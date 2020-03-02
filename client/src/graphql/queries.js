@@ -16,19 +16,42 @@ export default {
       user(id: $userId) {
         id
         email
-        accounts {
+        apikeys
+      }
+    }
+  `,
+  FETCH_ACCOUNTS: gql`
+    query fetchAccounts($apikeys: [String!]) {
+      accounts(apikeys: $apikeys) {
+        id
+        first_name
+        last_name
+        apikey
+        name
+        email
+        is_public
+        image_id
+        organizations {
           id
-          apikey
-          email
           name
-          first_name
-          last_name
-          image_id
-          is_public
-          organizations {
-            name
-            id
-          }
+        }
+      }
+    }
+  `,
+  FETCH_ACCOUNT: gql`
+    query fetchAccount($apikey: String!) {
+      account(apikey: $apikey) {
+        id
+        first_name
+        last_name
+        apikey
+        name
+        email
+        is_public
+        image_id
+        organizations {
+          id
+          name
         }
       }
     }

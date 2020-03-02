@@ -11,9 +11,9 @@ const Login = props => {
   const [error, setError] = useState("");
   const [login] = useMutation(LOGIN_USER, {
     onCompleted: data => {
-      const { token, userId } = data.login;
+      const { token, id } = data.login;
       localStorage.setItem("auth-token", token);
-      localStorage.setItem("userId", userId);
+      localStorage.setItem("userId", id);
       props.history.push("/");
     },
     onError: err => {
@@ -28,7 +28,7 @@ const Login = props => {
     client.writeData({
       data: {
         isLoggedIn: data.login.loggedIn,
-        userId: data.login.userId
+        userId: data.login.id
       }
     });
   }

@@ -45,7 +45,7 @@ const register = async data => {
     loggedIn: true,
     ...user._doc,
     password: null,
-    userId: user._id
+    id: user._id
   };
 };
 
@@ -81,8 +81,7 @@ const login = async data => {
     token,
     loggedIn: true,
     ...user._doc,
-    password: null,
-    userId: user._id
+    password: null
   };
 };
 
@@ -95,7 +94,7 @@ const verifyUser = async data => {
     const loggedIn = await User.findById(id).then(user => {
       return !!user;
     });
-    return { loggedIn, userId: user._id };
+    return { loggedIn, id: user._id };
   } catch (err) {
     return { loggedIn: false };
   }

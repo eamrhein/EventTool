@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
+import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import App from "./components/App";
 import { BrowserRouter } from "react-router-dom";
@@ -56,7 +56,7 @@ if (token) {
       cache.writeData({
         data: {
           isLoggedIn: data.verifyUser.loggedIn,
-          userId: data.verifyUser.userId
+          userId: data.verifyUser.id
         }
       });
     });

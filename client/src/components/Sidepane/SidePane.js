@@ -9,6 +9,7 @@ import {
   Form,
   FormField,
   TextInput,
+  Text,
   Accordion,
   AccordionPanel
 } from "grommet";
@@ -23,18 +24,26 @@ function SidePane(props) {
       userId: id
     }
   });
+  const [errorMessage, setErrorMessage] = useState(null);
   let [apikey, setApiKey] = useState("");
   const [pushApi] = useMutation(PUSH_API_KEY, {
     onError: err => {
       const message = err.message.split(":")[1];
-      console.log(err.message);
+      setErrorMessage(<Text size="small">{message}</Text>);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 10000);
     },
-    update(cache, { data: { pushApikey } }) {
-      let newUser = data.user;
-      newUser.apikeys = pushApikey.apikeys;
-      cache.writeQuery({
+    update(client, { data: { pushAPIkey } }) {
+      client.writeQuery({
         query: FETCH_USER,
-        data: { user: newUser }
+        variables: { userId: id },
+        data: {
+          user: {
+            ...data.user,
+            apikeys: pushAPIkey.apikeys
+          }
+        }
       });
     }
   });
@@ -51,9 +60,9 @@ function SidePane(props) {
       flex="shrink"
     >
       <Box height={{ max: "65.6vh" }} width="100%" overflow="auto">
-        <Accounts apikeys={data.user.apikeys} />
+        <Accounts user={data.user} />
       </Box>
-      <Box>
+      <Box height="20vh">
         <Accordion alignSelf="center">
           <AccordionPanel
             height="30px"
@@ -64,8 +73,6 @@ function SidePane(props) {
               left: "15px",
               right: "15px"
             }}
-            round="small"
-            elevation="medium"
             background="brand"
             label="Add Account"
           >
@@ -82,7 +89,7 @@ function SidePane(props) {
                   setApiKey("");
                 }}
               >
-                <FormField label="API Key" align="start">
+                <FormField error={errorMessage} label="API Key" align="start">
                   <TextInput
                     onChange={e => setApiKey(e.target.value)}
                     value={apikey}

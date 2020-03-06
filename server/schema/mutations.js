@@ -4,7 +4,7 @@ const graphql = require("graphql");
 const User = mongoose.model("users");
 const { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID } = graphql;
 const UserType = require("./user_type");
-
+const validateAPIkey = require("../validation/apikey");
 const AuthService = require("../services/auth");
 
 const mutation = new GraphQLObjectType({
@@ -39,7 +39,27 @@ const mutation = new GraphQLObjectType({
         return AuthService.verifyUser(args);
       }
     },
-    pushApikey: {
+    pushAPIkey: {
+      type: UserType,
+      args: {
+        id: { type: GraphQLID },
+        apikey: { type: GraphQLString }
+      },
+      async resolve(_, { id, apikey }) {
+        const { message, isValid } = await validateAPIkey(apikey);
+        if (!isValid) {
+          throw new Error(message);
+        }
+        const user = await User.findById(id);
+        if (user.apikeys.includes(apikey)) {
+          throw new Error("Eventbrite account is already added");
+        }
+        user.apikeys.push(apikey);
+        user.save();
+        return user;
+      }
+    },
+    deleteAPIkey: {
       type: UserType,
       args: {
         id: { type: GraphQLID },
@@ -47,7 +67,11 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(_, { id, apikey }) {
         const user = await User.findById(id);
-        user.apikeys.push(apikey);
+        const index = user.apikeys.findIndex(el => el === apikey);
+        if (index === -1) {
+          return user;
+        }
+        user.apikeys.splice(index, 1);
         user.save();
         return user;
       }

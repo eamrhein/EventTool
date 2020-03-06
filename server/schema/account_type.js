@@ -11,7 +11,7 @@ const {
 
 const AccountType = new GraphQLObjectType({
   name: "AccountType",
-  description: "Eventbrite Account Information",
+  description: "Eventbrite Account Information Pulled from the eventbrite api",
   fields: {
     id: { type: GraphQLID },
     apikey: { type: GraphQLString },

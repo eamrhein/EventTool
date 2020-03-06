@@ -27,8 +27,17 @@ export default {
     }
   `,
   PUSH_API_KEY: gql`
-    mutation pushApikey($id: ID!, $apikey: String!) {
-      pushApikey(id: $id, apikey: $apikey) {
+    mutation pushAPIkey($id: ID!, $apikey: String!) {
+      pushAPIkey(id: $id, apikey: $apikey) {
+        id
+        email
+        apikeys
+      }
+    }
+  `,
+  DELETE_API_KEY: gql`
+    mutation deleteAPIkey($id: ID!, $apikey: String!) {
+      deleteAPIkey(id: $id, apikey: $apikey) {
         id
         email
         apikeys

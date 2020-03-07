@@ -2,8 +2,8 @@ import React from "react";
 import AuthRoute from "../util/route_util";
 import Login from "./Login";
 import EventTool from "./EventTool";
-import { Grommet, Box, ResponsiveContext } from "grommet";
-import { css, ThemeProvider } from "styled-components";
+import { Grommet, Box } from "grommet";
+import { css } from "styled-components";
 
 const theme = {
   global: {
@@ -32,7 +32,7 @@ const theme = {
 
 function App(props) {
   return (
-    <Grommet theme={theme} full>
+    <Grommet theme={theme} >
       <Box
         tag="main"
         direction="column"
@@ -40,7 +40,7 @@ function App(props) {
         justify="start"
         background="light-1"
         elevation="low"
-        style={{ zIndex: "1" }}
+        height="100vh"
         {...props}
       >
         <AuthRoute exact path="/login" component={Login} routeType="auth" />

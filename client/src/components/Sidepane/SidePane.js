@@ -51,9 +51,7 @@ function SidePane(props) {
   if (loading) return null;
   return (
     <Box
-      width="300px"
-      height="89.6vh"
-      pad="4px"
+      height="100%"
       background="light-6"
       pad="small"
       align="start"

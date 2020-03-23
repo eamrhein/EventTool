@@ -35,7 +35,12 @@ function AccountCard({ apikey, id, userId }) {
       apikey
     }
   });
-  if (error) return <h3>Error</h3>;
+  if (error)
+    return (
+      <h3 style={{ color: "red", fontWeight: "bolder" }}>
+        {error.message.split(":")[1]}
+      </h3>
+    );
   if (loading) return null;
   let { account } = data;
   return (

@@ -21,7 +21,8 @@ const UserSchema = new Schema({
     {
       type: String
     }
-  ]
+  ],
+  jobs: [{ type: Schema.Types.ObjectId, ref: "jobs" }]
 });
 const User = mongoose.model("users", UserSchema);
 

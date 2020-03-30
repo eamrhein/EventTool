@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 const graphql = require("graphql");
-
-const User = mongoose.model("users");
-const { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID } = graphql;
 const UserType = require("./user_type");
 const validateAPIkey = require("../validation/apikey");
 const AuthService = require("../services/auth");
+const scheduler = require("../services/scheduler");
+
+const User = mongoose.model("users");
+const { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID } = graphql;
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -74,6 +75,19 @@ const mutation = new GraphQLObjectType({
         user.apikeys.splice(index, 1);
         user.save();
         return user;
+      }
+    },
+    scheduleEvent: {
+      type: UserType,
+      args: {
+        date: { type: GraphQLString },
+        data: { type: GraphQLString }
+      },
+      async resolve(_, { date, data }) {
+        scheduler.scheduleEvent({
+          date,
+          data
+        });
       }
     }
   }

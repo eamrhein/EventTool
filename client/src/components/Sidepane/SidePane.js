@@ -52,7 +52,7 @@ function SidePane(props) {
   return (
     <Box
       height="100%"
-      background="light-6"
+      background="light-1"
       pad="small"
       align="start"
       flex="shrink"

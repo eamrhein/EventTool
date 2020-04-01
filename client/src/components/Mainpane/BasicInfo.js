@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Box, Heading, Select, TextInput, Text } from "grommet";
-import { FaWpforms, FaRegMap } from "react-icons/fa";
+import { FaWpforms, FaRegMap, FaSearch } from "react-icons/fa";
 import { Search } from "grommet-icons";
 export default function BasicInfo(props) {
   const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("Venue")
   return (
     <Box margin="small" pad="small">
       <Heading level="2">
@@ -32,11 +33,10 @@ export default function BasicInfo(props) {
         <FaRegMap style={{ verticalAlign: "bottom" }} /> Location
       </Heading>
       <Box gap="small" margin="small">
-        <Select placeholder="Type" options={["Venue"]} />
+        <Select value={location} onChange={({ option }) => setLocation(option)} options={["Venue", "Online Event", "To Be Announced"]} />
         <Box>
           <TextInput
-            icon={<Search />}
-            reverse
+            icon={<FaSearch />}
             placeholder="Search for a venue or address."
           />
         </Box>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
-import SidePane from "./Sidepane/SidePane";
-import EventForm from "./Mainpane/EventForm";
+import SidePane from "../components/Sidepane/SidePane";
+import EventForm from "../components/Mainpane/EventForm";
 import Queries from "../graphql/queries";
 import styled from "styled-components";
 import { Box, Heading, Header, Stack, Text } from "grommet";

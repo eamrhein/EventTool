@@ -18,5 +18,5 @@ const scheduleEvent = ({ date, data }) => {
     console.log(job);
   });
 };
-I;
+
 module.exports = { scheduleEvent };

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import Queries from "../../graphql/queries";
 import Mutations from "../../graphql/mutations";
-import Accounts from "./Accounts";
+import Accounts from "./AccountList";
 import {
   Box,
   Button,

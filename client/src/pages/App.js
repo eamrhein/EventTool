@@ -32,7 +32,7 @@ const theme = {
 
 function App(props) {
   return (
-    <Grommet theme={theme} >
+    <Grommet full theme={theme}>
       <Box
         tag="main"
         direction="column"

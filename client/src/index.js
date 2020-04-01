@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
-import App from "./components/App";
+import App from "./pages/App";
 import { BrowserRouter } from "react-router-dom";
 
 import ApolloClient from "apollo-client";

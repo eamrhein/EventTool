@@ -84,7 +84,7 @@ function EventTool(props) {
           <SidePane id={data.userId} history={props.history} />
         </Box>
         <Box height="100%" width="100%" direction="column">
-          <EventForm />
+          <EventForm userId={data.userId} />
         </Box>
       </MainBox>
     </Box>

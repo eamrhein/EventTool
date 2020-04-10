@@ -20,7 +20,6 @@ const Tabs = ({ children }) => {
   const onClickTabItem = tab => {
     setActiveTab(tab);
   };
-  console.log(activeTab);
   return (
     <Box>
       <Box direction="row">

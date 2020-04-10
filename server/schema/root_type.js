@@ -13,6 +13,7 @@ const {
 
 const UserType = require("./user_type");
 const AccountType = require("./account_type");
+const Category = require("./categories");
 const EventBriteService = require("../services/evenbriteApi");
 
 const RootQuery = new GraphQLObjectType({
@@ -38,6 +39,27 @@ const RootQuery = new GraphQLObjectType({
       args: { apikey: { type: GraphQLString } },
       resolve(_, { apikey }) {
         return EventBriteService.fetchAccount(apikey);
+      }
+    },
+    categories: {
+      type: GraphQLList(Category),
+      args: { apikey: { type: GraphQLString } },
+      resolve(_, { apikey }) {
+        return EventBriteService.fetchCategories(apikey);
+      }
+    },
+    subcategories: {
+      type: GraphQLList(Category),
+      args: { apikey: { type: GraphQLString } },
+      resolve(_, { apikey }) {
+        return EventBriteService.fetchSubCategories(apikey);
+      }
+    },
+    types: {
+      type: GraphQLList(Category),
+      args: { apikey: { type: GraphQLString } },
+      resolve(_, { apikey }) {
+        return EventBriteService.fetchFormats(apikey);
       }
     }
   }

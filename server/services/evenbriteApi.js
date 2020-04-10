@@ -184,7 +184,69 @@ const fetchAccount = async apikey => {
     organizations: orgs
   };
 };
+const fetchCategories = async (apikey, continuationToken) => {
+  let url = `${baseurl}/categories/?token=${apikey}`;
+  if (continuationToken) {
+    url += `&continuation=${continuationToken}`;
+  }
+  const firstPage = await fetch(url);
+  const res = await firstPage.json();
+  const categories = res.categories.map(({ name, id }) => {
+    return {
+      name,
+      id
+    };
+  });
 
+  if (res.pagination.continuation) {
+    const rest = await fetchCategories(apikey, res.pagination.continuation);
+    return categories.concat(rest);
+  }
+  return categories;
+};
+
+const fetchSubCategories = async (apikey, continuationToken) => {
+  let url = `${baseurl}/subcategories/?token=${apikey}`;
+  if (continuationToken) {
+    url += `&continuation=${continuationToken}`;
+  }
+  const firstPage = await fetch(url);
+  const res = await firstPage.json();
+  const categories = res.subcategories.map(({ name, id, parent_category }) => {
+    return {
+      name,
+      id,
+      parent: parent_category.name
+    };
+  });
+
+  if (res.pagination.continuation) {
+    const rest = await fetchSubCategories(apikey, res.pagination.continuation);
+    return categories.concat(rest);
+  }
+  return categories;
+};
+
+const fetchFormats = async (apikey, continuationToken) => {
+  let url = `${baseurl}/formats/?token=${apikey}`;
+  if (continuationToken) {
+    url += `&continuation=${continuationToken}`;
+  }
+  const firstPage = await fetch(url);
+  const res = await firstPage.json();
+  const types = res.formats.map(({ name, id }) => {
+    return {
+      name,
+      id
+    };
+  });
+
+  if (res.pagination && res.pagination.continuation) {
+    const rest = await fetchFormats(apikey, res.pagination.continuation);
+    return types.concat(rest);
+  }
+  return types;
+};
 module.exports = {
   fetchAccount,
   createEvent,
@@ -193,5 +255,8 @@ module.exports = {
   publishEvent,
   getUploadedUrl,
   getUploadSignature,
-  uploadImage
+  uploadImage,
+  fetchCategories,
+  fetchSubCategories,
+  fetchFormats
 };

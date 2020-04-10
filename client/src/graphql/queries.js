@@ -55,5 +55,29 @@ export default {
         }
       }
     }
+  `,
+  FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES: gql`
+    query fetchCategories($apikey: String!) {
+      categories(apikey: $apikey) {
+        name
+        id
+      }
+      subcategories(apikey: $apikey) {
+        name
+        id
+        parent
+      }
+      types(apikey: $apikey) {
+        name
+        id
+      }
+      account(apikey: $apikey) {
+        name
+        organizations {
+          id
+          name
+        }
+      }
+    }
   `
 };

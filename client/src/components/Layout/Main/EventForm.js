@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Box, Form } from "grommet";
 import { useQuery } from "@apollo/react-hooks";
-import Queries from "../../graphql/queries";
-import Tabs from "./tabs";
+import Queries from "../../../graphql/queries";
+import Tabs from "../../Custom/tabs";
 import BasicInfo from "./FormComponents/BasicInfo";
 import Schedule from "./FormComponents/Schedule";
 import Description from "./FormComponents/Description";
+import Tickets from "./FormComponents/Tickets";
 
 const { FETCH_USER } = Queries;
 
@@ -17,16 +18,16 @@ let defaultFormState = {
   type: "Type",
   start: new Date().toISOString(),
   end: new Date().toISOString(),
-  series: false
+  series: false,
 };
 function EventForm({ userId }) {
   const [form, setForm] = useState(defaultFormState);
   const { loading, data, error } = useQuery(FETCH_USER, {
     variables: {
-      userId
-    }
+      userId,
+    },
   });
-  if (loading) return "...";
+  if (loading) return <Box width="100vw">...loading</Box>;
   if (error) {
     console.log(error);
     return null;
@@ -34,14 +35,9 @@ function EventForm({ userId }) {
   let { user } = data;
   let { apikeys } = user;
   let key = apikeys[0];
-  console.log(form);
   return (
-    <Form
-      value={form}
-      background="light-1"
-      style={{ height: "100%", alignItems: "center" }}
-    >
-      <Tabs>
+    <Form value={form}>
+      <Tabs form={form} setForm={setForm}>
         <Box label="Basic Info">
           <BasicInfo form={form} setForm={setForm} apikey={key} />
         </Box>
@@ -50,6 +46,9 @@ function EventForm({ userId }) {
         </Box>
         <Box label="Description">
           <Description form={form} setForm={setForm} apikey={key} />
+        </Box>
+        <Box label="Tickets">
+          <Tickets />
         </Box>
       </Tabs>
     </Form>

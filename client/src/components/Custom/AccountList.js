@@ -2,21 +2,21 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import Queries from "../../graphql/queries";
 import Mutations from "../../graphql/mutations";
-import { Box, Text } from "grommet";
+import { Box, Text, List } from "grommet";
 import { FormTrash } from "grommet-icons";
 const { DELETE_API_KEY } = Mutations;
 const { FETCH_ACCOUNT, FETCH_USER } = Queries;
-function AccountCard({ apikey, id, userId }) {
+function AccountCard({ apikey, id, userId, active, setActive }) {
   const [hover, sethover] = useState(false);
   const [deleteAPI] = useMutation(DELETE_API_KEY, {
-    onError: err => {
+    onError: (err) => {
       const message = err.message.split(":")[1];
       console.log(message);
     },
     update(client, { data: { deleteAPIkey } }) {
       let data = client.readQuery({
         query: FETCH_USER,
-        variables: { userId }
+        variables: { userId },
       });
       client.writeQuery({
         query: FETCH_USER,
@@ -24,16 +24,16 @@ function AccountCard({ apikey, id, userId }) {
         data: {
           user: {
             ...data.user,
-            apikeys: deleteAPIkey.apikeys
-          }
-        }
+            apikeys: deleteAPIkey.apikeys,
+          },
+        },
       });
-    }
+    },
   });
   const { loading, data, error } = useQuery(FETCH_ACCOUNT, {
     variables: {
-      apikey
-    }
+      apikey,
+    },
   });
   if (error)
     return (
@@ -45,29 +45,37 @@ function AccountCard({ apikey, id, userId }) {
   let { account } = data;
   return (
     <Box
+      margin="none"
       key={id}
       direction="row"
-      margin="xsmall"
+      border={
+        id === active
+          ? {
+              color: "brand",
+              size: "small",
+            }
+          : false
+      }
       justify="between"
-      background="light-2"
-      elevation="medium"
+      background={{ light: "light-4", dark: "dark-5" }}
       flex="grow"
-      height="80px"
+      style={{ cursor: "pointer" }}
+      onClick={() => setActive(id)}
     >
-      <Box background="light-2" pad="xsmall" margin="xsmall" direction="column">
-        <Text size="xsmall">
+      <Box pad="xsmall" margin="xsmall" direction="column">
+        <Text size="xsmall" truncate>
           <Text size="xsmall" weight="bold">
             Account Name:
           </Text>{" "}
           {account.name}
         </Text>
-        <Text size="xsmall">
+        <Text size="xsmall" truncate>
           <Text size="xsmall" weight="bold">
             Email:
           </Text>{" "}
           {account.email}
         </Text>
-        <Text size="xsmall">
+        <Text size="xsmall" truncate>
           <Text size="xsmall" weight="bold">
             API_KEY:
           </Text>{" "}
@@ -78,13 +86,13 @@ function AccountCard({ apikey, id, userId }) {
         <FormTrash
           onMouseEnter={() => sethover(true)}
           onMouseLeave={() => sethover(false)}
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault();
             deleteAPI({
               variables: {
                 id: userId,
-                apikey
-              }
+                apikey,
+              },
             });
           }}
           color={hover ? "status-error" : "status-disabled"}
@@ -93,10 +101,24 @@ function AccountCard({ apikey, id, userId }) {
     </Box>
   );
 }
+
 function Accounts({ user }) {
-  return user.apikeys.map((apikey, id) => {
-    return <AccountCard key={id} apikey={apikey} userId={user.id} id={id} />;
-  });
+  const [active, setActive] = useState(0);
+  return (
+    <List
+      primaryKey={(apikey, id) => (
+        <AccountCard
+          key={id}
+          apikey={apikey}
+          userId={user.id}
+          id={id}
+          active={active}
+          setActive={setActive}
+        />
+      )}
+      data={user.apikeys}
+    />
+  );
 }
 
 export default Accounts;

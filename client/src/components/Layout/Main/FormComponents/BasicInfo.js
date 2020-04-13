@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { useQuery } from "@apollo/react-hooks";
-import Queries from "../../../graphql/queries";
+import Queries from "../../../../graphql/queries";
 import { Box, Heading, Select, TextInput, Text } from "grommet";
-import { FormFieldLabel } from "../../custom/FormFieldLabel";
+import { FormFieldLabel } from "../../../Custom/FormFieldLabel";
 import { FaWpforms, FaRegMap, FaSearch } from "react-icons/fa";
 
 const { FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES } = Queries;
@@ -13,29 +13,28 @@ export default function BasicInfo({ apikey, form, setForm }) {
     FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES,
     {
       variables: {
-        apikey
-      }
+        apikey,
+      },
     }
   );
-  if (loading) return "...";
+  if (loading) return <Box width="100vw">...loading</Box>;
   if (error) {
     console.log(error);
     return null;
   }
   let categories = data.categories.map(({ name }) => name);
   let subcategories = data.subcategories
-    .filter(obj => obj.parent === category)
+    .filter((obj) => obj.parent === category)
     .map(({ name }) => name);
   let types = data.types.map(({ name }) => name);
   let orgs = data.account.organizations.map(({ name, id }) => {
     return name;
   });
-  console.log(orgs);
   return (
-    <Box width="100vw" pad="small">
-      <Heading color="status-unknown" level="1">
+    <Box pad="small" width="100vw">
+      <Heading color={{ light: "light-6", dark: "dark-6" }} level="2">
         <FaWpforms style={{ verticalAlign: "bottom" }} />
-        <Text color="dark-1" size="xxlarge">
+        <Text color={{ light: "dark-1", dark: "light-1" }} size="xlarge">
           {" "}
           Basic Info
         </Text>
@@ -45,7 +44,7 @@ export default function BasicInfo({ apikey, form, setForm }) {
           left: "large",
           top: "small",
           right: "small",
-          bottom: "small"
+          bottom: "small",
         }}
       >
         <FormFieldLabel
@@ -62,7 +61,7 @@ export default function BasicInfo({ apikey, form, setForm }) {
             maxLength="70"
             margin="small"
             value={title}
-            onChange={e => setForm({ ...form, title: e.target.value })}
+            onChange={(e) => setForm({ ...form, title: e.target.value })}
             placeholder="Be clear and descriptive"
           />
         </FormFieldLabel>
@@ -99,9 +98,9 @@ export default function BasicInfo({ apikey, form, setForm }) {
           <Select value={orgs[0]} options={orgs} />
         </FormFieldLabel>
       </Box>
-      <Heading color="status-unknown" level="1">
+      <Heading color={{ light: "light-6", dark: "dark-6" }} level="2">
         <FaRegMap style={{ verticalAlign: "bottom" }} />
-        <Text color="dark-1" size="xxlarge">
+        <Text color={{ light: "dark-1", dark: "light-1" }} size="xlarge">
           {" "}
           Locations
         </Text>
@@ -111,7 +110,7 @@ export default function BasicInfo({ apikey, form, setForm }) {
           left: "large",
           top: "small",
           right: "small",
-          bottom: "small"
+          bottom: "small",
         }}
       >
         <FormFieldLabel label="Venue" margin="small" required>

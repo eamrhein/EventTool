@@ -10,8 +10,8 @@ export default {
     }
   `,
   REGISTER_USER: gql`
-    mutation RegisterUser($email: String!, $name: String!, $password: String!) {
-      register(email: $email, name: $name, password: $password) {
+    mutation RegisterUser($email: String!, $password: String!) {
+      register(email: $email, password: $password) {
         id
         token
         loggedIn
@@ -43,5 +43,5 @@ export default {
         apikeys
       }
     }
-  `
+  `,
 };

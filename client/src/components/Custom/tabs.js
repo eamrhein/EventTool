@@ -17,13 +17,13 @@ const Tab = ({ label, onClick, activeTab }) => {
 
 const Tabs = ({ children }) => {
   const [activeTab, setActiveTab] = useState(children[0].props.label);
-  const onClickTabItem = tab => {
+  const onClickTabItem = (tab) => {
     setActiveTab(tab);
   };
   return (
     <Box>
       <Box direction="row">
-        {children.map(child => {
+        {children.map((child) => {
           const { label } = child.props;
           return (
             <Tab
@@ -36,7 +36,7 @@ const Tabs = ({ children }) => {
         })}
       </Box>
       <Box>
-        {children.map(child => {
+        {children.map((child) => {
           if (child.props.label !== activeTab) return undefined;
           return child.props.children;
         })}

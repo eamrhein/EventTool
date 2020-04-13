@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
-import App from "./pages/App";
+import App from "./components/App";
 import { BrowserRouter } from "react-router-dom";
 
 import ApolloClient from "apollo-client";
@@ -16,7 +16,7 @@ import Mutations from "./graphql/mutations";
 const { VERIFY_USER } = Mutations;
 
 const cache = new InMemoryCache({
-  dataIdFromObject: object => object._id || null
+  dataIdFromObject: (object) => object._id || null,
 });
 
 const errorLink = onError(({ graphQLErrors }) => {
@@ -26,8 +26,8 @@ const errorLink = onError(({ graphQLErrors }) => {
 const httpLink = createHttpLink({
   uri: "http://localhost:5000/graphql",
   headers: {
-    authorization: localStorage.getItem("auth-token")
-  }
+    authorization: localStorage.getItem("auth-token"),
+  },
 });
 
 const client = new ApolloClient({
@@ -37,7 +37,7 @@ const client = new ApolloClient({
     console.log("graphQLErrors", graphQLErrors);
     console.log("networkError", networkError);
   },
-  resolvers: {}
+  resolvers: {},
 });
 
 const token = localStorage.getItem("auth-token");
@@ -45,8 +45,8 @@ const userId = localStorage.getItem("userId");
 cache.writeData({
   data: {
     isLoggedIn: Boolean(token),
-    userId: userId
-  }
+    userId: userId,
+  },
 });
 
 if (token) {
@@ -56,8 +56,8 @@ if (token) {
       cache.writeData({
         data: {
           isLoggedIn: data.verifyUser.loggedIn,
-          userId: data.verifyUser.id
-        }
+          userId: data.verifyUser.id,
+        },
       });
     });
 }

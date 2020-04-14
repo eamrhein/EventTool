@@ -12,28 +12,6 @@ const db = require("../config/keys").mongoURI;
 
 const app = express();
 
-app.use(cors());
-
-app.use(
-  "/graphql",
-  expressGraphQl((req) => {
-    return {
-      schema,
-      context: {
-        token: req.headers.authorization,
-      },
-      graphiql: true,
-    };
-  })
-);
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
-  app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "/client/build/index.html"));
-  });
-}
-
 if (!db) {
   throw new Error("You must provide a string to connect to MongoDB Atlas");
 }
@@ -46,6 +24,26 @@ mongoose
   })
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log(err));
+app.use(cors());
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+  app.get("/", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
+app.use(
+  "/graphql",
+  expressGraphQl((req) => {
+    return {
+      schema,
+      context: {
+        token: req.headers.authorization,
+      },
+      graphiql: true,
+    };
+  })
+);
 
 app.use(bodyParser.json());
 

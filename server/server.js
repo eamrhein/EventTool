@@ -16,16 +16,19 @@ app.use(cors());
 
 app.use(
   "/graphql",
-  expressGraphQl(req => {
+  expressGraphQl((req) => {
     return {
       schema,
       context: {
-        token: req.headers.authorization
+        token: req.headers.authorization,
       },
-      graphiql: true
+      graphiql: true,
     };
   })
 );
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+}
 
 if (!db) {
   throw new Error("You must provide a string to connect to MongoDB Atlas");
@@ -35,10 +38,10 @@ if (!db) {
 mongoose
   .connect(db, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   })
   .then(() => console.log("Connected to MongoDB"))
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));
 
 app.use(bodyParser.json());
 

@@ -40,7 +40,7 @@ app.use(
       context: {
         token: req.headers.authorization,
       },
-      graphiql: true,
+      graphiql: process.env.NODE_ENV !== "production",
     };
   })
 );

@@ -34,9 +34,10 @@
     "nodemon": "^2.0.2"
   },
   "scripts": {
+    "start": "node app.js",
     "client-install": "npm install --prefix client",
     "client": "npm start --prefix client",
-    "server": "nodemon index.js",
+    "server": "nodemon app.js",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   }
 }

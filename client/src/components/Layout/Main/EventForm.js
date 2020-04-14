@@ -16,9 +16,19 @@ let defaultFormState = {
   category: "Category",
   subcategory: "subcategory",
   type: "Type",
-  start: new Date().toISOString(),
-  end: new Date().toISOString(),
+  start: {
+    date: new Date().toISOString(),
+    time: "",
+  },
+  end: {
+    date: new Date().toISOString(),
+    time: "",
+  },
   series: false,
+  recurrence: {
+    times: 1,
+    occurs: "Daily",
+  },
 };
 function EventForm({ userId }) {
   const [form, setForm] = useState(defaultFormState);

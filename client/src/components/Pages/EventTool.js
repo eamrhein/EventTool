@@ -44,11 +44,7 @@ function EventTool({ sidePanel, pending, ...props }) {
         justify="start"
         align="start"
       >
-        <Box
-          border="small"
-          elevation="small"
-          className={sidePanel ? "open" : "closed"}
-        >
+        <Box elevation="small" className={sidePanel ? "open" : "closed"}>
           <SidePanel id={data.userId} history={props.history} />
         </Box>
         <Box

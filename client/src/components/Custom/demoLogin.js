@@ -20,7 +20,7 @@ const Demo = ({ email, setEmail, password, setPassword, login, error }) => {
         clearInterval(int);
       };
     }, 200);
-  }, []);
+  }, [setEmail, setPassword]);
 
   return (
     <Form

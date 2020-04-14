@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Calendar,
   Box,
@@ -12,10 +12,6 @@ import { FormFieldLabel } from "../../../Custom/FormFieldLabel";
 import { TimeInput } from "../../../Custom/TimeInput";
 import { FaCalendar } from "react-icons/fa";
 export default function Schedule({ form, setForm, apikey, ...props }) {
-  const [dateList, setDateList] = useState([]);
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
-  const [count, setCount] = useState(1);
   let today = new Date();
   let year = today.getFullYear();
   let day = today.getDate();
@@ -24,17 +20,43 @@ export default function Schedule({ form, setForm, apikey, ...props }) {
     today.toISOString(),
     new Date(year + 5, month, day).toISOString(),
   ];
-  function handleDayClick(day) {
-    let nArray = dateList;
-    const index = nArray.findIndex((item) => item === day);
-    if (index === -1) {
-      nArray.push(day);
-    } else {
-      nArray.splice(index, 1);
+
+  const handleDate = (dates) => {
+    if (dates[0].length === 2) {
+      setForm({
+        ...form,
+        start: {
+          ...form.start,
+          date: dates[0][0],
+        },
+        end: {
+          ...form.end,
+          date: dates[0][1],
+        },
+      });
     }
-    console.log(dateList);
-    setDateList(nArray);
-  }
+  };
+  const handleTime = (e, time) => {
+    if (time === "start") {
+      setForm({
+        ...form,
+        start: {
+          ...form.start,
+          time: e.target.value,
+        },
+      });
+    }
+    if (time === "end") {
+      setForm({
+        ...form,
+        end: {
+          ...form.end,
+          time: e.target.value,
+        },
+      });
+    }
+  };
+  console.log(form);
   return (
     <Box pad="small" width="100vw">
       <Heading color="status-unknown" level="2">
@@ -100,63 +122,73 @@ export default function Schedule({ form, setForm, apikey, ...props }) {
               <Calendar
                 bounds={bounds}
                 size="medium"
-                dates={dateList}
-                onSelect={handleDayClick}
+                onSelect={handleDate}
                 range
               />
               <Box pad="small" justify="center">
                 <TimeInput
                   label="Start Time:"
-                  value={start}
-                  onChange={(event) => setStart(event.target.value)}
+                  value={form.start.time}
+                  onChange={(e) => handleTime(e, "start")}
                   required
                 />
                 <TimeInput
                   label="End Time:"
-                  value={end}
-                  onChange={(event) => setEnd(event.target.value)}
+                  value={form.end.time}
+                  onChange={(e) => handleTime(e, "end")}
                   required
                 />
               </Box>
             </Box>
           ) : (
             <Box justify="center" margin="small" direction="row">
-              <Calendar
-                bounds={bounds}
-                size="medium"
-                dates={dateList}
-                onSelect={handleDayClick}
-                range
-              />
+              <Calendar bounds={bounds} size="medium" range />
               <Box pad="small" justify="center">
                 <TimeInput
                   label="Start Time:"
-                  value={start}
-                  onChange={(event) => setStart(event.target.value)}
+                  value={form.start.time}
+                  onChange={(e) => handleTime(e, "start")}
                   required
                 />
                 <TimeInput
                   label="End Time:"
-                  value={end}
-                  onChange={(event) => setEnd(event.target.value)}
+                  value={form.end.time}
+                  onChange={(e) => handleTime(e, "end")}
                   required
                 />
                 <FormFieldLabel label="Occurs:">
                   <Select
-                    value="Daily"
+                    value={form.recurrence.occurs}
                     options={["Daily", "Weekly", "Monthly"]}
+                    onChange={({ option }) =>
+                      setForm({
+                        ...form,
+                        recurrence: {
+                          ...form.recurrence,
+                          occurs: option,
+                        },
+                      })
+                    }
                   />
                 </FormFieldLabel>
                 <FormFieldLabel
                   info={
                     `Event repeats ` +
-                    count +
-                    (count > 1 ? " times." : " time.")
+                    form.recurrence.times +
+                    (form.recurrence.times > 1 ? " times." : " time.")
                   }
                 >
                   <TextInput
-                    value={count}
-                    onChange={(e) => setCount(e.target.value)}
+                    value={form.recurrence.times}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        recurrence: {
+                          ...form.recurrence,
+                          times: e.target.value,
+                        },
+                      })
+                    }
                   />
                 </FormFieldLabel>
               </Box>

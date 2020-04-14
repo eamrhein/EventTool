@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { useMutation } from "@apollo/react-hooks";
 import Mutations from "../../graphql/mutations";
@@ -10,8 +10,6 @@ import { Mail } from "grommet-icons";
 const { LOGIN_USER, REGISTER_USER } = Mutations;
 
 const Login = (props) => {
-  const demoLogin = "demo@demo.com";
-  const demoPass = "123456";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

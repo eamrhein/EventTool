@@ -12,6 +12,12 @@ const db = require("../config/keys").mongoURI;
 
 const app = express();
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+  app.get("/*", (req, res) => {
+    res.sendFile(path.join(__dirname, "/client/build/index.html"));
+  });
+}
 app.use(cors());
 
 app.use(
@@ -26,12 +32,6 @@ app.use(
     };
   })
 );
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
-  app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname, "/client/build/index.html"));
-  });
-}
 
 if (!db) {
   throw new Error("You must provide a string to connect to MongoDB Atlas");

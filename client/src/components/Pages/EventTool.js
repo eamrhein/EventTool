@@ -12,7 +12,6 @@ let MainBox = styled(Box)`
     opacity: 1;
     height: 98%;
     width: 400px;
-    transform: translateX(2%);
     transition: 0.25s ease-out;
   }
   .closed {
@@ -24,46 +23,40 @@ let MainBox = styled(Box)`
   }
   .here {
     opacity: 1;
-    transition: 0.25s ease-out;
+    transition: opacity 0.5s ease-out;
   }
   .gone {
+    pointer-events: none;
     opacity: 0;
   }
 `;
 const { FETCH_USER_ID } = Queries;
 
-function EventTool({ sidePanel, pending, ...props }) {
+function EventTool({ responsive, pending, ...props }) {
   const { data, error } = useQuery(FETCH_USER_ID);
   if (error) return <h3>Error: {error.message}</h3>;
   return (
     <Box height={{ min: "92vh" }} direction="column">
-      <MainBox
-        style={{ position: "relative" }}
-        height="100vh"
-        direction="row"
-        justify="start"
-        align="start"
-      >
-        <Box elevation="small" className={sidePanel ? "open" : "closed"}>
+      <MainBox height="100vh" direction="row" justify="start" align="start">
+        <Box className={responsive !== "small" ? "open" : "closed"}>
           <SidePanel id={data.userId} history={props.history} />
         </Box>
-        <Box
-          style={{
-            transform: "translateX(-50%)",
-            position: "absolute",
-            zIndex: "1",
-            top: "15%",
-            left: "50%",
-          }}
-          pad="small"
-          background={{ dark: "dark-6", light: "light-6" }}
-          elevation="small"
-          className={pending ? "here" : "gone"}
-        >
-          <Pending />
-        </Box>
-        <Box height="100%" width="100%" direction="column">
-          <EventForm userId={data.userId} />
+        <Box style={{ position: "relative" }} direction="row">
+          <Box className={pending ? "gone" : "here"}>
+            <EventForm responsive={responsive} userId={data.userId} />
+          </Box>
+          <Box
+            height="100%"
+            width="100%"
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+            }}
+            className={pending ? "here" : "gone"}
+          >
+            <Pending />
+          </Box>
         </Box>
       </MainBox>
     </Box>

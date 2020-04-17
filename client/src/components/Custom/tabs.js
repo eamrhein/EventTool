@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, Text } from "grommet";
 
 const Tab = ({ label, onClick, activeTab }) => {
@@ -9,25 +9,37 @@ const Tab = ({ label, onClick, activeTab }) => {
     active = true;
   }
   return (
-    <Box margin="medium" className={className} onClick={() => onClick(label)}>
-      <Text weight={active ? "bold" : "normal"}>{label}</Text>
+    <Box pad="xsmall" className={className} onClick={() => onClick(label)}>
+      <Text
+        style={
+          active
+            ? {
+                borderBottom: "3px solid #7D4CDB",
+              }
+            : null
+        }
+        truncate
+        weight={active ? "bold" : "normal"}
+      >
+        {label}
+      </Text>
     </Box>
   );
 };
 
-const Tabs = ({ children }) => {
-  const [activeTab, setActiveTab] = useState(children[0].props.label);
+const Tabs = ({ children, form, setForm }) => {
+  let { active_tab } = form;
   const onClickTabItem = (tab) => {
-    setActiveTab(tab);
+    setForm({ ...form, active_tab: tab });
   };
   return (
-    <Box>
-      <Box direction="row">
+    <Box margin="xsmall">
+      <Box pad="small" gap="small" direction="row" justify="around">
         {children.map((child) => {
           const { label } = child.props;
           return (
             <Tab
-              activeTab={activeTab}
+              activeTab={active_tab}
               key={label}
               label={label}
               onClick={onClickTabItem}
@@ -37,7 +49,7 @@ const Tabs = ({ children }) => {
       </Box>
       <Box>
         {children.map((child) => {
-          if (child.props.label !== activeTab) return undefined;
+          if (child.props.label !== active_tab) return undefined;
           return child.props.children;
         })}
       </Box>

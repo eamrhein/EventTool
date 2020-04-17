@@ -51,7 +51,7 @@ function SidePane(props) {
   if (error) return <h3>Error {error.message}</h3>;
   if (loading) return null;
   return (
-    <Box height="100%" pad="small" align="start">
+    <Box pad="small" align="start">
       <Box height={{ max: "65.6vh" }} width="100%" overflow="auto">
         <Box
           margin={{
@@ -63,54 +63,52 @@ function SidePane(props) {
           pad="xsmall"
           background="brand"
         >
-          <Heading level="4">Accounts</Heading>
+          <Heading level="4">Select Account</Heading>
         </Box>
         <Accounts user={data.user} />
-        <Box>
-          <Accordion alignSelf="center">
-            <AccordionPanel
-              height="30px"
-              pad="small"
-              margin={{
-                top: "small",
-                bottom: "small",
-                left: "15px",
-                right: "15px",
-              }}
-              background="brand"
-              label="Add Account"
-            >
-              <Box margin="medium">
-                <Form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    pushApi({
-                      variables: {
-                        id: data.user.id,
-                        apikey,
-                      },
-                    });
-                    setApiKey("");
-                  }}
-                >
-                  <FormField error={errorMessage} label="API Key" align="start">
-                    <TextInput
-                      onChange={(e) => setApiKey(e.target.value)}
-                      value={apikey}
-                      placeholder="2HFXXX2G...."
-                    />
-                  </FormField>
-                  <Button
-                    margin={{ left: "auto" }}
-                    type="submit"
-                    primary
-                    label="Submit"
+        <Accordion alignSelf="center" width="100%">
+          <AccordionPanel
+            height="30px"
+            pad="small"
+            margin={{
+              top: "small",
+              bottom: "small",
+              left: "15px",
+              right: "15px",
+            }}
+            background="brand"
+            label="Add Account"
+          >
+            <Box margin="medium" wo>
+              <Form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  pushApi({
+                    variables: {
+                      id: data.user.id,
+                      apikey,
+                    },
+                  });
+                  setApiKey("");
+                }}
+              >
+                <FormField error={errorMessage} label="API Key" align="start">
+                  <TextInput
+                    onChange={(e) => setApiKey(e.target.value)}
+                    value={apikey}
+                    placeholder="2HFXXX2G...."
                   />
-                </Form>
-              </Box>
-            </AccordionPanel>
-          </Accordion>
-        </Box>
+                </FormField>
+                <Button
+                  margin={{ left: "auto" }}
+                  type="submit"
+                  primary
+                  label="Submit"
+                />
+              </Form>
+            </Box>
+          </AccordionPanel>
+        </Accordion>
       </Box>
     </Box>
   );

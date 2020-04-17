@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import ApolloClient from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
+import { persistCache } from "apollo-cache-persist";
 import { createHttpLink } from "apollo-link-http";
 import { ApolloProvider } from "react-apollo";
 import { onError } from "apollo-link-error";
@@ -23,56 +24,66 @@ const errorLink = onError(({ graphQLErrors }) => {
   if (graphQLErrors) graphQLErrors.map(({ message }) => console.log(message));
 });
 
+// why do i need to do this?
+const gqlUri =
+  process.env.NODE_ENV === "production"
+    ? "/grapqhql"
+    : "http://localhost:5000/graphql";
+
 const httpLink = createHttpLink({
-  uri: "/graphql",
+  uri: gqlUri,
   headers: {
     authorization: localStorage.getItem("auth-token"),
   },
 });
+const init = async () => {
+  await persistCache({
+    cache,
+    storage: window.localStorage,
+  });
+  const client = new ApolloClient({
+    link: ApolloLink.from([errorLink, httpLink]),
+    cache,
+    onError: ({ networkError, graphQLErrors }) => {
+      console.log("graphQLErrors", graphQLErrors);
+      console.log("networkError", networkError);
+    },
+    resolvers: {},
+  });
+  const token = localStorage.getItem("auth-token");
+  const userId = localStorage.getItem("userId");
+  cache.writeData({
+    data: {
+      isLoggedIn: Boolean(token),
+      userId: userId,
+    },
+  });
 
-const client = new ApolloClient({
-  link: ApolloLink.from([errorLink, httpLink]),
-  cache,
-  onError: ({ networkError, graphQLErrors }) => {
-    console.log("graphQLErrors", graphQLErrors);
-    console.log("networkError", networkError);
-  },
-  resolvers: {},
-});
-
-const token = localStorage.getItem("auth-token");
-const userId = localStorage.getItem("userId");
-cache.writeData({
-  data: {
-    isLoggedIn: Boolean(token),
-    userId: userId,
-  },
-});
-
-if (token) {
-  client
-    .mutate({ mutation: VERIFY_USER, variables: { token } })
-    .then(({ data }) => {
-      cache.writeData({
-        data: {
-          isLoggedIn: data.verifyUser.loggedIn,
-          userId: data.verifyUser.id,
-        },
+  if (token) {
+    client
+      .mutate({ mutation: VERIFY_USER, variables: { token } })
+      .then(({ data }) => {
+        cache.writeData({
+          data: {
+            isLoggedIn: data.verifyUser.loggedIn,
+            userId: data.verifyUser.id,
+          },
+        });
       });
-    });
-}
+  }
+  const Root = () => (
+    <ApolloProvider client={client}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ApolloProvider>
+  );
 
-const Root = () => (
-  <ApolloProvider client={client}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </ApolloProvider>
-);
+  ReactDOM.render(<Root />, document.getElementById("root"));
 
-ReactDOM.render(<Root />, document.getElementById("root"));
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.register();
+  // If you want your app to work offline and load faster, you can change
+  // unregister() to register() below. Note this comes with some pitfalls.
+  // Learn more about service workers: https://bit.ly/CRA-PWA
+  serviceWorker.unregister();
+};
+init();

@@ -45,7 +45,8 @@ function AccountCard({ apikey, id, userId, active, setActive }) {
   let { account } = data;
   return (
     <Box
-      margin="none"
+      focusIndicator={false}
+      width="100vw"
       key={id}
       direction="row"
       border={
@@ -54,15 +55,18 @@ function AccountCard({ apikey, id, userId, active, setActive }) {
               color: "brand",
               size: "small",
             }
-          : false
+          : {
+              size: "small",
+            }
       }
-      justify="between"
-      background={{ light: "light-4", dark: "dark-5" }}
+      background={{ light: "light-2", dark: "dark-1" }}
+      as="button"
+      justify="left"
       flex="grow"
       style={{ cursor: "pointer" }}
       onClick={() => setActive(id)}
     >
-      <Box pad="xsmall" margin="xsmall" direction="column">
+      <Box pad="xsmall" direction="column">
         <Text size="xsmall" truncate>
           <Text size="xsmall" weight="bold">
             Account Name:

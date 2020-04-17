@@ -32,6 +32,7 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
+
 app.use(
   "/graphql",
   expressGraphQl((req) => {
@@ -40,7 +41,7 @@ app.use(
       context: {
         token: req.headers.authorization,
       },
-      graphiql: process.env.NODE_ENV !== "production",
+      graphiql: true,
     };
   })
 );

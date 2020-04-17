@@ -10,7 +10,7 @@ import {
 } from "grommet";
 import { FormFieldLabel } from "../../../Custom/FormFieldLabel";
 import { TimeInput } from "../../../Custom/TimeInput";
-import { FaCalendar } from "react-icons/fa";
+import { Calendar as CalendarIcon } from "grommet-icons";
 export default function Schedule({ form, setForm, apikey, ...props }) {
   let today = new Date();
   let year = today.getFullYear();
@@ -59,12 +59,8 @@ export default function Schedule({ form, setForm, apikey, ...props }) {
   console.log(form);
   return (
     <Box pad="small" width="100vw">
-      <Heading color="status-unknown" level="2">
-        <FaCalendar style={{ verticalAlign: "bottom" }} />
-        <Text color={{ light: "dark-1", dark: "light-2" }} size="xlarge">
-          {" "}
-          Schedule
-        </Text>
+      <Heading level="2">
+        <CalendarIcon /> Schedule
       </Heading>
       <Box
         margin={{

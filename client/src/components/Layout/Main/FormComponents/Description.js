@@ -1,7 +1,7 @@
 import React from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { Box, TextArea, Heading, Text } from "grommet";
-import { FaReadme } from "react-icons/fa";
+import { Book } from "grommet-icons";
 import { FormFieldLabel } from "../../../Custom/FormFieldLabel";
 
 class Description extends React.Component {
@@ -17,12 +17,8 @@ class Description extends React.Component {
   render() {
     return (
       <Box pad="small" width="100vw">
-        <Heading color={{ light: "light-6", dark: "dark-6" }} level="2">
-          <FaReadme style={{ verticalAlign: "bottom" }} />
-          <Text color={{ light: "dark-1", dark: "light-1" }} size="xlarge">
-            {" "}
-            Basic Info
-          </Text>
+        <Heading level="2">
+          <Book /> Event Description
         </Heading>
         <Box margin="small">
           <FormFieldLabel
@@ -50,13 +46,13 @@ class Description extends React.Component {
               resize: false,
               menubar: false,
               plugins: [
-                "advlist autolink lists link image",
+                "advlist autolink lists link image imagetools",
                 "charmap print preview anchor help",
                 "searchreplace visualblocks code",
                 "insertdatetime media table paste wordcount",
               ],
               toolbar:
-                "undo redo | formatselect | bold italic | bullist numlist",
+                "undo redo | formatselect | bold italic | bullist numlist | image",
             }}
             onChange={this.handleEditorChange}
           />

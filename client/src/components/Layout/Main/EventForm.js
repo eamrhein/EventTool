@@ -34,6 +34,7 @@ let defaultFormState = {
 };
 function EventForm({ userId, responsive, ...props }) {
   const [form, setForm] = useState(defaultFormState);
+  console.log(form)
   const { loading, data, error } = useQuery(FETCH_USER, {
     variables: {
       userId,

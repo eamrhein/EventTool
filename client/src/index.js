@@ -24,7 +24,6 @@ const errorLink = onError(({ graphQLErrors }) => {
   if (graphQLErrors) graphQLErrors.map(({ message }) => console.log(message));
 });
 let devhost = window.location.hostname;
-// why do i need to do this?
 const gqlUri =
   process.env.NODE_ENV === "production"
     ? "/grapqhql"

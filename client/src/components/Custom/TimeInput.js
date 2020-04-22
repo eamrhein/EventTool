@@ -10,23 +10,22 @@ export const TimeInput = (props) => {
         mask={[
           {
             length: [1, 2],
-            options: Array.from({ length: 12 }, (v, k) => k + 1),
             regexp: /^1[0,1-2]$|^0?[1-9]$|^0$/,
-            placeholder: "hh",
+            placeholder: "Hour",
           },
           { fixed: ":" },
           {
             length: 2,
             options: ["00", "15", "30", "45"],
             regexp: /^[0-5][0-9]$|^[0-9]$/,
-            placeholder: "mm",
+            placeholder: "Min",
           },
           { fixed: " " },
           {
             length: 2,
             options: ["AM", "PM"],
             regexp: /^[ap]m$|^[AP]M$|^[aApP]$/,
-            placeholder: "ap",
+            placeholder: "AM/PM",
           },
         ]}
         {...rest}

@@ -26,7 +26,7 @@ const errorLink = onError(({ graphQLErrors }) => {
 let devhost = window.location.hostname;
 const gqlUri =
   process.env.NODE_ENV === "production"
-    ? "/grapqhql"
+    ? "/graphql"
     : `http://${devhost}:5000/graphql`;
 
 const httpLink = createHttpLink({

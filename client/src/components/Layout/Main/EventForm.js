@@ -5,7 +5,6 @@ import BasicInfo from "./FormComponents/BasicInfo";
 import Schedule from "./FormComponents/Schedule";
 import Description from "./FormComponents/Description";
 import Tickets from "./FormComponents/Tickets";
-import { UserManager } from "grommet-icons";
 
 let defaultFormState = {
   active_tab: "Basic Info",

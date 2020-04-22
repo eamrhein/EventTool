@@ -27,14 +27,17 @@ const Tab = ({ label, onClick, activeTab }) => {
   );
 };
 
-const Tabs = ({ children }) => {
-  const [activeTab, setActiveTab] = useState(children[0].props.label)
+const Tabs = ({ children, defaultTab, screenSize }) => {
+  const [activeTab, setActiveTab] = useState(defaultTab);
   const onClickTabItem = (tab) => {
-    setActiveTab(tab)
+    setActiveTab(tab);
   };
+  if (activeTab === "Accounts" && screenSize === "large") {
+    setActiveTab("Basic Info");
+  }
   return (
     <Box margin="xsmall">
-      <Box pad="small" gap="small" direction="row" justify="around">
+      <Box gap="medium" direction="row" justify="center">
         {children.map((child) => {
           const { label } = child.props;
           return (

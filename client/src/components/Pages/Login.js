@@ -51,7 +51,7 @@ const Login = (props) => {
   return (
     <Box width="100%" height="100%" align="center">
       <Heading>Event Tool</Heading>
-      <Tabs>
+      <Tabs defaultTab="Login">
         <Box label="Login" align="center" pad="small">
           <Form
             align="end"

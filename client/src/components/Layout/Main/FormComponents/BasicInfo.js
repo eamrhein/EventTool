@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/react-hooks";
 import Queries from "../../../../graphql/queries";
 import { Box, Heading, Select, TextInput, Text } from "grommet";
 import { FormFieldLabel } from "../../../Custom/FormFieldLabel";
-import { FaWpforms, FaRegMap, FaSearch } from "react-icons/fa";
+import { Document, MapLocation, Search } from "grommet-icons";
 
 const { FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES } = Queries;
 
@@ -31,22 +31,11 @@ export default function BasicInfo({ apikey, form, setForm }) {
     return name;
   });
   return (
-    <Box pad="small" width="100vw">
-      <Heading color={{ light: "light-6", dark: "dark-6" }} level="2">
-        <FaWpforms style={{ verticalAlign: "bottom" }} />
-        <Text color={{ light: "dark-1", dark: "light-1" }} size="xlarge">
-          {" "}
-          Basic Info
-        </Text>
+    <Box pad="small" width="100vw" justify="between" flex>
+      <Heading level="2">
+        <Document /> Basic Info
       </Heading>
-      <Box
-        margin={{
-          left: "large",
-          top: "small",
-          right: "small",
-          bottom: "small",
-        }}
-      >
+      <Box margin="small">
         <FormFieldLabel
           margin="small"
           required
@@ -98,21 +87,10 @@ export default function BasicInfo({ apikey, form, setForm }) {
           <Select value={orgs[0]} options={orgs} />
         </FormFieldLabel>
       </Box>
-      <Heading color={{ light: "light-6", dark: "dark-6" }} level="2">
-        <FaRegMap style={{ verticalAlign: "bottom" }} />
-        <Text color={{ light: "dark-1", dark: "light-1" }} size="xlarge">
-          {" "}
-          Locations
-        </Text>
+      <Heading level="2">
+        <MapLocation /> Locations
       </Heading>
-      <Box
-        margin={{
-          left: "large",
-          top: "small",
-          right: "small",
-          bottom: "small",
-        }}
-      >
+      <Box margin="small">
         <FormFieldLabel label="Venue" margin="small" required>
           <Select
             value={location}
@@ -123,7 +101,7 @@ export default function BasicInfo({ apikey, form, setForm }) {
         {location === "Venue" ? (
           <FormFieldLabel margin="small">
             <TextInput
-              icon={<FaSearch />}
+              icon={<Search />}
               placeholder="Search for a venue or address."
             />
           </FormFieldLabel>

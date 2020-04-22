@@ -6,7 +6,8 @@ import { Box, Text, List } from "grommet";
 import { FormTrash } from "grommet-icons";
 const { DELETE_API_KEY } = Mutations;
 const { FETCH_ACCOUNT, FETCH_USER } = Queries;
-function AccountCard({ apikey, id, userId, active, setActive }) {
+
+function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
   const [hover, sethover] = useState(false);
   const [deleteAPI] = useMutation(DELETE_API_KEY, {
     onError: (err) => {
@@ -50,7 +51,7 @@ function AccountCard({ apikey, id, userId, active, setActive }) {
       key={id}
       direction="row"
       border={
-        id === active
+        apikey === selectedKey
           ? {
               color: "brand",
               size: "small",
@@ -61,10 +62,8 @@ function AccountCard({ apikey, id, userId, active, setActive }) {
       }
       background={{ light: "light-2", dark: "dark-1" }}
       as="button"
-      justify="left"
-      flex="grow"
       style={{ cursor: "pointer" }}
-      onClick={() => setActive(id)}
+      onClick={() => setSelectedKey(apikey)}
     >
       <Box pad="xsmall" direction="column">
         <Text size="xsmall" truncate>
@@ -106,8 +105,7 @@ function AccountCard({ apikey, id, userId, active, setActive }) {
   );
 }
 
-function Accounts({ user }) {
-  const [active, setActive] = useState(0);
+function Accounts({ user, selectedKey, setSelectedKey }) {
   return (
     <List
       primaryKey={(apikey, id) => (
@@ -116,8 +114,8 @@ function Accounts({ user }) {
           apikey={apikey}
           userId={user.id}
           id={id}
-          active={active}
-          setActive={setActive}
+          selectedKey={selectedKey}
+          setSelectedKey={setSelectedKey}
         />
       )}
       data={user.apikeys}

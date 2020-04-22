@@ -14,6 +14,14 @@ const theme = deepMerge(grommet, {
       size: "18px",
       height: "20px",
     },
+    colors: {
+      brand: "#0060A8",
+      "accent-1": "#00a89d",
+      "accent-2": "#a8005f",
+      "accent-3": "#b0e0dc",
+      "accent-4": "#dbf500",
+      focus: "none",
+    },
   },
 });
 
@@ -25,7 +33,12 @@ function App(props) {
       <ResponsiveContext.Consumer>
         {(responsive) => {
           return (
-            <>
+            <Box
+              style={{ transition: "0.25s ease-out" }}
+              background={{ light: "light-1", dark: "dark-1" }}
+              overflow="auto"
+              height="100vh"
+            >
               <HeaderPanel
                 responsive={responsive}
                 mode={mode}
@@ -34,13 +47,10 @@ function App(props) {
                 setPending={setPending}
               />
               <Box
-                background={{ light: "light-2", dark: "dark-1" }}
-                style={{ transition: "0.25s ease-out" }}
                 tag="main"
                 direction="column"
                 align="center"
                 justify="start"
-                height="92vh"
                 {...props}
               >
                 <AuthRoute
@@ -59,7 +69,7 @@ function App(props) {
                   routeType="protected"
                 />
               </Box>
-            </>
+            </Box>
           );
         }}
       </ResponsiveContext.Consumer>

@@ -23,12 +23,12 @@ const cache = new InMemoryCache({
 const errorLink = onError(({ graphQLErrors }) => {
   if (graphQLErrors) graphQLErrors.map(({ message }) => console.log(message));
 });
-
+let devhost = window.location.hostname;
 // why do i need to do this?
 const gqlUri =
   process.env.NODE_ENV === "production"
     ? "/grapqhql"
-    : "http://localhost:5000/graphql";
+    : `http://${devhost}:5000/graphql`;
 
 const httpLink = createHttpLink({
   uri: gqlUri,

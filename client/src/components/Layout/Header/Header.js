@@ -30,25 +30,9 @@ const HeaderPanel = ({
   };
 
   return responsive === "small" ? (
-    <Header
-      height="8vh"
-      background={{ light: "light-2", dark: "dark-1" }}
-      style={{ transition: "0.25s ease-out" }}
-      width="100vw"
-      pad="medium"
-    >
-      <Box direction="row" align="center">
-        <Heading
-          margin="medium"
-          level="1"
-          color="brand"
-          style={{ userSelect: "none" }}
-        >
-          Event Tool
-        </Heading>
-        <Tools color="brand" size="medium" />
-      </Box>
+    <Header background="brand">
       <Menu
+        alignSelf="center"
         dropProps={{ align: { top: "bottom", left: "left" } }}
         icon={<MenuIcon />}
         pad="small"
@@ -66,6 +50,7 @@ const HeaderPanel = ({
                       label="Dark Mode"
                     />
                   ),
+                  onClick: () => setMode(!mode),
                 },
                 {
                   label: (
@@ -90,23 +75,11 @@ const HeaderPanel = ({
       />
     </Header>
   ) : (
-    <Header
-      height="8vh"
-      background={{ light: "light-2", dark: "dark-1" }}
-      style={{ transition: "0.25s ease-out" }}
-      width="100vw"
-      pad="medium"
-    >
-      <Box direction="row" align="center">
-        <Heading
-          margin="xsmall"
-          level="2"
-          color="brand"
-          style={{ userSelect: "none" }}
-        >
-          Event Tool
+    <Header background="brand">
+      <Box pad="small" direction="row" align="center">
+        <Heading level="1" style={{ userSelect: "none" }}>
+          Event Tool <Tools size="2.5rem" />
         </Heading>
-        <Tools color="brand" size="medium" />
       </Box>
       <Box direction="row" gap="small">
         <CheckBox
@@ -136,11 +109,8 @@ const HeaderPanel = ({
             <Box gap="small" margin="medium" direction="row">
               <Button
                 icon={<Logout size="medium" />}
-                color={{ light: "brand", dark: "brand" }}
-                primary
                 label="Logout"
                 onClick={logout}
-                style={{ cursor: "pointer" }}
               />
             </Box>
           </>

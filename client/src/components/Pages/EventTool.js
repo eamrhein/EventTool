@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import SidePanel from "../Layout/Side/SidePanel";
 import Pending from "../Layout/Side/Pending";
@@ -30,20 +30,46 @@ let MainBox = styled(Box)`
     opacity: 0;
   }
 `;
-const { FETCH_USER_ID } = Queries;
 
+const { FETCH_USER_ID, FETCH_USER } = Queries;
 function EventTool({ responsive, pending, ...props }) {
-  const { data, error } = useQuery(FETCH_USER_ID);
-  if (error) return <h3>Error: {error.message}</h3>;
+  const {
+    data: { userId },
+    error: idError,
+    loading: idLoading,
+  } = useQuery(FETCH_USER_ID);
+  const {
+    data: { user },
+    error: userError,
+    loading: userLoading,
+  } = useQuery(FETCH_USER, {
+    variables: {
+      userId: userId,
+    },
+  });
+  const [selectedKey, setSelectedKey] = useState(user.apikeys[0]);
+  if (idError || userError)
+    return <h3>Error: {idError.message || userError.message}</h3>;
+  if (idLoading || userLoading) return <h1>Test Message</h1>;
   return (
-    <Box height={{ min: "92vh" }} direction="column">
-      <MainBox height="100vh" direction="row" justify="start" align="start">
-        <Box className={responsive !== "small" ? "open" : "closed"}>
-          <SidePanel id={data.userId} history={props.history} />
+    <Box direction="column">
+      <MainBox direction="row" justify="start" align="start">
+        <Box className={responsive !== "large" ? "closed" : "open"}>
+          <SidePanel
+            user={user}
+            history={props.history}
+            selectedKey={selectedKey}
+            setSelectedKey={setSelectedKey}
+          />
         </Box>
         <Box style={{ position: "relative" }} direction="row">
           <Box className={pending ? "gone" : "here"}>
-            <EventForm responsive={responsive} userId={data.userId} />
+            <EventForm
+              responsive={responsive}
+              user={user}
+              selectedKey={selectedKey}
+              setSelectedKey={setSelectedKey}
+            />
           </Box>
           <Box
             height="100%"

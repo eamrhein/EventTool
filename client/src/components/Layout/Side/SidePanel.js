@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/react-hooks";
 import Queries from "../../../graphql/queries";
 import Mutations from "../../../graphql/mutations";
 import Accounts from "../../Custom/AccountList";
@@ -18,13 +18,7 @@ import {
 const { FETCH_USER } = Queries;
 const { PUSH_API_KEY } = Mutations;
 
-function SidePane(props) {
-  let { id } = props;
-  const { loading, data, error } = useQuery(FETCH_USER, {
-    variables: {
-      userId: id,
-    },
-  });
+function SidePane({ user, selectedKey, setSelectedKey }) {
   const [errorMessage, setErrorMessage] = useState(null);
   let [apikey, setApiKey] = useState("");
   const [pushApi] = useMutation(PUSH_API_KEY, {
@@ -38,18 +32,16 @@ function SidePane(props) {
     update(client, { data: { pushAPIkey } }) {
       client.writeQuery({
         query: FETCH_USER,
-        variables: { userId: id },
+        variables: { userId: user.id },
         data: {
           user: {
-            ...data.user,
+            ...user,
             apikeys: pushAPIkey.apikeys,
           },
         },
       });
     },
   });
-  if (error) return <h3>Error {error.message}</h3>;
-  if (loading) return null;
   return (
     <Box pad="small" align="start">
       <Box height={{ max: "65.6vh" }} width="100%" overflow="auto">
@@ -65,7 +57,11 @@ function SidePane(props) {
         >
           <Heading level="4">Select Account</Heading>
         </Box>
-        <Accounts user={data.user} />
+        <Accounts
+          user={user}
+          selectedKey={selectedKey}
+          setSelectedKey={setSelectedKey}
+        />
         <Accordion alignSelf="center" width="100%">
           <AccordionPanel
             height="30px"
@@ -85,7 +81,7 @@ function SidePane(props) {
                   e.preventDefault();
                   pushApi({
                     variables: {
-                      id: data.user.id,
+                      id: user.id,
                       apikey,
                     },
                   });

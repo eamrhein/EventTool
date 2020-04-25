@@ -38,6 +38,9 @@ function EventTool({ responsive, pending, ...props }) {
     error: idError,
     loading: idLoading,
   } = useQuery(FETCH_USER_ID);
+  if (userId) {
+    console.log("hello");
+  }
   const {
     data: { user },
     error: userError,

@@ -3,10 +3,10 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 <br />
-<div style="vertical-align:middle">
+<div >
          <a href="https://github.com/eamrhein/EventTool">
-                  <img style="vertical-align:middle" src="images/logo.png" alt="Logo" />
-                  Event Tool
+          <img style="vertical-align:middle" src="images/logo.png" alt="Logo" />
+          <p style="vertical-align:middle">Event Tool</p>
          </a>
 </div> 
 <p align="center">

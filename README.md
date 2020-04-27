@@ -2,10 +2,9 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-<!-- PROJECT LOGO -->
 <br />
 <p align="center">
-     <h1 align="center> 
+     <h1 style="vertical-align:middle" > 
           <a href="https://github.com/eamrhein/EventTool">
                <img style="vertical-align:middle" src="images/logo.png" alt="Logo" width="80" height="80">
           </a>

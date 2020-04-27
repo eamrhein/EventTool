@@ -4,12 +4,13 @@
 
 <br />
 <div style="vertical-align:middle">
+         <a href="https://github.com/eamrhein/EventTool">
      <h1 style="vertical-align:middle" > 
-          <a href="https://github.com/eamrhein/EventTool">
+      
                <img style="vertical-align:middle" src="images/logo.png" alt="Logo" width="80" height="80">
-          </a>
           Event Tool
      </h1>
+           </a>
 </div> 
 <p align="center">
      A Web

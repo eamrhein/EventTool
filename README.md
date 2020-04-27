@@ -3,27 +3,26 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 <br />
-<p align="center">
+<div style="vertical-align:middle">
      <h1 style="vertical-align:middle" > 
           <a href="https://github.com/eamrhein/EventTool">
                <img style="vertical-align:middle" src="images/logo.png" alt="Logo" width="80" height="80">
           </a>
           Event Tool
-    </h1>
-  <p align="center">
-    A Web
-    <br />
-    <a href="https://github.com/eamrhein/EventTool"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="verticle-align:center"https://github.com/eamrhein/EventTool">View Demo</a>
-    ·
-    <a href="https://github.com/eamrhein/EventTool/issues">EventToolrt Bug</a>
-    ·
-    <a href="https://github.com/eamrhein/EventTool/issues">Request Feature</a>
-  </p>
+     </h1>
+</div> 
+<p align="center">
+     A Web
+     <br />
+     <a href="https://github.com/eamrhein/EventTool"><strong>Explore the docs »</strong></a>
+     <br />
+     <br />
+     <a href="verticle-align:center"https://github.com/eamrhein/EventTool">View Demo</a>
+     ·
+     <a href="https://github.com/eamrhein/EventTool/issues">EventToolrt Bug</a>
+     ·
+     <a href="https://github.com/eamrhein/EventTool/issues">Request Feature</a>
 </p>
-
 <!-- TABLE OF CONTENTS -->
 
 ## Table of Contents

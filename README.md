@@ -144,7 +144,7 @@ Project Link: [https://github.com/eamrhein/EventTool](https://github.com/eamrhei
 
 [issues-shield]: https://img.shields.io/github/issues/eamrhein/EventTool.svg?style=flat-square
 [issues-url]: https://github.com/eamrhein/EventTool/issues
-[license-shield]: https://img.shields.io/github/license/eamrhein/EventTool.svg?style=flat-square
+[license-shield]: https://img.shields.io/github/license/eamrhein/EventTool?style=flat-square
 [license-url]: https://github.com/eamrhein/EventTool/blob/master/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/eamrhein

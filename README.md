@@ -5,12 +5,9 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <span>
-  <a href="https://github.com/eamrhein/EventTool">
+     <h1> <a href="https://github.com/eamrhein/EventTool">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-     <h1>Event Tool</h1>
-  </span>
+  </a>Event Tool</h1>
   <p align="center">
     A Web
     <br />

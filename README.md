@@ -7,6 +7,7 @@
 <p align="center">
   <a href="https://github.com/eamrhein/EventTool">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <h1>Event Tool</h1>
   </a>
   <p align="center">
     A Web

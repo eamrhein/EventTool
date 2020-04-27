@@ -7,7 +7,7 @@
 <p align="center">
      <h1 align="center> 
           <a href="https://github.com/eamrhein/EventTool">
-               <img src="images/logo.png" alt="Logo" width="80" height="80">
+               <img style= src="images/logo.png" alt="Logo" width="80" height="80">
           </a>
           Event Tool
     </h1>
@@ -17,7 +17,7 @@
     <a href="https://github.com/eamrhein/EventTool"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/eamrhein/EventTool">View Demo</a>
+    <a href="verticle-align:center"https://github.com/eamrhein/EventTool">View Demo</a>
     ·
     <a href="https://github.com/eamrhein/EventTool/issues">EventToolrt Bug</a>
     ·

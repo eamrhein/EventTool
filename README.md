@@ -11,9 +11,9 @@
   </a>
   <h1 align="center" style="color:rgb(0, 96, 168)">Event Tool</h1>
   <p align="center">
-    A Web
+    A Web framework build to make create batch Events in EventBrite.
     <br />
-    <a href="https://github.com/eamrhein/EventTool"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/eamrhein/EventTool/wiki"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="http://eventtool.ericamrhein.com/">View Demo</a>
@@ -22,24 +22,6 @@
     ·
   </p>
 </p>
-<!-- TABLE OF CONTENTS -->
-
-## Table of Contents
-
-- [Table of Contents](#table-of-contents)
-- [About The Project](#about-the-project)
-  - [Built With](#built-with)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-- [Acknowledgements](#acknowledgements)
-
-<!-- ABOUT THE PROJECT -->
 
 ## About The Project
 
@@ -72,7 +54,7 @@ npm install npm@latest -g
 
 ### Installation
 
-1. Clone the EventTool
+1. Clone EventTool
 
 ```sh
 git clone https://github.com/eamrhein/EventTool.git
@@ -88,35 +70,7 @@ or
 
 ```sh
 yarn install
-```
-
-<!-- USAGE EXAMPLES -->
-
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<!-- ROADMAP -->
-
-## Roadmap
-
-See the [open issues](https://github.com/eamrhein/EventTool/issues) for a list of proposed features (and known issues).
-
-<!-- CONTRIBUTING -->
-
-## Contributing
-
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<!-- LICENSE -->
+``
 
 ## License
 
@@ -146,3 +100,4 @@ Project Link: [https://github.com/eamrhein/EventTool](https://github.com/eamrhei
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/eamrhein
 [product-screenshot]: images/screenshot.png
+```

@@ -3,22 +3,23 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 <!-- PROJECT LOGO -->
+
 <br />
 <p align="center">
   <a href="https://github.com/eamrhein/EventTool">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.png" alt="Logo" />
   </a>
+  <h1 align="center" style="color:rgb(0, 96, 168)">Event Tool</h1>
   <p align="center">
     A Web
     <br />
     <a href="https://github.com/eamrhein/EventTool"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/eamrhein/EventTool">View Demo</a>
+    <a href="http://eventtool.ericamrhein.com/">View Demo</a>
     ·
-    <a href="https://github.com/eamrhein/EventTool/issues">EventToolrt Bug</a>
+    <a href="https://github.com/eamrhein/EventTool/issues">Open Bugs and Feature Requests</a>
     ·
-    <a href="https://github.com/eamrhein/EventTool/issues">Request Feature</a>
   </p>
 </p>
 

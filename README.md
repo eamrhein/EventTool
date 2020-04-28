@@ -5,12 +5,6 @@
 <!-- PROJECT LOGO -->
 
 <br />
-<div >
-         <a href="https://github.com/eamrhein/EventTool">
-          <img style="vertical-align:middle" src="images/logo.png" alt="Logo" />
-          <p style="vertical-align:middle">Event Tool</p>
-         </a>
-</div>
 <p align="center">
   <a href="https://github.com/eamrhein/EventTool">
     <img src="images/logo.png" alt="Logo" />

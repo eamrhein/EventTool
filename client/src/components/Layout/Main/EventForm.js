@@ -88,7 +88,7 @@ function EventForm({ user, selectedKey, setSelectedKey, responsive, history }) {
             history={history}
           />
         </Tab>
-        <Tab title="Basic Info">
+        <Tab title="Basic Info" pad="large">
           <BasicInfo form={form} setForm={setForm} apikey={selectedKey} />
         </Tab>
         <Tab title="Schedule">

@@ -7,6 +7,10 @@
   "author": "Eric Amrhein",
   "license": "MIT",
   "private": false,
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",

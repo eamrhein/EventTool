@@ -39,21 +39,20 @@ function EventTool({ responsive, pending, ...props }) {
     loading: idLoading,
   } = useQuery(FETCH_USER_ID);
 
-  const {
-    data: data,
-    error: userError,
-    loading: userLoading,
-  } = useQuery(FETCH_USER, {
-    variables: {
-      userId: userId,
-    },
-  });
+  const { data: userData, error: userError, loading: userLoading } = useQuery(
+    FETCH_USER,
+    {
+      variables: {
+        userId: userId,
+      },
+    }
+  );
 
   const [selectedKey, setSelectedKey] = useState("");
   if (idError || userError)
     return <h3>Error: {idError.message || userError.message}</h3>;
   if (idLoading || userLoading) return <h1>Test Message</h1>;
-  let { user } = data
+  let { user } = userData;
   return (
     <Box direction="column">
       <MainBox direction="row" justify="start" align="start">

@@ -23,7 +23,7 @@ function SidePane({ user, selectedKey, setSelectedKey }) {
 
   useEffect(() => {
     setSelectedKey(apikeys[0]);
-  }, [apikeys]);
+  }, [apikeys, setSelectedKey]);
 
   const [errorMessage, setErrorMessage] = useState(null);
   let [apikey, setApiKey] = useState("");

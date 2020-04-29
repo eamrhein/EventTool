@@ -1,11 +1,11 @@
 const graphql = require("graphql");
-
+const JobType = require("./job_type");
 const {
   GraphQLObjectType,
   GraphQLID,
   GraphQLString,
   GraphQLList,
-  GraphQLBoolean
+  GraphQLBoolean,
 } = graphql;
 
 const UserType = new GraphQLObjectType({
@@ -15,8 +15,9 @@ const UserType = new GraphQLObjectType({
     email: { type: GraphQLString },
     apikeys: { type: GraphQLList(GraphQLString) },
     token: { type: GraphQLString },
-    loggedIn: { type: GraphQLBoolean }
-  }
+    loggedIn: { type: GraphQLBoolean },
+    jobs: { type: GraphQLList(JobType) },
+  },
 });
 
 module.exports = UserType;

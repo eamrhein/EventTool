@@ -8,7 +8,7 @@ const keys = require("../../config/keys").secretOrkey;
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 
-const register = async data => {
+const register = async (data) => {
   const { message, isValid } = validateRegisterInput(data);
 
   if (!isValid) {
@@ -29,9 +29,10 @@ const register = async data => {
     {
       email,
       password: hashedPassword,
-      apikeys: []
+      apikeys: [],
+      jobs: [],
     },
-    err => {
+    (err) => {
       if (err) throw err;
     }
   );
@@ -45,11 +46,11 @@ const register = async data => {
     loggedIn: true,
     ...user._doc,
     password: null,
-    id: user._id
+    id: user._id,
   };
 };
 
-const logout = async data => {
+const logout = async (data) => {
   const { _id } = data;
 
   const user = await User.findById(_id);
@@ -60,7 +61,7 @@ const logout = async data => {
   return { token, loggedIn: false, ...user._doc, password: null };
 };
 
-const login = async data => {
+const login = async (data) => {
   const { message, isValid } = validateLoginInput(data);
 
   if (!isValid) {
@@ -79,17 +80,17 @@ const login = async data => {
     token,
     loggedIn: true,
     ...user._doc,
-    password: null
+    password: null,
   };
 };
 
-const verifyUser = async data => {
+const verifyUser = async (data) => {
   try {
     const { token } = data;
     const decoded = jwt.verify(token, keys);
     const { id } = decoded;
     const user = await User.findById(id);
-    const loggedIn = await User.findById(id).then(user => {
+    const loggedIn = await User.findById(id).then((user) => {
       return !!user;
     });
     return { loggedIn, id: user._id };

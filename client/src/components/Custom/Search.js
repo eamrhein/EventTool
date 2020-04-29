@@ -31,6 +31,26 @@ const allContentPartners = [
     name: "Location 6",
     id: "32131272",
   },
+  {
+    name: "Location 6",
+    id: "32131272",
+  },
+  {
+    name: "Location 6",
+    id: "32131272",
+  },
+  {
+    name: "Location 6",
+    id: "32131272",
+  },
+  {
+    name: "Location 6",
+    id: "32131272",
+  },
+  {
+    name: "Location 6",
+    id: "32131272",
+  },
 ];
 
 const Search = () => {
@@ -102,7 +122,7 @@ const Search = () => {
           selectRef.current.focus();
         }}
       >
-        <Box background="gray" round="full">
+        <Box background="accent-4" round="full">
           <FormClose style={{ width: "12px", height: "12px" }} />
         </Box>
       </Button>
@@ -146,30 +166,32 @@ const Search = () => {
   };
 
   return (
-    <FormFieldLabel>
-      <Select
-        ref={selectRef}
-        closeOnChange={false}
-        placeholder="Select Content Partners"
-        searchPlaceholder="Search Content Partners"
-        emptySearchMessage="No partners found"
-        multiple
-        value={
-          selectedContentPartners.length ? renderContentPartners() : undefined
-        }
-        selected={selectedContentPartners.map((option) =>
-          contentPartners.indexOf(option)
-        )}
-        options={contentPartners}
-        onChange={({ option }) => handleChange(option)}
-        onSearch={(query) => {
-          setSearching(true);
-          setSearchQuery(query);
-        }}
-      >
-        {renderOption}
-      </Select>
-    </FormFieldLabel>
+    <SearchInputContext.Provider>
+      <FormFieldLabel>
+        <Select
+          ref={selectRef}
+          closeOnChange={false}
+          placeholder="Select Content Partners"
+          searchPlaceholder="Search Content Partners"
+          emptySearchMessage="No partners found"
+          multiple
+          value={
+            selectedContentPartners.length ? renderContentPartners() : undefined
+          }
+          selected={selectedContentPartners.map((option) =>
+            contentPartners.indexOf(option)
+          )}
+          options={contentPartners}
+          onChange={({ option }) => handleChange(option)}
+          onSearch={(query) => {
+            setSearching(true);
+            setSearchQuery(query);
+          }}
+        >
+          {renderOption}
+        </Select>
+      </FormFieldLabel>
+    </SearchInputContext.Provider>
   );
 };
 

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const graphql = require("graphql");
 const UserType = require("./user_type");
+const JobType = require("./job_type");
 const validateAPIkey = require("../validation/apikey");
 const AuthService = require("../services/auth");
 const scheduler = require("../services/scheduler");
@@ -80,11 +81,13 @@ const mutation = new GraphQLObjectType({
     scheduleEvent: {
       type: UserType,
       args: {
+        id: {type: GraphQLID},
         date: { type: GraphQLString },
         data: { type: GraphQLString }
       },
-      async resolve(_, { date, data }) {
-        scheduler.scheduleEvent({
+      async resolve(_, {id, date, data }) {
+        return scheduler.scheduleEvent({
+          id,
           date,
           data
         });

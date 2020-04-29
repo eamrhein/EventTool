@@ -40,23 +40,23 @@ function EventForm({ user, selectedKey, setSelectedKey, responsive, history }) {
   const [index, setIndex] = useState();
   const onActive = (nextIndex) => setIndex(nextIndex);
   const [submitForm] = useMutation(SUBMIT_FORM, {
+    onError: (err) => {
+      console.log(err);
+    },
     onCompleted: (data) => {
       console.log(data);
     },
-    onError: (msg) => {
-      console.log(msg);
-    },
   });
-  let date = new Date().toISOString()
-  
+  let date = new Date().toISOString();
   useEffect(() => {
     submitForm({
-      variables:{
+      variables: {
+        id: user.id,
         date,
-        data: JSON.stringify(form)
-      }
+        data: JSON.stringify(form),
+      },
     });
-  }, [form]);
+  }, []);
   if (form.active_tab === "Accounts" && responsive === "large") {
     setForm({ ...form, active_tab: "Basic Info" });
   }

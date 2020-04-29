@@ -44,4 +44,13 @@ export default {
       }
     }
   `,
+  SUBMIT_FORM: gql`
+    mutation scheduleEvent($date: String!, $data: String!){
+      scheduleEvent(date: $date, data: $data){
+        id,
+        email,
+        apikeys
+      }
+    }
+  `
 };

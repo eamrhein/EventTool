@@ -38,11 +38,9 @@ function EventTool({ responsive, pending, ...props }) {
     error: idError,
     loading: idLoading,
   } = useQuery(FETCH_USER_ID);
-  if (userId) {
-    console.log("hello");
-  }
+
   const {
-    data: { user },
+    data: data,
     error: userError,
     loading: userLoading,
   } = useQuery(FETCH_USER, {
@@ -50,10 +48,12 @@ function EventTool({ responsive, pending, ...props }) {
       userId: userId,
     },
   });
-  const [selectedKey, setSelectedKey] = useState(user.apikeys[0]);
+
+  const [selectedKey, setSelectedKey] = useState("");
   if (idError || userError)
     return <h3>Error: {idError.message || userError.message}</h3>;
   if (idLoading || userLoading) return <h1>Test Message</h1>;
+  let { user } = data
   return (
     <Box direction="column">
       <MainBox direction="row" justify="start" align="start">

@@ -1,9 +1,11 @@
 import React from "react";
+import Search from '../../../Custom/Search'
 import { useQuery } from "@apollo/react-hooks";
 import Queries from "../../../../graphql/queries";
 import { Box, Heading, Select, TextInput, Text } from "grommet";
 import { FormFieldLabel } from "../../../Custom/FormFieldLabel";
-import { Document, MapLocation, Search } from "grommet-icons";
+import { Document, MapLocation, } from "grommet-icons";
+
 
 const { FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES } = Queries;
 
@@ -100,10 +102,7 @@ export default function BasicInfo({ apikey, form, setForm }) {
         </FormFieldLabel>
         {location === "Venue" ? (
           <FormFieldLabel margin="small">
-            <TextInput
-              icon={<Search />}
-              placeholder="Search for a venue or address."
-            />
+            <Search />
           </FormFieldLabel>
         ) : null}
       </Box>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import Queries from "../../../graphql/queries";
 import Mutations from "../../../graphql/mutations";
@@ -19,6 +19,12 @@ const { FETCH_USER } = Queries;
 const { PUSH_API_KEY } = Mutations;
 
 function SidePane({ user, selectedKey, setSelectedKey }) {
+  let { apikeys } = user;
+
+  useEffect(() => {
+    setSelectedKey(apikeys[0]);
+  }, [apikeys]);
+
   const [errorMessage, setErrorMessage] = useState(null);
   let [apikey, setApiKey] = useState("");
   const [pushApi] = useMutation(PUSH_API_KEY, {

@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Tabs, Tab } from "grommet";
 import SidePanel from "../../Layout/Side/SidePanel";
 import BasicInfo from "./FormComponents/BasicInfo";
 import Schedule from "./FormComponents/Schedule";
 import Description from "./FormComponents/Description";
 import Tickets from "./FormComponents/Tickets";
+import { useMutation } from "@apollo/react-hooks";
+import Mutations from "../../../graphql/mutations";
+
+const { SUBMIT_FORM } = Mutations;
 
 let defaultFormState = {
   active_tab: "Basic Info",
@@ -35,7 +39,24 @@ function EventForm({ user, selectedKey, setSelectedKey, responsive, history }) {
   const [form, setForm] = useState(defaultFormState);
   const [index, setIndex] = useState();
   const onActive = (nextIndex) => setIndex(nextIndex);
-  console.log(form);
+  const [submitForm] = useMutation(SUBMIT_FORM, {
+    onCompleted: (data) => {
+      console.log(data);
+    },
+    onError: (msg) => {
+      console.log(msg);
+    },
+  });
+  let date = new Date().toISOString()
+  
+  useEffect(() => {
+    submitForm({
+      variables:{
+        date,
+        data: JSON.stringify(form)
+      }
+    });
+  }, [form]);
   if (form.active_tab === "Accounts" && responsive === "large") {
     setForm({ ...form, active_tab: "Basic Info" });
   }

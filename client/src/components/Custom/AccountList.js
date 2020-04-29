@@ -106,21 +106,33 @@ function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
 }
 
 function Accounts({ user, selectedKey, setSelectedKey }) {
-  return (
-    <List
-      primaryKey={(apikey, id) => (
-        <AccountCard
-          key={id}
-          apikey={apikey}
-          userId={user.id}
-          id={id}
-          selectedKey={selectedKey}
-          setSelectedKey={setSelectedKey}
-        />
-      )}
-      data={user.apikeys}
-    />
-  );
+  if (user.apikeys.length > 0) {
+    return (
+      <List
+        primaryKey={(apikey, id) => (
+          <AccountCard
+            key={id}
+            apikey={apikey}
+            userId={user.id}
+            id={id}
+            selectedKey={selectedKey}
+            setSelectedKey={setSelectedKey}
+          />
+        )}
+        data={user.apikeys}
+      />
+    );
+  } else {
+    return (
+      <Box width="100vw">
+        <Box margin="medium">
+          <Text pad="small">
+            Please add the secret keys from the accounts you want to post with.
+          </Text>
+        </Box>
+      </Box>
+    );
+  }
 }
 
 export default Accounts;

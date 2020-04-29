@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import moment from "moment";
 import { Box, Tabs, Tab } from "grommet";
 import SidePanel from "../../Layout/Side/SidePanel";
 import BasicInfo from "./FormComponents/BasicInfo";
@@ -7,9 +8,10 @@ import Description from "./FormComponents/Description";
 import Tickets from "./FormComponents/Tickets";
 import { useMutation } from "@apollo/react-hooks";
 import Mutations from "../../../graphql/mutations";
+import Queries from "../../../graphql/queries";
 
 const { SUBMIT_FORM } = Mutations;
-
+const { FETCH_USER } = Queries;
 let defaultFormState = {
   active_tab: "Basic Info",
   title: "",
@@ -43,11 +45,20 @@ function EventForm({ user, selectedKey, setSelectedKey, responsive, history }) {
     onError: (err) => {
       console.log(err);
     },
-    onCompleted: (data) => {
-      console.log(data);
+    update(client, { data: { scheduleEvent } }) {
+      let updateUser = client.writeQuery({
+        query: FETCH_USER,
+        variables: { userId: user.id },
+        data: {
+          user: {
+            ...scheduleEvent,
+          },
+        },
+        fetchPolicy: "no-cache",
+      });
     },
   });
-  let date = new Date().toISOString();
+  let date = moment(new Date()).add("10", "seconds").toISOString();
   useEffect(() => {
     submitForm({
       variables: {

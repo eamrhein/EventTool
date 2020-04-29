@@ -1,10 +1,6 @@
 const graphql = require("graphql");
 
-const {
-  GraphQLObjectType,
-  GraphQLID,
-  GraphQLString,
-} = graphql;
+const { GraphQLObjectType, GraphQLID, GraphQLString } = graphql;
 
 const JobType = new GraphQLObjectType({
   name: "JobType",
@@ -12,8 +8,8 @@ const JobType = new GraphQLObjectType({
     id: { type: GraphQLID },
     data: { type: GraphQLString },
     status: { type: GraphQLString },
-    schedule: { type: GraphQLString }
-  }
+    schedule: { type: GraphQLString },
+  },
 });
 
 module.exports = JobType;

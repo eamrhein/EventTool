@@ -6,25 +6,26 @@ let Job = mongoose.model("jobs");
 let User = mongoose.model("users");
 
 const scheduleEvent = async ({ id, date, data }) => {
-  let dbUser = await User.findById(id);
-  if (!dbUser) {
+  let user = await User.findById(id);
+  if (!user) {
     throw Error("User not in database");
   }
   let job = new Job({
     data,
     schedule: date,
     status: "Pending",
-    userId: id,
   });
-  job.save();
-  dbUser.jobs.push(job);
-  dbUser.save();
-  let user = await dbUser.populate("jobs");
-  console.log(user);
+  // user.jobs = [];
+  user.jobs.push(job);
+  user.save();
+
   schedule.scheduleJob(date, function () {
-    // #todo Sanitize Data for Eventbrite
-    // Write function to submit data.
-    job.status = "Resolved";
+    // let index = user.jobs.findIndex((id) => id === job.id);
+    let index = user.jobs.findIndex((obj) => obj._id === job._id);
+    user.jobs[index].status = "Resolved";
+    console.log(index);
+    user.save();
+    console.log(user.jobs);
   });
   return user;
 };

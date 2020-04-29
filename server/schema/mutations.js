@@ -16,36 +16,36 @@ const mutation = new GraphQLObjectType({
       type: UserType,
       args: {
         email: { type: new GraphQLNonNull(GraphQLString) },
-        password: { type: new GraphQLNonNull(GraphQLString) }
+        password: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve(_, args) {
         return AuthService.register(args);
-      }
+      },
     },
     login: {
       type: UserType,
       args: {
         email: { type: GraphQLString },
-        password: { type: GraphQLString }
+        password: { type: GraphQLString },
       },
       resolve(_, args) {
         return AuthService.login(args);
-      }
+      },
     },
     verifyUser: {
       type: UserType,
       args: {
-        token: { type: GraphQLString }
+        token: { type: GraphQLString },
       },
       async resolve(_, args) {
         return AuthService.verifyUser(args);
-      }
+      },
     },
     pushAPIkey: {
       type: UserType,
       args: {
         id: { type: GraphQLID },
-        apikey: { type: GraphQLString }
+        apikey: { type: GraphQLString },
       },
       async resolve(_, { id, apikey }) {
         const { message, isValid } = await validateAPIkey(apikey);
@@ -59,41 +59,41 @@ const mutation = new GraphQLObjectType({
         user.apikeys.push(apikey);
         user.save();
         return user;
-      }
+      },
     },
     deleteAPIkey: {
       type: UserType,
       args: {
         id: { type: GraphQLID },
-        apikey: { type: GraphQLString }
+        apikey: { type: GraphQLString },
       },
       async resolve(_, { id, apikey }) {
         const user = await User.findById(id);
-        const index = user.apikeys.findIndex(el => el === apikey);
+        const index = user.apikeys.findIndex((el) => el === apikey);
         if (index === -1) {
           return user;
         }
         user.apikeys.splice(index, 1);
         user.save();
         return user;
-      }
+      },
     },
     scheduleEvent: {
       type: UserType,
       args: {
-        id: {type: GraphQLID},
+        id: { type: GraphQLID },
         date: { type: GraphQLString },
-        data: { type: GraphQLString }
+        data: { type: GraphQLString },
       },
-      async resolve(_, {id, date, data }) {
+      async resolve(_, { id, date, data }) {
         return scheduler.scheduleEvent({
           id,
           date,
-          data
+          data,
         });
-      }
-    }
-  }
+      },
+    },
+  },
 });
 
 module.exports = mutation;

@@ -45,6 +45,7 @@ function EventTool({ responsive, pending, ...props }) {
       variables: {
         userId: userId,
       },
+      fetchPolicy: "no-cache",
     }
   );
 
@@ -83,7 +84,7 @@ function EventTool({ responsive, pending, ...props }) {
             }}
             className={pending ? "here" : "gone"}
           >
-            <Pending />
+            <Pending user={user} />
           </Box>
         </Box>
       </MainBox>

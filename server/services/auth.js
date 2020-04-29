@@ -73,7 +73,6 @@ const login = async (data) => {
   if (!user) throw new Error("This user does not exist");
   const isValidPassword = await bcrypt.compareSync(password, user.password);
   if (!isValidPassword) throw new Error("Invalid password");
-  console.log(keys);
   const token = jwt.sign({ id: user.id }, keys);
   return {
     id: user._id,

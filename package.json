@@ -38,7 +38,7 @@
   },
   "scripts": {
     "deploy": "npm run heroku-postbuild && gcloud app deploy",
-    "start": "pm2 start app.js --watch",
+    "start": "node app.js",
     "server": "nodemon app.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",

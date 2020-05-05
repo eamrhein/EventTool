@@ -27,6 +27,10 @@ mongoose
   .catch((err) => console.log(err));
 app.use(cors());
 app.use(helmet());
+let redirector = require("redirect-https")({
+  body: "<!-- Hello Developer! Please use HTTPS instead: {{ URL }} -->",
+});
+app.use("/", redirector);
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
   app.get("/", (req, res) => {

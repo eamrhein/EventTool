@@ -1,6 +1,6 @@
 {
   "name": "EventTool",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A Tool to schedule eventbrite events with multiple accounts.",
   "main": "app.js",
   "repository": "https://github.com/eamrhein/EventTool",
@@ -32,11 +32,11 @@
     "nodemon": "^2.0.2"
   },
   "scripts": {
-    "deploy": "npm run heroku-postbuild && gcloud app deploy",
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "server": "nodemon app.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "predeploy": "cd client && yarn install && yarn build",
+    "deploy": "gcloud app deploy"
   }
 }

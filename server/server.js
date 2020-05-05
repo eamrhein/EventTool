@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const express = require("express");
+const helmet = require("helmet");
 const mongoose = require("mongoose");
 const expressGraphQl = require("express-graphql");
 const bodyParser = require("body-parser");
@@ -25,7 +26,7 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log(err));
 app.use(cors());
-
+app.use(helmet());
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
   app.get("/", (req, res) => {

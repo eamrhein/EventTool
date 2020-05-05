@@ -2,23 +2,22 @@ import React, { useState } from "react";
 
 import { useMutation } from "@apollo/react-hooks";
 import Mutations from "./graphql/mutations";
-import {
-  Box,
-  Form,
-  FormField,
-  TextInput,
-  Button,
-  Heading,
-  Tabs,
-  Tab,
-} from "grommet";
-import Demo from "./components/DemoLogin";
-import { Mail } from "grommet-icons";
+import { Box, Heading, Tabs, Tab, Text } from "grommet";
+import { LoginForm } from "./components";
 
 const { LOGIN_USER, REGISTER_USER } = Mutations;
 
 const Login = (props) => {
   const [email, setEmail] = useState("");
+  const [tabColors, setTabColors] = useState(["brand", "plain", "plain"]);
+  const [index, setIndex] = React.useState(0);
+  const onActive = (nextIndex) => {
+    let nArray = [...tabColors];
+    nArray[index] = "plain";
+    nArray[nextIndex] = "brand";
+    setTabColors([...nArray]);
+    setIndex(nextIndex);
+  };
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [login] = useMutation(LOGIN_USER, {
@@ -57,106 +56,66 @@ const Login = (props) => {
   }
 
   return (
-    <Box width="100%" height="100vh" align="center">
-      <Heading>Event Tool</Heading>
-      <Tabs>
-        <Tab title="Login" align="center" pad="small">
-          <Form
-            align="end"
-            onSubmit={(e) => {
-              e.preventDefault();
-              login({
-                variables: {
-                  email,
-                  password,
-                },
-              });
-            }}
-          >
-            <FormField info="Email Address" align="start">
-              <TextInput
-                icon={<Mail />}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="example@example.com"
-              />
-            </FormField>
-            <FormField info="Password" align="start">
-              <TextInput
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                type="password"
-                placeholder="Password"
-              />
-            </FormField>
-            <Button
-              margin={{ left: "auto" }}
-              type="submit"
-              primary
-              label="Submit"
-            />
-            <Box
-              style={{ color: "Red" }}
-              align="center"
-              height="20px"
-              pad="large"
-            >
-              {error}
-            </Box>
-          </Form>
-        </Tab>
-        <Tab title="Register">
-          <Form
-            align="end"
-            onSubmit={(e) => {
-              e.preventDefault();
-              register({
-                variables: {
-                  email,
-                  password,
-                },
-              });
-            }}
-          >
-            <FormField info="Email Address" align="start">
-              <TextInput
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="example@example.com"
-              />
-            </FormField>
-            <FormField info="Password" align="start">
-              <TextInput
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                type="password"
-                placeholder="Password"
-              />
-            </FormField>
-            <Button
-              margin={{ left: "auto" }}
-              type="submit"
-              primary
-              label="Submit"
-            />
-            <Box
-              style={{ color: "Red" }}
-              align="center"
-              height="20px"
-              pad="large"
-            >
-              {error}
-            </Box>
-          </Form>
-        </Tab>
-        <Tab title="Demo" align="center" pad="small">
-          <Demo
-            error={error}
-            login={login}
-            password={password}
-            setPassword={setPassword}
+    <Box width="100vw" height="100vh" align="center" justify="center">
+      <Heading
+        level="1"
+        size="large"
+        color="brand"
+        style={{ userSelect: "none", fontFamily: "Playball" }}
+      >
+        Event Tool
+      </Heading>
+      <Tabs activeIndex={index} onActive={onActive} pad="small" width="70vw">
+        <Tab
+          title={
+            <Heading color={tabColors[0]} level="3" weight="bold">
+              Login
+            </Heading>
+          }
+          pad="small"
+        >
+          <LoginForm
             email={email}
             setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            error={error}
+            action={login}
+          />
+        </Tab>
+        <Tab
+          title={
+            <Heading color={tabColors[1]} level="3" weight="bold">
+              Register
+            </Heading>
+          }
+        >
+          <LoginForm
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            error={error}
+            action={register}
+          />
+        </Tab>
+        <Tab
+          title={
+            <Heading color={tabColors[2]} level="3" weight="bold">
+              Demo
+            </Heading>
+          }
+          align="center"
+          pad="small"
+        >
+          <LoginForm
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            error={error}
+            action={login}
+            demo
           />
         </Tab>
       </Tabs>

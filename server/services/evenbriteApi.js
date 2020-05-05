@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 const baseurl = "https://www.eventbriteapi.com/v3";
 
 // get a single account
-const getAccount = async apikey => {
+const getAccount = async (apikey) => {
   return fetch(`${baseurl}/users/me?token=${apikey}`);
 };
 // fetch organization data
@@ -19,8 +19,8 @@ async function createEvent(data, apikey) {
       method: "post",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     }
   );
   if (!res.ok) {
@@ -38,12 +38,12 @@ async function createSeries(id, occurrence_duration, recurrence_rule, apikey) {
       body: JSON.stringify({
         schedule: {
           occurrence_duration,
-          recurrence_rule
-        }
+          recurrence_rule,
+        },
       }),
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     }
   );
   const data = await res.json();
@@ -63,12 +63,12 @@ async function createTicket(id, cost, count, name, apikey) {
           ticket_class: {
             name,
             quantity_total: count,
-            free: true
-          }
+            free: true,
+          },
         }),
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       }
     );
   } else {
@@ -80,12 +80,12 @@ async function createTicket(id, cost, count, name, apikey) {
           ticket_class: {
             name,
             quantity_total: count,
-            cost: `USD, ${cost}`
-          }
+            cost: `USD, ${cost}`,
+          },
         }),
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       }
     );
   }
@@ -101,8 +101,8 @@ async function publishEvent(id, apikey) {
     {
       method: "post",
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     }
   );
   if (!res.ok) {
@@ -129,7 +129,7 @@ async function uploadImage(img, url, args) {
   try {
     const config = {
       method: "POST",
-      body: formData
+      body: formData,
     };
     const response = await fetch(url, config);
     if (!response.ok) {
@@ -149,7 +149,7 @@ async function getUploadedUrl(token) {
       `https://www.eventbriteapi.com/v3/media/upload/?token=${apikey}`,
       {
         method: "POST",
-        body: formData
+        body: formData,
       }
     );
     return await response.json();
@@ -159,18 +159,20 @@ async function getUploadedUrl(token) {
 }
 
 // Graphql Endpoints
-const fetchAccount = async apikey => {
+const fetchAccount = async (apikey) => {
   const accountRes = await getAccount(apikey);
   if (!accountRes.ok) {
+    console.log(accountRes);
     throw new Error("Eventbrite API is not responding");
   }
   const account = await accountRes.json();
   const orgResponse = await getOrg(account.id, apikey);
   const orgsJson = await orgResponse.json();
-  const orgs = orgsJson.organizations.map(obj => {
+
+  const orgs = orgsJson.organizations.map((obj) => {
     return {
       name: obj.name,
-      id: obj.id
+      id: obj.id,
     };
   });
   return {
@@ -181,7 +183,7 @@ const fetchAccount = async apikey => {
     last_name: account.last_name,
     name: account.name,
     image_id: account.image_id,
-    organizations: orgs
+    organizations: orgs,
   };
 };
 const fetchCategories = async (apikey, continuationToken) => {
@@ -194,7 +196,7 @@ const fetchCategories = async (apikey, continuationToken) => {
   const categories = res.categories.map(({ name, id }) => {
     return {
       name,
-      id
+      id,
     };
   });
 
@@ -216,7 +218,7 @@ const fetchSubCategories = async (apikey, continuationToken) => {
     return {
       name,
       id,
-      parent: parent_category.name
+      parent: parent_category.name,
     };
   });
 
@@ -237,7 +239,7 @@ const fetchFormats = async (apikey, continuationToken) => {
   const types = res.formats.map(({ name, id }) => {
     return {
       name,
-      id
+      id,
     };
   });
 
@@ -258,5 +260,5 @@ module.exports = {
   uploadImage,
   fetchCategories,
   fetchSubCategories,
-  fetchFormats
+  fetchFormats,
 };

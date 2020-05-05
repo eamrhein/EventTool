@@ -7,7 +7,7 @@ const spinning = (
     viewBox="0 0 32 32"
     width="68px"
     height="68px"
-    fill="#0060A8"
+    fill="#f05537"
   >
     <path
       opacity=".25"

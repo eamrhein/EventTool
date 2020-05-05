@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import styled from "styled-components";
-import { Box } from "grommet";
+import { Box, Heading, Paragraph } from "grommet";
 import AccountManager from "./AccountManager";
 import BasicInfo from "./BasicInfo";
 import Schedule from "./Schedule";
@@ -60,15 +60,9 @@ let MainBox = styled(Box)`
   }
 `;
 
-function EventForm({
-  user,
-  selectedKey,
-  setSelectedKey,
-  responsive,
-  history,
-  pending,
-}) {
+function EventForm({ user, responsive, history, pending, defaultKey }) {
   const [form, setForm] = useState(defaultFormState);
+  const [selectedKey, setSelectedKey] = useState(defaultKey);
   const [submitForm] = useMutation(SUBMIT_FORM, {
     onError: (err) => {
       console.log(err);
@@ -87,15 +81,6 @@ function EventForm({
     },
   });
   let date = moment(new Date()).add("10", "seconds").toISOString();
-  // useEffect(() => {
-  //   submitForm({
-  //     variables: {
-  //       id: user.id,
-  //       date,
-  //       data: JSON.stringify(form),
-  //     },
-  //   });
-  // }, []);
   const [render, setRender] = useState(true);
   useEffect(() => {
     if (!pending) setRender(true);
@@ -110,7 +95,7 @@ function EventForm({
         onAnimationEnd={onAnimationEnd}
         style={{ animation: `${pending ? "fadeOut" : "fadeIn"} 1s` }}
         value={form}
-        margin="medium"
+        pad="medium"
       >
         <AccountManager
           user={user}
@@ -118,15 +103,32 @@ function EventForm({
           setSelectedKey={setSelectedKey}
           history={history}
         />
-        <BasicInfo form={form} setForm={setForm} apikey={selectedKey} />
-        <Schedule
-          screenSize={responsive}
-          form={form}
-          setForm={setForm}
-          apikey={selectedKey}
-        />
-        <Description form={form} setForm={setForm} apikey={selectedKey} />
-        <Tickets screenSize={responsive} form={form} setForm={setForm} />
+        {user.apikeys && user.apikeys.length > 0 ? (
+          <>
+            <BasicInfo form={form} setForm={setForm} apikey={selectedKey} />
+            <Schedule
+              screenSize={responsive}
+              form={form}
+              setForm={setForm}
+              apikey={selectedKey}
+            />
+            <Description form={form} setForm={setForm} apikey={selectedKey} />
+            <Tickets screenSize={responsive} form={form} setForm={setForm} />
+          </>
+        ) : (
+          <Box width={{ min: "100%" }} pad="large" justify="center">
+            <Heading textAlign="center" margin="small" level="1">
+              Welcome to Event Tool
+            </Heading>
+            <Heading fill margin="small" level="3">
+              How to use this application:
+            </Heading>
+            <Paragraph fill margin="small">
+              In order to use this application you need to add the secret keys
+              from the accounts you want to use.
+            </Paragraph>
+          </Box>
+        )}
       </MainBox>
     )
   );

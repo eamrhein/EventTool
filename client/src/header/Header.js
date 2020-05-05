@@ -56,18 +56,18 @@ const HeaderPanel = ({ responsive, pending, setPending, mode, setMode }) => {
     </Header>
   ) : (
     <Header>
-      <Box pad="medium" direction="row" align="center">
-        <Heading
-          level="1"
-          color="brand"
-          style={{ userSelect: "none", fontFamily: "Playball" }}
-        >
-          Event Tool
-        </Heading>
-      </Box>
-      <Box direction="row" gap="small">
-        {data.isLoggedIn ? (
-          <>
+      {data.isLoggedIn ? (
+        <>
+          <Box pad="medium" direction="row" align="center">
+            <Heading
+              level="1"
+              color="brand"
+              style={{ userSelect: "none", fontFamily: "Playball" }}
+            >
+              Event Tool
+            </Heading>
+          </Box>
+          <Box direction="row" gap="small">
             <Box gap="small" margin="medium" direction="row">
               <Button
                 onClick={() => {
@@ -92,9 +92,9 @@ const HeaderPanel = ({ responsive, pending, setPending, mode, setMode }) => {
                 onClick={logout}
               />
             </Box>
-          </>
-        ) : null}
-      </Box>
+          </Box>
+        </>
+      ) : null}
     </Header>
   );
 };

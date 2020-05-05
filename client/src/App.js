@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AuthRoute from "./util/route_util";
+import { Switch, Redirect } from "react-router-dom";
 import Login from "./Login";
 import HeaderPanel from "./header/Header";
 import EventTool from "./eventtool/EventTool";
@@ -17,7 +18,9 @@ const theme = deepMerge(grommet, {
       "accent-1": "#73a580",
       "accent-2": "#F48668",
       "accent-3": "#c5c392",
-      "accent-4": "#f4a698",
+      "neutral-1": "#EEA960",
+      "neutral-2": "#C95286",
+      "neutral-3": "#47AE6A",
       focus: "none",
     },
   },
@@ -25,15 +28,17 @@ const theme = deepMerge(grommet, {
 
 function App(props) {
   const [pending, setPending] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  window.setDarkMode = setDarkMode;
   return (
-    <Grommet theme={theme} themeMode="dark">
+    <Grommet theme={theme} themeMode={darkMode ? "dark" : "light"}>
       <ResponsiveContext.Consumer>
         {(responsive) => {
           return (
             <Box
               height={{ max: "100vh" }}
               style={{ transition: "0.25s ease-out" }}
-              background={{ light: "light-1", dark: "dark-1" }}
+              background={{ light: "light-3", dark: "dark-1" }}
               overflow="auto"
             >
               <HeaderPanel
@@ -48,20 +53,24 @@ function App(props) {
                 justify="start"
                 {...props}
               >
-                <AuthRoute
-                  exact
-                  responsive={responsive}
-                  path="/login"
-                  component={Login}
-                  routeType="auth"
-                />
-                <AuthRoute
-                  path="/"
-                  responsive={responsive}
-                  component={EventTool}
-                  pending={pending}
-                  routeType="protected"
-                />
+                <Switch>
+                  <AuthRoute
+                    exact
+                    responsive={responsive}
+                    path="/login"
+                    component={Login}
+                    routeType="auth"
+                  />
+                  <AuthRoute
+                    exact
+                    path="/"
+                    responsive={responsive}
+                    component={EventTool}
+                    pending={pending}
+                    routeType="protected"
+                  />
+                  <Redirect to="/" />
+                </Switch>
               </Box>
             </Box>
           );

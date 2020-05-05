@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Schedule from "../Schedule";
 import { useQuery } from "@apollo/react-hooks";
 import EventForm from "./EventForm";
@@ -23,10 +23,7 @@ function EventTool({ responsive, pending }) {
       fetchPolicy: "no-cache",
     }
   );
-
-  const [selectedKey, setSelectedKey] = useState("");
-  if (idError || userError)
-    return <h3>Error: {idError.message || userError.message}</h3>;
+  if (idError || userError) return <h3>Error: {idError || userError}</h3>;
   if (idLoading || userLoading)
     return (
       <Box height="100vh" justify="center" align="center">
@@ -34,19 +31,17 @@ function EventTool({ responsive, pending }) {
       </Box>
     );
   let { user } = userData;
+  let defaultKey = user.apikeys[0];
   return (
-    <Box direction="column">
-      <Box direction="row" justify="start" align="start">
-        <Box>
-          <Schedule user={user} pending={pending} />
-          <EventForm
-            pending={pending}
-            responsive={responsive}
-            user={user}
-            selectedKey={selectedKey}
-            setSelectedKey={setSelectedKey}
-          />
-        </Box>
+    <Box direction="row" justify="start" align="start" height="100vh">
+      <Box>
+        <Schedule user={user} pending={pending} />
+        <EventForm
+          pending={pending}
+          responsive={responsive}
+          user={user}
+          defaultKey={defaultKey}
+        />
       </Box>
     </Box>
   );

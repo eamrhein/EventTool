@@ -64,10 +64,10 @@ const Pending = ({ user, pending }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {jobs.map((job) => {
+            {jobs.map((job, index) => {
               let date = new Date(job.schedule);
               return (
-                <TableRow>
+                <TableRow key={index}>
                   <TableCell>
                     {moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a")}
                   </TableCell>

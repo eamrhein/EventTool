@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import Queries from "../graphql/queries";
 import Mutations from "../graphql/mutations";
-import { Box, Text, List } from "grommet";
+import { Box, Text, Grid } from "grommet";
 import { FormTrash } from "grommet-icons";
 const { DELETE_API_KEY } = Mutations;
 const { FETCH_ACCOUNT, FETCH_USER } = Queries;
@@ -108,8 +108,15 @@ function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
 function AccountList({ user, selectedKey, setSelectedKey }) {
   if (user.apikeys.length > 0) {
     return (
-      <List
-        primaryKey={(apikey, id) => (
+      <Grid
+        columns={{
+          count: user.apikeys.length % 4,
+          size: "xsmall",
+        }}
+        margin="small"
+        gap="small"
+      >
+        {user.apikeys.map((apikey, id) => (
           <AccountCard
             key={id}
             apikey={apikey}
@@ -118,9 +125,8 @@ function AccountList({ user, selectedKey, setSelectedKey }) {
             selectedKey={selectedKey}
             setSelectedKey={setSelectedKey}
           />
-        )}
-        data={user.apikeys}
-      />
+        ))}
+      </Grid>
     );
   } else {
     return (

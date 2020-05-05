@@ -73,7 +73,7 @@ export const LoginForm = ({
       <Box>
         <Button
           ref={inputRef}
-          pad="large"
+          size="xlarge"
           alignSelf="end"
           type="submit"
           primary

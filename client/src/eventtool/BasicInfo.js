@@ -11,6 +11,7 @@ import {
   Collapsible,
   Button,
 } from "grommet";
+import { Spinner } from "../components";
 import { FormFieldLabel } from "../components/FormFieldLabel";
 import { Document, MapLocation } from "grommet-icons";
 
@@ -27,7 +28,12 @@ export default function BasicInfo({ apikey, form, setForm }) {
       },
     }
   );
-  if (loading) return <Box width="100vw">...loading</Box>;
+  if (loading)
+    return (
+      <Box height="100vh" justify="center" align="center">
+        <Spinner />
+      </Box>
+    );
   if (error) {
     console.log(error);
     return null;

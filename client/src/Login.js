@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { useMutation } from "@apollo/react-hooks";
 import Mutations from "./graphql/mutations";
-import { Box, Heading, Tabs, Tab, Text } from "grommet";
+import { Box, Heading, Tabs, Tab } from "grommet";
 import { LoginForm } from "./components";
 
 const { LOGIN_USER, REGISTER_USER } = Mutations;

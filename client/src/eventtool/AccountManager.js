@@ -10,8 +10,7 @@ import {
   FormField,
   TextInput,
   Text,
-  Accordion,
-  AccordionPanel,
+  Collapsible,
   Heading,
 } from "grommet";
 
@@ -20,7 +19,8 @@ const { PUSH_API_KEY } = Mutations;
 
 function AccountManager({ user, selectedKey, setSelectedKey }) {
   let { apikeys } = user;
-
+  const [open, setOpen] = useState(true);
+  const [addApi, setAddApi] = useState(false);
   useEffect(() => {
     setSelectedKey(apikeys[0]);
   }, [apikeys, setSelectedKey]);
@@ -49,69 +49,62 @@ function AccountManager({ user, selectedKey, setSelectedKey }) {
     },
   });
   return (
-    <Box pad="small" align="start">
-      <Box height={{ max: "65.6vh" }} width="100%" overflow="auto">
-        <Box
-          margin={{
-            top: "small",
-            bottom: "small",
-            left: "15px",
-            right: "15px",
-          }}
-          pad="xsmall"
-          background="brand"
+    <Box pad="medium" width="100vw" justify="between" flex>
+      <Button plain onClick={() => setOpen(!open)}>
+        <Heading
+          color={
+            open
+              ? "brand"
+              : {
+                  dark: "light-1",
+                  light: "dark-1",
+                }
+          }
+          level="3"
         >
-          <Heading level="4">Select Account</Heading>
-        </Box>
+          Eventbrite Accounts
+        </Heading>
+      </Button>
+      <Collapsible open={open}>
         <Accounts
           user={user}
           selectedKey={selectedKey}
           setSelectedKey={setSelectedKey}
         />
-        <Accordion alignSelf="center" width="100%">
-          <AccordionPanel
-            height="30px"
-            pad="small"
-            margin={{
-              top: "small",
-              bottom: "small",
-              left: "15px",
-              right: "15px",
-            }}
-            background="brand"
-            label="Add Account"
-          >
-            <Box margin="medium" wo>
-              <Form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  pushApi({
-                    variables: {
-                      id: user.id,
-                      apikey,
-                    },
-                  });
-                  setApiKey("");
-                }}
-              >
-                <FormField error={errorMessage} label="API Key" align="start">
-                  <TextInput
-                    onChange={(e) => setApiKey(e.target.value)}
-                    value={apikey}
-                    placeholder="2HFXXX2G...."
-                  />
-                </FormField>
-                <Button
-                  margin={{ left: "auto" }}
-                  type="submit"
-                  primary
-                  label="Submit"
+        <Collapsible open={addApi}>
+          <Box margin="small">
+            <Form
+              onSubmit={(e) => {
+                e.preventDefault();
+                pushApi({
+                  variables: {
+                    id: user.id,
+                    apikey,
+                  },
+                });
+                setApiKey("");
+              }}
+            >
+              <FormField error={errorMessage} label="API Key">
+                <TextInput
+                  onChange={(e) => setApiKey(e.target.value)}
+                  value={apikey}
+                  placeholder="2HFXXX2G...."
                 />
-              </Form>
-            </Box>
-          </AccordionPanel>
-        </Accordion>
-      </Box>
+              </FormField>
+              <Button type="submit" color="neutral-2" label="Submit" a />
+            </Form>
+          </Box>
+        </Collapsible>
+        <Box align="end">
+          <Button
+            label="add account"
+            size="medium"
+            color="neutral-2"
+            onClick={() => setAddApi(!addApi)}
+          />
+        </Box>
+      </Collapsible>
     </Box>
   );
 }

@@ -23,11 +23,34 @@ const scheduleEvent = async ({ id, date, data }) => {
     // let index = user.jobs.findIndex((id) => id === job.id);
     let index = user.jobs.findIndex((obj) => obj._id === job._id);
     user.jobs[index].status = "Resolved";
-    console.log(index);
+
     user.save();
-    console.log(user.jobs);
   });
+  console.log(user);
   return user;
 };
 
-module.exports = { scheduleEvent };
+function eventCleaner() {
+  schedule.scheduleJob("0 * * * *", function () {
+    cleanupEvents();
+  });
+}
+
+const cleanupEvents = async () => {
+  let users = await User.find();
+  let date = Date.now();
+  for (let index = 0; index < users.length; index++) {
+    const user = users[index];
+    if (user.jobs) {
+      user.jobs = user.jobs.filter((job) => moment(job.schedule).isAfter(date));
+      try {
+        user.save();
+      } catch (error) {
+        console.log("user failed to save in event cleanup");
+      }
+    }
+  }
+  console.log("cleanup succesfull");
+};
+
+module.exports = { scheduleEvent, eventCleaner };

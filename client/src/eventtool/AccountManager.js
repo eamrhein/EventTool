@@ -6,18 +6,17 @@ import Accounts from "../components/AccountList";
 import {
   Box,
   Button,
-  Form,
   FormField,
   TextInput,
   Text,
   Collapsible,
   Heading,
 } from "grommet";
-
+import { Add, Subtract } from "grommet-icons";
 const { FETCH_USER } = Queries;
 const { PUSH_API_KEY } = Mutations;
 
-function AccountManager({ user, selectedKey, setSelectedKey }) {
+function AccountManager({ user, selectedKey, setSelectedKey, isSubmitting }) {
   let { apikeys } = user;
   const [open, setOpen] = useState(true);
   const [addApi, setAddApi] = useState(false);
@@ -35,8 +34,13 @@ function AccountManager({ user, selectedKey, setSelectedKey }) {
         setErrorMessage(null);
       }, 10000);
     },
-    update(client, { data: { pushAPIkey } }) {
-      client.writeQuery({
+    update(cache, { data: { pushAPIkey } }) {
+      let data = cache.readQuery({
+        query: FETCH_USER,
+        variables: { userId: user.id },
+      });
+      console.log(data);
+      cache.writeQuery({
         query: FETCH_USER,
         variables: { userId: user.id },
         data: {
@@ -50,21 +54,45 @@ function AccountManager({ user, selectedKey, setSelectedKey }) {
   });
   return (
     <Box pad="medium" width="100vw" justify="between" flex>
-      <Button plain onClick={() => setOpen(!open)}>
-        <Heading
-          color={
-            open
-              ? "brand"
-              : {
-                  dark: "light-1",
-                  light: "dark-1",
-                }
-          }
-          level="3"
-        >
+      <Heading
+        color={
+          open
+            ? "brand"
+            : {
+                dark: "light-1",
+                light: "dark-1",
+              }
+        }
+        level="3"
+      >
+        <Button plain onClick={() => setOpen(!open)}>
           Eventbrite Accounts
-        </Heading>
-      </Button>
+        </Button>
+      </Heading>
+      <Box margin={{ right: "small" }} direction="row" justify="end">
+        <Box justify="center">
+          <Box
+            direction="row"
+            align="center"
+            gap="small"
+            label="Account"
+            as="button"
+            type="button"
+            border={{ color: "neutral-3", size: "small" }}
+            size="medium"
+            onClick={() => setAddApi(!addApi)}
+          >
+            {addApi ? (
+              <Subtract size="small" color="neutral-3" />
+            ) : (
+              <Add size="small" color="neutral-3" />
+            )}
+            <Text size="small" color="neutral-3">
+              Edit
+            </Text>
+          </Box>
+        </Box>
+      </Box>
       <Collapsible open={open}>
         <Accounts
           user={user}
@@ -73,8 +101,16 @@ function AccountManager({ user, selectedKey, setSelectedKey }) {
         />
         <Collapsible open={addApi}>
           <Box margin="small">
-            <Form
-              onSubmit={(e) => {
+            <FormField error={errorMessage} label="API Key">
+              <TextInput
+                onChange={(e) => setApiKey(e.target.value)}
+                value={apikey}
+                placeholder="2HFXXX2G...."
+              />
+            </FormField>
+            <Button
+              type="button"
+              onClick={(e) => {
                 e.preventDefault();
                 pushApi({
                   variables: {
@@ -84,25 +120,22 @@ function AccountManager({ user, selectedKey, setSelectedKey }) {
                 });
                 setApiKey("");
               }}
-            >
-              <FormField error={errorMessage} label="API Key">
-                <TextInput
-                  onChange={(e) => setApiKey(e.target.value)}
-                  value={apikey}
-                  placeholder="2HFXXX2G...."
-                />
-              </FormField>
-              <Button type="submit" color="neutral-2" label="Submit" a />
-            </Form>
+              color="neutral-2"
+              label="Submit"
+            />
           </Box>
         </Collapsible>
         <Box align="end">
-          <Button
-            label="add account"
-            size="medium"
-            color="neutral-2"
-            onClick={() => setAddApi(!addApi)}
-          />
+          <Box direction="row" gap="small">
+            <Button
+              label="Submit"
+              type="submit"
+              primary
+              size="large"
+              color="brand"
+              disabled={isSubmitting}
+            />
+          </Box>
         </Box>
       </Collapsible>
     </Box>

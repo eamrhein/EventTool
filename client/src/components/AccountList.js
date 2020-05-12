@@ -14,12 +14,12 @@ function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
       const message = err.message.split(":")[1];
       console.log(message);
     },
-    update(client, { data: { deleteAPIkey } }) {
-      let data = client.readQuery({
+    update(cache, { data: { deleteAPIkey } }) {
+      let data = cache.readQuery({
         query: FETCH_USER,
         variables: { userId },
       });
-      client.writeQuery({
+      cache.writeQuery({
         query: FETCH_USER,
         variables: { userId },
         data: {
@@ -62,6 +62,7 @@ function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
       }
       background={{ light: "light-2", dark: "dark-1" }}
       as="button"
+      type="button"
       style={{ cursor: "pointer" }}
       onClick={() => setSelectedKey(apikey)}
     >
@@ -110,7 +111,7 @@ function AccountList({ user, selectedKey, setSelectedKey }) {
     return (
       <Grid
         columns={{
-          count: user.apikeys.length % 4,
+          count: user.apikeys.length < 4 ? user.apikeys.length : 4,
           size: "xsmall",
         }}
         margin="small"

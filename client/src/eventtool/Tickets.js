@@ -12,7 +12,7 @@ import {
 import { Ticket, FormTrash, Currency } from "grommet-icons";
 import { FormFieldLabel } from "../components/FormFieldLabel";
 
-const Tickets = ({ form, setForm, screenSize }) => {
+const Tickets = ({ screenSize, values, setFieldValue }) => {
   const [selected, setSelected] = useState("paid");
   const [open, setOpen] = useState(false);
   const [ticket, setTicket] = useState({
@@ -24,7 +24,7 @@ const Tickets = ({ form, setForm, screenSize }) => {
 
   const handleClick = (e) => {
     setTicket({ ...ticket, num: ticket.num + 1 });
-    setForm({ ...form, tickets: [...form.tickets, ticket] });
+    setFieldValue("tickets", [...values.tickets, ticket]);
   };
   return (
     <Box pad="medium" width="100vw">
@@ -184,7 +184,7 @@ const Tickets = ({ form, setForm, screenSize }) => {
             </Box>
           </Box>
           <Box pad="small" width={screenSize === "small" ? "100%" : "50%"}>
-            {form.tickets.length > 0 ? (
+            {values.tickets.length > 0 ? (
               <Box width="100%" align="center">
                 <DataTable
                   primaryKey="num"
@@ -214,12 +214,12 @@ const Tickets = ({ form, setForm, screenSize }) => {
                               size="small"
                               hoverIndicator="accent-1"
                               onClick={() => {
-                                setForm({
-                                  ...form,
-                                  tickets: form.tickets.filter(
+                                setFieldValue(
+                                  "tickets",
+                                  values.tickets.filter(
                                     (ticket) => ticket.num !== datum.num
-                                  ),
-                                });
+                                  )
+                                );
                               }}
                               icon={<FormTrash />}
                             />
@@ -228,7 +228,7 @@ const Tickets = ({ form, setForm, screenSize }) => {
                       },
                     },
                   ]}
-                  data={form.tickets}
+                  data={values.tickets}
                 />
               </Box>
             ) : (

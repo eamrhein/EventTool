@@ -14,6 +14,9 @@ import { FormFieldLabel } from "../components/";
 import { TimeInput } from "../components/";
 import { Calendar as CalendarIcon } from "grommet-icons";
 export default function Schedule({
+  values,
+  onChange,
+  setFieldValue,
   form,
   setForm,
   apikey,
@@ -32,36 +35,27 @@ export default function Schedule({
 
   const handleDate = (dates) => {
     if (dates[0].length === 2) {
-      setForm({
-        ...form,
-        start: {
-          ...form.start,
-          date: dates[0][0],
-        },
-        end: {
-          ...form.end,
-          date: dates[0][1],
-        },
+      setFieldValue("start", {
+        ...values.start,
+        date: dates[0][0],
+      });
+      setFieldValue("end", {
+        ...values.end,
+        date: dates[0][1],
       });
     }
   };
   const handleTime = (e, time) => {
     if (time === "start") {
-      setForm({
-        ...form,
-        start: {
-          ...form.start,
-          time: e.target.value,
-        },
+      setFieldValue("start", {
+        ...values.start,
+        time: e.target.value,
       });
     }
     if (time === "end") {
-      setForm({
-        ...form,
-        end: {
-          ...form.end,
-          time: e.target.value,
-        },
+      setFieldValue("end", {
+        ...values.start,
+        time: e.target.value,
       });
     }
   };
@@ -115,8 +109,8 @@ export default function Schedule({
                     </Text>
                   </Box>
                 }
-                checked={!form.series}
-                onChange={(event) => setForm({ ...form, series: false })}
+                checked={!values.series}
+                onChange={() => setFieldValue("series", false)}
                 {...props}
               />
               <RadioButton
@@ -131,14 +125,14 @@ export default function Schedule({
                   </Box>
                 }
                 name="series"
-                checked={form.series}
-                onChange={(event) => setForm({ ...form, series: true })}
+                checked={values.series}
+                onChange={() => setFieldValue("series", true)}
                 {...props}
               />{" "}
             </Box>
           }
         >
-          {!form.series ? (
+          {!values.series ? (
             <Box
               justify="around"
               margin="small"
@@ -153,13 +147,13 @@ export default function Schedule({
               <Box pad="small" justify="center">
                 <TimeInput
                   label="Start Time:"
-                  value={form.start.time}
+                  value={values.start.time}
                   onChange={(e) => handleTime(e, "start")}
                   required
                 />
                 <TimeInput
                   label="End Time:"
-                  value={form.end.time}
+                  value={values.end.time}
                   onChange={(e) => handleTime(e, "end")}
                   required
                 />
@@ -175,27 +169,24 @@ export default function Schedule({
               <Box pad="small" justify="center">
                 <TimeInput
                   label="Start Time:"
-                  value={form.start.time}
+                  value={values.start.time}
                   onChange={(e) => handleTime(e, "start")}
                   required
                 />
                 <TimeInput
                   label="End Time:"
-                  value={form.end.time}
+                  value={values.end.time}
                   onChange={(e) => handleTime(e, "end")}
                   required
                 />
                 <FormFieldLabel label="Occurs:">
                   <Select
-                    value={form.recurrence.occurs}
+                    value={values.recurrence.occurs}
                     options={["Daily", "Weekly", "Monthly"]}
                     onChange={({ option }) =>
-                      setForm({
-                        ...form,
-                        recurrence: {
-                          ...form.recurrence,
-                          occurs: option,
-                        },
+                      setFieldValue("recurrence", {
+                        ...values.recurrence,
+                        occurs: option,
                       })
                     }
                   />
@@ -203,19 +194,16 @@ export default function Schedule({
                 <FormFieldLabel
                   info={
                     `Event repeats ` +
-                    form.recurrence.times +
-                    (form.recurrence.times > 1 ? " times." : " time.")
+                    values.recurrence.times +
+                    (values.recurrence.times > 1 ? " times." : " time.")
                   }
                 >
                   <TextInput
-                    value={form.recurrence.times}
+                    value={values.recurrence.times}
                     onChange={(e) =>
-                      setForm({
-                        ...form,
-                        recurrence: {
-                          ...form.recurrence,
-                          times: e.target.value,
-                        },
+                      setFieldValue("recurrence", {
+                        ...values.recurrence,
+                        times: e.target.value,
                       })
                     }
                   />

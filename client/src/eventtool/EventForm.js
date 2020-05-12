@@ -2,41 +2,19 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import styled from "styled-components";
 import { Box, Heading, Paragraph } from "grommet";
+import { Formik, Form } from "formik";
 import AccountManager from "./AccountManager";
 import BasicInfo from "./BasicInfo";
 import Schedule from "./Schedule";
 import Description from "./Description";
 import Tickets from "./Tickets";
 import { useMutation } from "@apollo/react-hooks";
+import { defaultFormState } from "../util/form_defaults";
 import Mutations from "../graphql/mutations";
 import Queries from "../graphql/queries";
 
 const { SUBMIT_FORM } = Mutations;
 const { FETCH_USER } = Queries;
-let defaultFormState = {
-  active_tab: "Basic Info",
-  title: "",
-  location: "Venue",
-  category: "Category",
-  subcategory: "subcategory",
-  type: "Type",
-  summary: "",
-  description: "",
-  start: {
-    date: new Date().toISOString(),
-    time: "",
-  },
-  end: {
-    date: new Date().toISOString(),
-    time: "",
-  },
-  series: false,
-  recurrence: {
-    times: 1,
-    occurs: "Daily",
-  },
-  tickets: [],
-};
 
 let MainBox = styled(Box)`
   @keyframes fadeIn {
@@ -68,7 +46,7 @@ function EventForm({ user, responsive, history, pending, defaultKey }) {
       console.log(err);
     },
     update(client, { data: { scheduleEvent } }) {
-      let updateUser = client.writeQuery({
+      client.writeQuery({
         query: FETCH_USER,
         variables: { userId: user.id },
         data: {
@@ -89,48 +67,120 @@ function EventForm({ user, responsive, history, pending, defaultKey }) {
   const onAnimationEnd = () => {
     if (pending) setRender(false);
   };
+
+  if (user.apikeys && user.apikeys.length > 0) {
+    return (
+      render && (
+        <MainBox
+          onAnimationEnd={onAnimationEnd}
+          style={{ animation: `${pending ? "fadeOut" : "fadeIn"} 1s` }}
+          value={form}
+          pad="medium"
+        >
+          <Formik
+            initialValues={defaultFormState}
+            validateOnChange={false}
+            validateOnBlur={false}
+            onSubmit={(values, { setSubmitting }) => {
+              console.log(values);
+              // submitForm({
+              //   variables: {
+              //     id: user.id,
+              //     date,
+              //     data: JSON.stringify(values),
+              //   },
+              // });
+              setSubmitting();
+            }}
+          >
+            {({
+              values,
+              errors,
+              handleChange,
+              handleSubmit,
+              isSubmitting,
+              setFieldValue,
+            }) => (
+              <Form onSubmit={handleSubmit}>
+                <AccountManager
+                  user={user}
+                  selectedKey={selectedKey}
+                  setSelectedKey={setSelectedKey}
+                  history={history}
+                  isSubmitting={isSubmitting}
+                />
+                <BasicInfo
+                  values={values}
+                  setFieldValue={setFieldValue}
+                  handleChange={handleChange}
+                  apikey={selectedKey}
+                  errors={errors}
+                />
+                <Schedule
+                  values={values}
+                  setFieldValue={setFieldValue}
+                  handleChange={handleChange}
+                  screenSize={responsive}
+                  apikey={selectedKey}
+                  errors={errors}
+                />
+                <Description
+                  values={values}
+                  setFieldValue={setFieldValue}
+                  handleChange={handleChange}
+                  apikey={selectedKey}
+                  errors={errors}
+                />
+                <Tickets
+                  values={values}
+                  setFieldValue={setFieldValue}
+                  screenSize={responsive}
+                  errors={errors}
+                />
+              </Form>
+            )}
+          </Formik>
+        </MainBox>
+      )
+    );
+  }
   return (
-    render && (
-      <MainBox
-        onAnimationEnd={onAnimationEnd}
-        style={{ animation: `${pending ? "fadeOut" : "fadeIn"} 1s` }}
-        value={form}
-        pad="medium"
+    <Box
+      border={{
+        color: "brand",
+        size: "medium",
+      }}
+      pad="medium"
+      align="center"
+      justify="center"
+    >
+      <Heading
+        style={{ fontFamily: "Fira Sans", fontWeight: "900" }}
+        margin="small"
       >
-        <AccountManager
-          user={user}
-          selectedKey={selectedKey}
-          setSelectedKey={setSelectedKey}
-          history={history}
-        />
-        {user.apikeys && user.apikeys.length > 0 ? (
-          <>
-            <BasicInfo form={form} setForm={setForm} apikey={selectedKey} />
-            <Schedule
-              screenSize={responsive}
-              form={form}
-              setForm={setForm}
-              apikey={selectedKey}
-            />
-            <Description form={form} setForm={setForm} apikey={selectedKey} />
-            <Tickets screenSize={responsive} form={form} setForm={setForm} />
-          </>
-        ) : (
-          <Box width={{ min: "100%" }} pad="large" justify="center">
-            <Heading textAlign="center" margin="small" level="1">
-              Welcome to Event Tool
-            </Heading>
-            <Heading fill margin="small" level="3">
-              How to use this application:
-            </Heading>
-            <Paragraph fill margin="small">
-              In order to use this application you need to add the secret keys
-              from the accounts you want to use.
-            </Paragraph>
-          </Box>
-        )}
-      </MainBox>
-    )
+        Welcome to Event Tool
+      </Heading>
+      <Box width="70%" margin="medium" align="start">
+        <Heading margin="small" level="3">
+          How to use this application:
+        </Heading>
+        <Paragraph margin="small">
+          In order to use this application you need to:
+        </Paragraph>
+        <Box margin={{ left: "large" }}>
+          <Paragraph>1. Login to an Eventbrite account</Paragraph>
+          <Paragraph>2. Go to Account Settings</Paragraph>
+          <Paragraph>3. Click the Developer Links Section</Paragraph>
+          <Paragraph>
+            4. Click the create api key button and fill out the nessesary data
+          </Paragraph>
+          <Paragraph>
+            5. Copy the "Private Token" and paste into the eventbrite accounts
+            form above{" "}
+          </Paragraph>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 

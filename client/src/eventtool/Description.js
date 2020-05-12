@@ -11,9 +11,9 @@ class Description extends React.Component {
   };
 
   render() {
-    const { form, setForm } = this.props;
+    const { values, setFieldValue, handleChange } = this.props;
     const handleEditorChange = (e) => {
-      setForm({ ...form, description: e.target.getContent() });
+      setFieldValue("description", e.target.getContent());
     };
     return (
       <Box pad="medium" width="100vw">
@@ -54,13 +54,15 @@ class Description extends React.Component {
             <FormFieldLabel
               info={
                 <Box align="end">
-                  <Text size="small">{form.summary.length} / 140</Text>
+                  <Text size="small">{values.summary.length} / 140</Text>
                 </Box>
               }
               label="Summary"
             >
               <TextArea
-                onChange={(e) => setForm({ ...form, summary: e.target.value })}
+                name="summary"
+                value={values.summary}
+                onChange={handleChange}
                 placeholder="Write a short event summary to get attendees excited"
                 resize={false}
               />
@@ -68,8 +70,9 @@ class Description extends React.Component {
           </Box>
           <Box margin="small">
             <Editor
+              name="description"
               apiKey="l4239s08cwmf7d2qxig6hsvhyihcglbothx4eb7vkgtlxkic"
-              initialValue={form.description}
+              initialValue={values.description}
               init={{
                 height: 400,
                 resize: false,

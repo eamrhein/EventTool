@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useQuery } from "react-apollo";
+import Queries from "./graphql/queries";
 import styled from "styled-components";
 import moment from "moment";
 import {
+  Heading,
   Box,
   Table,
   TableRow,
@@ -10,6 +13,7 @@ import {
   TableHeader,
 } from "grommet";
 
+let { FETCH_USER } = Queries;
 let MainBox = styled(Box)`
   @keyframes fadeIn {
     0% {
@@ -32,7 +36,6 @@ let MainBox = styled(Box)`
   }
 `;
 const Pending = ({ user, pending }) => {
-  let { jobs } = user;
   const [render, setRender] = useState(pending);
   useEffect(() => {
     if (pending) setRender(true);
@@ -41,7 +44,27 @@ const Pending = ({ user, pending }) => {
   const onAnimationEnd = () => {
     if (!pending) setRender(false);
   };
+  const { data, error, loading } = useQuery(FETCH_USER, {
+    variables: {
+      userId: user.id,
+    },
+    pollInterval: 500,
+  });
 
+  if (error) {
+    return (
+      <Box>
+        <Heading color="red">{error.message}</Heading>
+      </Box>
+    );
+  }
+  if (loading) {
+    return (
+      <Box>
+        <Heading color="green">Loading</Heading>
+      </Box>
+    );
+  }
   return (
     render && (
       <MainBox
@@ -64,7 +87,7 @@ const Pending = ({ user, pending }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {jobs.map((job, index) => {
+            {data.user.jobs.map((job, index) => {
               let date = new Date(job.schedule);
               return (
                 <TableRow key={index}>

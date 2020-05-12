@@ -56,7 +56,6 @@ function App(props) {
               >
                 <Switch>
                   <AuthRoute
-                    exact
                     responsive={responsive}
                     path="/login"
                     component={Login}

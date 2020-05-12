@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { Query } from "react-apollo";
+import { useQuery } from "react-apollo";
 import Queries from "../graphql/queries";
 const { IS_LOGGED_IN } = Queries;
 
@@ -10,38 +10,36 @@ const AuthRoute = ({
   exact,
   routeType,
   ...rest
-}) => (
-  <Query query={IS_LOGGED_IN}>
-    {({ data }) => {
-      if (routeType === "auth") {
-        return (
-          <Route
-            path={path}
-            exact={exact}
-            render={(props) =>
-              !data.isLoggedIn ? (
-                <Component {...props} {...rest} />
-              ) : (
-                <Redirect to="/" />
-              )
-            }
-          />
-        );
-      } else {
-        return (
-          <Route
-            {...rest}
-            render={(props) =>
-              data.isLoggedIn ? (
-                <Component {...props} {...rest} />
-              ) : (
-                <Redirect to="/login" />
-              )
-            }
-          />
-        );
-      }
-    }}
-  </Query>
-);
+}) => {
+  let { data, error } = useQuery(IS_LOGGED_IN);
+  if (error) {
+    return <p>Error</p>;
+  }
+  let { isLoggedIn } = data;
+  if (routeType === "protected") {
+    return (
+      <Route
+        path={path}
+        exact={exact}
+        render={(props) =>
+          isLoggedIn ? (
+            <Component {...props} {...rest} />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
+      />
+    );
+  } else {
+    return (
+      <Route
+        path={path}
+        exact={exact}
+        render={(props) =>
+          !isLoggedIn ? <Component {...props} {...rest} /> : <Redirect to="/" />
+        }
+      />
+    );
+  }
+};
 export default AuthRoute;

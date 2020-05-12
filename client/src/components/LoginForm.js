@@ -14,7 +14,6 @@ export const LoginForm = ({
   const inputRef = useRef(null);
   useEffect(() => {
     if (demo) {
-      console.log("hello");
       let i = 0;
       let string = "demo@demo.com123456";
       const int = setInterval(() => {
@@ -73,7 +72,7 @@ export const LoginForm = ({
       <Box>
         <Button
           ref={inputRef}
-          size="xlarge"
+          size="large"
           alignSelf="end"
           type="submit"
           primary

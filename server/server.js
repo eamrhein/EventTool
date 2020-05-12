@@ -6,7 +6,7 @@ const expressGraphQl = require("express-graphql");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const models = require("./models");
-
+const scheduler = require("./services/scheduler");
 const schema = require("./schema/schema");
 
 const db = require("../config/keys").mongoURI;
@@ -16,7 +16,7 @@ const app = express();
 if (!db) {
   throw new Error("You must provide a string to connect to MongoDB Atlas");
 }
-
+scheduler.eventCleaner();
 // Connect MongoDB:
 mongoose
   .connect(db, {

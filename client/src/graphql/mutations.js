@@ -32,6 +32,11 @@ export default {
         id
         email
         apikeys
+        jobs {
+          data
+          status
+          schedule
+        }
       }
     }
   `,
@@ -41,6 +46,11 @@ export default {
         id
         email
         apikeys
+        jobs {
+          data
+          status
+          schedule
+        }
       }
     }
   `,

@@ -20,7 +20,6 @@ function EventTool({ responsive, pending }) {
       variables: {
         userId: userId,
       },
-      fetchPolicy: "no-cache",
     }
   );
   if (idError || userError) return <h3>Error: {idError || userError}</h3>;

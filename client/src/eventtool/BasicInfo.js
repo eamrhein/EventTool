@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FastField } from "formik";
 import Search from "../components/SearchDropdown";
 import { useQuery } from "@apollo/react-hooks";
 import Queries from "../graphql/queries";
@@ -17,9 +18,14 @@ import { Document, MapLocation } from "grommet-icons";
 
 const { FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES } = Queries;
 
-export default function BasicInfo({ apikey, form, setForm }) {
+export default function BasicInfo({
+  apikey,
+  values,
+  handleChange,
+  setFieldValue,
+  errors,
+}) {
   const [open, setOpen] = useState(true);
-  let { title, location, category, subcategory, type } = form;
   const { loading, data, error } = useQuery(
     FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES,
     {
@@ -40,7 +46,7 @@ export default function BasicInfo({ apikey, form, setForm }) {
   }
   let categories = data.categories.map(({ name }) => name);
   let subcategories = data.subcategories
-    .filter((obj) => obj.parent === category)
+    .filter((obj) => obj.parent === values.category)
     .map(({ name }) => name);
   let types = data.types.map(({ name }) => name);
   let orgs = data.account.organizations.map(({ name, id }) => {
@@ -79,47 +85,45 @@ export default function BasicInfo({ apikey, form, setForm }) {
         <Box margin="small">
           <FormFieldLabel
             margin="small"
-            required
             info={
               <Box align="end">
-                <Text size="small">{title.length} / 70</Text>
+                <Text size="small">{values.title.length} / 70</Text>
               </Box>
             }
+            error={errors.title}
             label="Event Title"
           >
             <TextInput
-              maxLength="70"
+              name="title"
               margin="small"
-              value={title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
+              value={values.title}
+              onChange={handleChange}
               placeholder="Be clear and descriptive"
             />
           </FormFieldLabel>
           <Box margin="small" gap="small" direction="row">
             <FormFieldLabel label="Type">
               <Select
-                placeholder="Conference"
-                value={type}
-                onChange={({ option }) => setForm({ ...form, type: option })}
+                placeholder="Type"
+                value={values.type}
+                onChange={({ option }) => setFieldValue("type", option)}
                 options={types}
               />
             </FormFieldLabel>
             <FormFieldLabel label="Category">
               <Select
                 placeholder="Music"
-                value={category}
-                onChange={({ option }) =>
-                  setForm({ ...form, category: option })
-                }
+                value={values.category}
+                onChange={({ option }) => setFieldValue("category", option)}
                 options={categories}
               />
             </FormFieldLabel>
             {subcategories.length > 1 ? (
               <FormFieldLabel label="Subcategory">
                 <Select
-                  value={subcategory}
+                  value={values.subcategory}
                   onChange={({ option }) =>
-                    setForm({ ...form, subcategory: option })
+                    setFieldValue("subcategory", option)
                   }
                   options={subcategories}
                 />
@@ -134,16 +138,18 @@ export default function BasicInfo({ apikey, form, setForm }) {
           <MapLocation /> Locations
         </Heading>
         <Box margin="small">
-          <FormFieldLabel label="Venue" margin="small" required>
+          <FormFieldLabel label="Venue" margin="small">
             <Select
-              value={location}
-              onChange={({ option }) => setForm({ ...form, location: option })}
+              multiple={false}
+              value={values.locationType || ""}
+              placeholder="Venue"
               options={["Venue", "Online Event", "To Be Announced"]}
+              onChange={({ option }) => setFieldValue("locationType", option)}
             />
           </FormFieldLabel>
-          {location === "Venue" ? (
+          {values.locationType === "Venue" ? (
             <FormFieldLabel margin="small">
-              <Search />
+              <Search values={values} setFieldValue={setFieldValue} />
             </FormFieldLabel>
           ) : null}
         </Box>

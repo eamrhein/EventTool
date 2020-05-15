@@ -69,7 +69,7 @@ class Description extends React.Component {
             </FormFieldLabel>
           </Box>
           <Box margin="small">
-            <Editor
+            {/* <Editor
               name="description"
               apiKey="l4239s08cwmf7d2qxig6hsvhyihcglbothx4eb7vkgtlxkic"
               initialValue={values.description}
@@ -88,7 +88,7 @@ class Description extends React.Component {
               }}
               onChange={handleEditorChange}
               onBlur={handleEditorChange}
-            />
+            /> */}
           </Box>
         </Collapsible>
       </Box>

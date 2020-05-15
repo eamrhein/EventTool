@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
-import Queries from "../graphql/queries";
 import Mutations from "../graphql/mutations";
 import Accounts from "../components/AccountList";
 import {
@@ -13,19 +12,32 @@ import {
   Heading,
 } from "grommet";
 import { Add, Subtract } from "grommet-icons";
-const { FETCH_USER } = Queries;
 const { PUSH_API_KEY } = Mutations;
 
-function AccountManager({ user, selectedKey, setSelectedKey, isSubmitting }) {
-  let { apikeys } = user;
-  const [open, setOpen] = useState(true);
-  const [addApi, setAddApi] = useState(false);
-  useEffect(() => {
-    setSelectedKey(apikeys[0]);
-  }, [apikeys, setSelectedKey]);
+//  To Display formik Error messages
+function FormErrors({ errors }) {
+  let errorList = Object.keys(errors).map((key, idx) => (
+    <Text size="small" color="red" key={idx}>
+      * {key} - {errors[key]}
+    </Text>
+  ));
+  return Object.keys(errors).length > 0 ? (
+    <Box
+      margin={{ left: "large", right: "large", bottom: "small" }}
+      pad="medium"
+      border={{ color: "red", size: "small" }}
+    >
+      <Text size="small" color="red">
+        This form has errors in the following fields:
+      </Text>
+      <Box margin={{ left: "large" }}>{errorList}</Box>
+    </Box>
+  ) : null;
+}
 
-  const [errorMessage, setErrorMessage] = useState(null);
+const AddKeyForm = ({ id, open }) => {
   let [apikey, setApiKey] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
   const [pushApi] = useMutation(PUSH_API_KEY, {
     onError: (err) => {
       const message = err.message.split(":")[1];
@@ -34,24 +46,50 @@ function AccountManager({ user, selectedKey, setSelectedKey, isSubmitting }) {
         setErrorMessage(null);
       }, 10000);
     },
-    update(cache, { data: { pushAPIkey } }) {
-      let data = cache.readQuery({
-        query: FETCH_USER,
-        variables: { userId: user.id },
-      });
-      console.log(data);
-      cache.writeQuery({
-        query: FETCH_USER,
-        variables: { userId: user.id },
-        data: {
-          user: {
-            ...user,
-            apikeys: pushAPIkey.apikeys,
-          },
-        },
-      });
-    },
   });
+  return (
+    <Collapsible open={open || false}>
+      <Box margin="small">
+        <FormField error={errorMessage} label="API Key">
+          <TextInput
+            onChange={(e) => setApiKey(e.target.value)}
+            value={apikey}
+            placeholder="2HFXXX2G...."
+          />
+        </FormField>
+        <Button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            pushApi({
+              variables: {
+                id,
+                apikey,
+              },
+            });
+            setApiKey("");
+          }}
+          color="neutral-2"
+          label="Submit"
+        />
+      </Box>
+    </Collapsible>
+  );
+};
+
+function AccountManager({
+  user,
+  selectedKey,
+  setSelectedKey,
+  isSubmitting,
+  errors,
+}) {
+  let { apikeys } = user;
+  const [open, setOpen] = useState(true);
+  const [addApi, setAddApi] = useState(false);
+  useEffect(() => {
+    setSelectedKey(apikeys[0]);
+  }, [apikeys, setSelectedKey]);
   return (
     <Box pad="medium" width="100vw" justify="between" flex>
       <Heading
@@ -78,18 +116,12 @@ function AccountManager({ user, selectedKey, setSelectedKey, isSubmitting }) {
             label="Account"
             as="button"
             type="button"
-            border={{ color: "neutral-3", size: "small" }}
+            border={{ size: "small" }}
             size="medium"
             onClick={() => setAddApi(!addApi)}
           >
-            {addApi ? (
-              <Subtract size="small" color="neutral-3" />
-            ) : (
-              <Add size="small" color="neutral-3" />
-            )}
-            <Text size="small" color="neutral-3">
-              Edit
-            </Text>
+            {addApi ? <Subtract size="small" /> : <Add size="small" />}
+            <Text size="small">Edit</Text>
           </Box>
         </Box>
       </Box>
@@ -99,32 +131,8 @@ function AccountManager({ user, selectedKey, setSelectedKey, isSubmitting }) {
           selectedKey={selectedKey}
           setSelectedKey={setSelectedKey}
         />
-        <Collapsible open={addApi}>
-          <Box margin="small">
-            <FormField error={errorMessage} label="API Key">
-              <TextInput
-                onChange={(e) => setApiKey(e.target.value)}
-                value={apikey}
-                placeholder="2HFXXX2G...."
-              />
-            </FormField>
-            <Button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                pushApi({
-                  variables: {
-                    id: user.id,
-                    apikey,
-                  },
-                });
-                setApiKey("");
-              }}
-              color="neutral-2"
-              label="Submit"
-            />
-          </Box>
-        </Collapsible>
+        <AddKeyForm id={user.id} open={addApi} />
+        <FormErrors errors={errors} />
         <Box align="end">
           <Box direction="row" gap="small">
             <Button

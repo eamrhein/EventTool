@@ -53,7 +53,7 @@ const allContentPartners = [
   },
 ];
 
-const SearchDropdown = ({ setFieldValue, values }) => {
+const SearchDropdown = ({ setFieldValue, values, ...props }) => {
   const [contentPartners, setContentPartners] = useState(allContentPartners);
   const [searching, setSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -164,12 +164,12 @@ const SearchDropdown = ({ setFieldValue, values }) => {
 
   return (
     <SearchInputContext.Provider>
-      <FormFieldLabel>
+      <FormFieldLabel {...props}>
         <Select
           ref={selectRef}
           closeOnChange={false}
-          placeholder="Select Content Partners"
-          searchPlaceholder="Search Content Partners"
+          placeholder="Select a location"
+          searchPlaceholder="Search for Location"
           emptySearchMessage="No partners found"
           multiple
           value={values.locations.length ? renderContentPartners() : undefined}

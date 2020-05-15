@@ -15,35 +15,23 @@ import {
 
 let { FETCH_USER } = Queries;
 let MainBox = styled(Box)`
-  @keyframes fadeIn {
-    0% {
-      transition: ease-in;
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
+  position: absolute;
+  height: 100%;
+  .table {
+    width: 100%;
+    z-index: 1;
   }
-
-  @keyframes fadeOut {
-    0% {
-      opacity: 1;
-      transition: ease-out;
-    }
-    100% {
-      opacity: 0;
-    }
+  .shown {
+    opacity: 1;
+    pointer-events: all;
+    transition: opacity 0.5s ease 0.2s;
+  }
+  .hidden {
+    transition: opacity 0.5s ease 0.2s;
+    opacity: 0;
   }
 `;
 const Pending = ({ user, pending }) => {
-  const [render, setRender] = useState(pending);
-  useEffect(() => {
-    if (pending) setRender(true);
-  }, [pending]);
-
-  const onAnimationEnd = () => {
-    if (!pending) setRender(false);
-  };
   const { data, error, loading } = useQuery(FETCH_USER, {
     variables: {
       userId: user.id,
@@ -54,7 +42,9 @@ const Pending = ({ user, pending }) => {
   if (error) {
     return (
       <Box>
-        <Heading color="red">{error.message}</Heading>
+        <Heading margin="small" color="red">
+          {error.message}
+        </Heading>
       </Box>
     );
   }
@@ -66,15 +56,18 @@ const Pending = ({ user, pending }) => {
     );
   }
   return (
-    render && (
-      <MainBox
-        width="93vw"
+    <MainBox>
+      <Box
         pad="medium"
-        style={{
-          animation: `${pending ? "fadeIn" : "fadeOut"} 1s`,
-        }}
-        onAnimationEnd={onAnimationEnd}
+        background={{ light: "light-2", dark: "dark-1" }}
+        border={{ size: "small" }}
+        elevation="medium"
+        className={pending ? "table shown" : "table hidden"}
+        align="center"
       >
+        <Heading level="4" textAlign="center">
+          Status of Recently Submitted Events
+        </Heading>
         <Table>
           <TableHeader>
             <TableRow>
@@ -100,8 +93,8 @@ const Pending = ({ user, pending }) => {
             })}
           </TableBody>
         </Table>
-      </MainBox>
-    )
+      </Box>
+    </MainBox>
   );
 };
 

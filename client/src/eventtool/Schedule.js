@@ -17,10 +17,9 @@ export default function Schedule({
   values,
   onChange,
   setFieldValue,
-  form,
-  setForm,
   apikey,
   screenSize,
+  errors,
   ...props
 }) {
   const [open, setOpen] = useState(false);
@@ -34,29 +33,21 @@ export default function Schedule({
   ];
 
   const handleDate = (dates) => {
-    if (dates[0].length === 2) {
-      setFieldValue("start", {
-        ...values.start,
-        date: dates[0][0],
-      });
-      setFieldValue("end", {
-        ...values.end,
-        date: dates[0][1],
-      });
+    if (typeof dates === "string") {
+      setFieldValue("start_date", dates[0][0]);
+      setFieldValue("end_date", "");
+    }
+    if (typeof dates === "object") {
+      setFieldValue("start_date", dates[0][0]);
+      setFieldValue("end_date", dates[0][1]);
     }
   };
   const handleTime = (e, time) => {
     if (time === "start") {
-      setFieldValue("start", {
-        ...values.start,
-        time: e.target.value,
-      });
+      setFieldValue("start_time", e.target.value);
     }
     if (time === "end") {
-      setFieldValue("end", {
-        ...values.start,
-        time: e.target.value,
-      });
+      setFieldValue("end_time", e.target.value);
     }
   };
   return (
@@ -93,6 +84,7 @@ export default function Schedule({
           pad={true}
           help={
             <Box
+              id="schedule"
               pad="medium"
               margin="small"
               background={{ light: "light-4", dark: "dark-4" }}
@@ -138,22 +130,29 @@ export default function Schedule({
               margin="small"
               direction={screenSize === "small" ? "column" : "row"}
             >
-              <Calendar
-                bounds={bounds}
-                size="medium"
-                onSelect={handleDate}
-                range
-              />
+              <FormFieldLabel
+                label="Select an event date"
+                error={errors.start_date}
+              >
+                <Calendar
+                  bounds={bounds}
+                  size="medium"
+                  onSelect={handleDate}
+                  range
+                />
+              </FormFieldLabel>
               <Box pad="small" justify="center">
                 <TimeInput
+                  error={errors.start_time}
                   label="Start Time:"
-                  value={values.start.time}
+                  value={values.start_time}
                   onChange={(e) => handleTime(e, "start")}
                   required
                 />
                 <TimeInput
+                  error={errors.end_time}
                   label="End Time:"
-                  value={values.end.time}
+                  value={values.end_time}
                   onChange={(e) => handleTime(e, "end")}
                   required
                 />
@@ -161,50 +160,51 @@ export default function Schedule({
             </Box>
           ) : (
             <Box
+              id="schedule"
               justify="center"
               margin="small"
               direction={screenSize === "small" ? "column" : "row"}
             >
-              <Calendar bounds={bounds} size="medium" range />
+              <FormFieldLabel
+                label="Select an event date"
+                error={errors.start_date}
+              >
+                <Calendar bounds={bounds} size="medium" range />
+              </FormFieldLabel>
+
               <Box pad="small" justify="center">
                 <TimeInput
+                  error={errors.start_time}
                   label="Start Time:"
-                  value={values.start.time}
+                  value={values.start_time}
                   onChange={(e) => handleTime(e, "start")}
                   required
                 />
                 <TimeInput
+                  error={errors.end_time}
                   label="End Time:"
-                  value={values.end.time}
+                  value={values.end_time}
                   onChange={(e) => handleTime(e, "end")}
                   required
                 />
                 <FormFieldLabel label="Occurs:">
                   <Select
-                    value={values.recurrence.occurs}
+                    value={values.occurs}
                     options={["Daily", "Weekly", "Monthly"]}
-                    onChange={({ option }) =>
-                      setFieldValue("recurrence", {
-                        ...values.recurrence,
-                        occurs: option,
-                      })
-                    }
+                    onChange={({ option }) => setFieldValue("occurs", option)}
                   />
                 </FormFieldLabel>
                 <FormFieldLabel
                   info={
                     `Event repeats ` +
-                    values.recurrence.times +
-                    (values.recurrence.times > 1 ? " times." : " time.")
+                    values.times +
+                    (values.times > 1 ? " times." : " time.")
                   }
                 >
                   <TextInput
-                    value={values.recurrence.times}
+                    value={values.times}
                     onChange={(e) =>
-                      setFieldValue("recurrence", {
-                        ...values.recurrence,
-                        times: e.target.value,
-                      })
+                      setFieldValue("recurrence", e.target.value)
                     }
                   />
                 </FormFieldLabel>

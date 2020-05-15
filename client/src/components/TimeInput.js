@@ -3,9 +3,9 @@ import { MaskedInput } from "grommet";
 import { FormFieldLabel } from "./FormFieldLabel";
 
 export const TimeInput = (props) => {
-  let { label, required, ...rest } = props;
+  let { label, required, error, ...rest } = props;
   return (
-    <FormFieldLabel label={label} required={required}>
+    <FormFieldLabel error={error} label={label} required={required}>
       <MaskedInput
         mask={[
           {

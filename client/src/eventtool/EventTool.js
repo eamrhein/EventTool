@@ -22,13 +22,15 @@ function EventTool({ responsive, pending }) {
       },
     }
   );
-  if (idError || userError) return <h3>Error: {idError || userError}</h3>;
+  if (idError || userError)
+    return <h3>Error: {idError.message || userError.message}</h3>;
   if (idLoading || userLoading)
     return (
       <Box height="100vh" justify="center" align="center">
         <Spinner />
       </Box>
     );
+  console.log(pending);
   let { user } = userData;
   let defaultKey = user.apikeys[0];
   return (
@@ -36,7 +38,6 @@ function EventTool({ responsive, pending }) {
       <Box>
         <Schedule user={user} pending={pending} />
         <EventForm
-          pending={pending}
           responsive={responsive}
           user={user}
           defaultKey={defaultKey}

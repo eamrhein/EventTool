@@ -13,7 +13,7 @@ const AuthRoute = ({
 }) => {
   let { data, error } = useQuery(IS_LOGGED_IN);
   if (error) {
-    return <p>Error</p>;
+    return <p>{error.message}</p>;
   }
   let { isLoggedIn } = data;
   if (routeType === "protected") {

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { FastField } from "formik";
 import Search from "../components/SearchDropdown";
 import { useQuery } from "@apollo/react-hooks";
 import Queries from "../graphql/queries";
@@ -41,8 +40,7 @@ export default function BasicInfo({
       </Box>
     );
   if (error) {
-    console.log(error);
-    return null;
+    return <Box>{error.message}</Box>;
   }
   let categories = data.categories.map(({ name }) => name);
   let subcategories = data.subcategories
@@ -82,7 +80,7 @@ export default function BasicInfo({
         </Heading>
       </Button>
       <Collapsible open={open}>
-        <Box margin="small">
+        <Box id="basic" margin="small">
           <FormFieldLabel
             margin="small"
             info={
@@ -102,7 +100,7 @@ export default function BasicInfo({
             />
           </FormFieldLabel>
           <Box margin="small" gap="small" direction="row">
-            <FormFieldLabel label="Type">
+            <FormFieldLabel error={errors.type} label="Type">
               <Select
                 placeholder="Type"
                 value={values.type}
@@ -110,7 +108,7 @@ export default function BasicInfo({
                 options={types}
               />
             </FormFieldLabel>
-            <FormFieldLabel label="Category">
+            <FormFieldLabel error={errors.category} label="Category">
               <Select
                 placeholder="Music"
                 value={values.category}
@@ -119,7 +117,7 @@ export default function BasicInfo({
               />
             </FormFieldLabel>
             {subcategories.length > 1 ? (
-              <FormFieldLabel label="Subcategory">
+              <FormFieldLabel error={errors.subcategory} label="Subcategory">
                 <Select
                   value={values.subcategory}
                   onChange={({ option }) =>
@@ -148,9 +146,13 @@ export default function BasicInfo({
             />
           </FormFieldLabel>
           {values.locationType === "Venue" ? (
-            <FormFieldLabel margin="small">
-              <Search values={values} setFieldValue={setFieldValue} />
-            </FormFieldLabel>
+            <Search
+              label="Location"
+              margin="small"
+              error={errors.locations}
+              values={values}
+              setFieldValue={setFieldValue}
+            />
           ) : null}
         </Box>
       </Collapsible>

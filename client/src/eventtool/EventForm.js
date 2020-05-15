@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import * as Yup from "yup";
 import moment from "moment";
 import styled from "styled-components";
 import { Box, Heading, Paragraph } from "grommet";
@@ -9,7 +10,7 @@ import Schedule from "./Schedule";
 import Description from "./Description";
 import Tickets from "./Tickets";
 import { useMutation } from "@apollo/react-hooks";
-import { defaultFormState } from "../util/form_defaults";
+import { defaultFormState, validationShape } from "../util/form_defaults";
 import Mutations from "../graphql/mutations";
 import Queries from "../graphql/queries";
 
@@ -17,9 +18,9 @@ const { SUBMIT_FORM } = Mutations;
 const { FETCH_USER } = Queries;
 
 let MainBox = styled(Box)`
-  @keyframes fadeIn {
+  /* @keyframes fadeIn {
     0% {
-      transition: ease-in;
+      transition: opacity 5s ease 5s;
       opacity: 0;
     }
     100% {
@@ -30,16 +31,16 @@ let MainBox = styled(Box)`
   @keyframes fadeOut {
     0% {
       opacity: 1;
-      transition: ease-out;
+      transition: opacity 5s ease 5s;
     }
     100% {
       opacity: 0;
     }
-  }
+  } */
 `;
 
 function EventForm({ user, responsive, history, pending, defaultKey }) {
-  const [form, setForm] = useState(defaultFormState);
+  let validation = Yup.object().shape(validationShape);
   const [selectedKey, setSelectedKey] = useState(defaultKey);
   const [submitForm] = useMutation(SUBMIT_FORM, {
     onError: (err) => {
@@ -59,89 +60,74 @@ function EventForm({ user, responsive, history, pending, defaultKey }) {
     },
   });
   let date = moment(new Date()).add("10", "seconds").toISOString();
-  const [render, setRender] = useState(true);
-  useEffect(() => {
-    if (!pending) setRender(true);
-  }, [pending]);
-
-  const onAnimationEnd = () => {
-    if (pending) setRender(false);
-  };
 
   if (user.apikeys && user.apikeys.length > 0) {
     return (
-      render && (
-        <MainBox
-          onAnimationEnd={onAnimationEnd}
-          style={{ animation: `${pending ? "fadeOut" : "fadeIn"} 1s` }}
-          value={form}
-          pad="medium"
+      <MainBox pad="medium">
+        <Formik
+          initialValues={defaultFormState}
+          validateOnChange={false}
+          validationSchema={validation}
+          onSubmit={(values, { setSubmitting }) => {
+            submitForm({
+              variables: {
+                id: user.id,
+                date,
+                data: JSON.stringify(values),
+              },
+            });
+            setSubmitting();
+          }}
         >
-          <Formik
-            initialValues={defaultFormState}
-            validateOnChange={false}
-            validateOnBlur={false}
-            onSubmit={(values, { setSubmitting }) => {
-              console.log(values);
-              // submitForm({
-              //   variables: {
-              //     id: user.id,
-              //     date,
-              //     data: JSON.stringify(values),
-              //   },
-              // });
-              setSubmitting();
-            }}
-          >
-            {({
-              values,
-              errors,
-              handleChange,
-              handleSubmit,
-              isSubmitting,
-              setFieldValue,
-            }) => (
-              <Form onSubmit={handleSubmit}>
-                <AccountManager
-                  user={user}
-                  selectedKey={selectedKey}
-                  setSelectedKey={setSelectedKey}
-                  history={history}
-                  isSubmitting={isSubmitting}
-                />
-                <BasicInfo
-                  values={values}
-                  setFieldValue={setFieldValue}
-                  handleChange={handleChange}
-                  apikey={selectedKey}
-                  errors={errors}
-                />
-                <Schedule
-                  values={values}
-                  setFieldValue={setFieldValue}
-                  handleChange={handleChange}
-                  screenSize={responsive}
-                  apikey={selectedKey}
-                  errors={errors}
-                />
-                <Description
-                  values={values}
-                  setFieldValue={setFieldValue}
-                  handleChange={handleChange}
-                  apikey={selectedKey}
-                  errors={errors}
-                />
-                <Tickets
-                  values={values}
-                  setFieldValue={setFieldValue}
-                  screenSize={responsive}
-                  errors={errors}
-                />
-              </Form>
-            )}
-          </Formik>
-        </MainBox>
-      )
+          {({
+            values,
+            errors,
+            handleChange,
+            handleSubmit,
+            isSubmitting,
+            setFieldValue,
+          }) => (
+            <Form onSubmit={handleSubmit}>
+              <AccountManager
+                user={user}
+                errors={errors}
+                selectedKey={selectedKey}
+                setSelectedKey={setSelectedKey}
+                history={history}
+                isSubmitting={isSubmitting}
+              />
+              <BasicInfo
+                values={values}
+                setFieldValue={setFieldValue}
+                handleChange={handleChange}
+                apikey={selectedKey}
+                errors={errors}
+              />
+              <Schedule
+                values={values}
+                setFieldValue={setFieldValue}
+                handleChange={handleChange}
+                screenSize={responsive}
+                apikey={selectedKey}
+                errors={errors}
+              />
+              <Description
+                values={values}
+                setFieldValue={setFieldValue}
+                handleChange={handleChange}
+                apikey={selectedKey}
+                errors={errors}
+              />
+              <Tickets
+                values={values}
+                setFieldValue={setFieldValue}
+                screenSize={responsive}
+                errors={errors}
+              />
+            </Form>
+          )}
+        </Formik>
+      </MainBox>
     );
   }
   return (

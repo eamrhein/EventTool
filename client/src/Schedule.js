@@ -4,6 +4,7 @@ import Queries from "./graphql/queries";
 import styled from "styled-components";
 import moment from "moment";
 import {
+  Anchor,
   Heading,
   Box,
   Table,
@@ -74,6 +75,9 @@ const Pending = ({ user, pending }) => {
               <TableCell scope="col" border="bottom">
                 Status
               </TableCell>
+              <TableCell scope="col" border="bottom">
+                urls
+              </TableCell>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -85,6 +89,13 @@ const Pending = ({ user, pending }) => {
                     {moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a")}
                   </TableCell>
                   <TableCell>{job.status}</TableCell>
+                  <TableCell>
+                    {job.urls.map((url, id) => (
+                      <Box key={id}>
+                        <Anchor href={url}>Event</Anchor>
+                      </Box>
+                    ))}
+                  </TableCell>
                 </TableRow>
               );
             })}

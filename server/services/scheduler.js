@@ -11,13 +11,6 @@ const scheduleEvent = async ({ id, date, data, key }) => {
   if (!user) {
     throw Error("User not in database");
   }
-  let job = new Job({
-    data,
-    schedule: date,
-    status: "Pending",
-  });
-  user.jobs.push(job);
-  user.save();
   let form = JSON.parse(data);
   let { eventData, scheduleData } = parseForm(form);
   try {
@@ -37,11 +30,20 @@ const scheduleEvent = async ({ id, date, data, key }) => {
       return await eventbrite.createTicket(ticketData, event.id, key);
     });
     let ticketRes = await Promise.all(ticketPromises);
-    console.log(event);
+    let job = new Job({
+      data,
+      schedule: date,
+      status: "Pending",
+      urls: [],
+    });
+    job.urls.push(event.url);
+    user.jobs.push(job);
+    console.log(user.jobs);
+    let u = await user.save();
+    return u;
   } catch (error) {
     console.log(error.message);
   }
-
   // schedule.scheduleJob(date, function () {
   //   try {
   //     console.log("hello");
@@ -55,7 +57,6 @@ const scheduleEvent = async ({ id, date, data, key }) => {
   //   }
   // });
   // // console.log(user);
-  return user;
 };
 
 function eventCleaner() {

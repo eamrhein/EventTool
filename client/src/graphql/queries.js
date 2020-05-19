@@ -21,6 +21,7 @@ export default {
           data
           status
           schedule
+          urls
         }
       }
     }

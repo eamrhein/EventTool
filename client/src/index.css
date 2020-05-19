@@ -109,6 +109,14 @@ body {
     Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial,
     sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
+.wf-loading {
+  visibility: hidden;
+}
+.wf-active,
+.wf-inactive {
+  visibility: visible;
+}
+
 ol,
 ul {
   list-style: none;

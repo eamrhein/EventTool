@@ -19,6 +19,7 @@ const JobSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  urls: [{ type: String }],
 });
 const Jobs = mongoose.model("jobs", JobSchema);
 

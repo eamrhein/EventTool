@@ -84,10 +84,12 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLID },
         date: { type: GraphQLString },
         data: { type: GraphQLString },
+        key: { type: GraphQLString },
       },
-      async resolve(_, { id, date, data }) {
+      async resolve(_, { id, date, data, key }) {
         return scheduler.scheduleEvent({
           id,
+          key,
           date,
           data,
         });

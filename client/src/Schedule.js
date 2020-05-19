@@ -15,21 +15,17 @@ import {
 
 let { FETCH_USER } = Queries;
 let MainBox = styled(Box)`
-  position: absolute;
-  height: 100%;
-  .table {
-    width: 100%;
-    z-index: 1;
-  }
-  .shown {
-    opacity: 1;
-    pointer-events: all;
-    transition: opacity 0.5s ease 0.2s;
-  }
-  .hidden {
-    transition: opacity 0.5s ease 0.2s;
-    opacity: 0;
-  }
+  position: fixed;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  min-width: 100;
+  max-height: 70%;
+  left: 2.5%;
+  right: 2.5%;
+  z-index: 1;
+  opacity: ${(props) => (props.shown ? 1 : 0)};
+  pointer-events: ${(props) => (props.shown ? "all" : "none")};
+  transition: opacity 0.5s ease 0.2s;
 `;
 const Pending = ({ user, pending }) => {
   const { data, error, loading } = useQuery(FETCH_USER, {
@@ -56,18 +52,19 @@ const Pending = ({ user, pending }) => {
     );
   }
   return (
-    <MainBox>
-      <Box
-        pad="medium"
-        background={{ light: "light-2", dark: "dark-1" }}
-        border={{ size: "small" }}
-        elevation="medium"
-        className={pending ? "table shown" : "table hidden"}
-        align="center"
-      >
-        <Heading level="4" textAlign="center">
-          Status of Recently Submitted Events
-        </Heading>
+    <MainBox
+      overflow="scroll"
+      pad="medium"
+      background={{ light: "light-2", dark: "dark-1" }}
+      border={{ size: "small" }}
+      elevation="medium"
+      shown={pending}
+      align="center"
+    >
+      <Heading level="4" textAlign="center">
+        Status of Recently Submitted Events
+      </Heading>
+      <Box width="100%">
         <Table>
           <TableHeader>
             <TableRow>

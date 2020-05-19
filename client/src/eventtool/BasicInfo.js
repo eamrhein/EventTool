@@ -42,13 +42,19 @@ export default function BasicInfo({
   if (error) {
     return <Box>{error.message}</Box>;
   }
-  let categories = data.categories.map(({ name }) => name);
+  let categories = data.categories.map(({ name, id }) => {
+    return { name, id };
+  });
   let subcategories = data.subcategories
-    .filter((obj) => obj.parent === values.category)
-    .map(({ name }) => name);
-  let types = data.types.map(({ name }) => name);
+    .filter((obj) => obj.parent === values.category.name)
+    .map(({ name, id }) => {
+      return { name, id };
+    });
+  let types = data.types.map(({ name, id }) => {
+    return { name, id };
+  });
   let orgs = data.account.organizations.map(({ name, id }) => {
-    return name;
+    return { name, id };
   });
   return (
     <Box pad="medium" width="100vw" justify="between" flex>
@@ -104,6 +110,8 @@ export default function BasicInfo({
               <Select
                 placeholder="Type"
                 value={values.type}
+                labelKey="name"
+                valueKey={{ key: "id" }}
                 onChange={({ option }) => setFieldValue("type", option)}
                 options={types}
               />
@@ -111,6 +119,8 @@ export default function BasicInfo({
             <FormFieldLabel error={errors.category} label="Category">
               <Select
                 placeholder="Music"
+                labelKey="name"
+                valueKey={{ key: "id" }}
                 value={values.category}
                 onChange={({ option }) => setFieldValue("category", option)}
                 options={categories}
@@ -120,6 +130,8 @@ export default function BasicInfo({
               <FormFieldLabel error={errors.subcategory} label="Subcategory">
                 <Select
                   value={values.subcategory}
+                  labelKey="name"
+                  valueKey={{ key: "id" }}
                   onChange={({ option }) =>
                     setFieldValue("subcategory", option)
                   }
@@ -129,7 +141,13 @@ export default function BasicInfo({
             ) : null}
           </Box>
           <FormFieldLabel label="Organizer" margin="small">
-            <Select value={orgs[0]} options={orgs} />
+            <Select
+              labelKey="name"
+              valueKey={{ key: "id" }}
+              value={values.organization || orgs[0].name}
+              options={orgs}
+              onChange={({ option }) => setFieldValue("organization", option)}
+            />
           </FormFieldLabel>
         </Box>
         <Heading level="2">

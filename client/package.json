@@ -26,8 +26,11 @@
     "react-apollo": "^3.1.3",
     "react-dom": "^16.13.0",
     "react-is": "^16.13.0",
+    "react-quill": "^2.0.0-beta.2",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
+    "serverdate": "^3.1.0",
+    "style-loader": "^1.2.1",
     "styled-components": "^5.1.0",
     "webfontloader": "^1.6.28",
     "yup": "^0.28.5"

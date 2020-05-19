@@ -17,29 +17,7 @@ import Queries from "../graphql/queries";
 const { SUBMIT_FORM } = Mutations;
 const { FETCH_USER } = Queries;
 
-let MainBox = styled(Box)`
-  /* @keyframes fadeIn {
-    0% {
-      transition: opacity 5s ease 5s;
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-
-  @keyframes fadeOut {
-    0% {
-      opacity: 1;
-      transition: opacity 5s ease 5s;
-    }
-    100% {
-      opacity: 0;
-    }
-  } */
-`;
-
-function EventForm({ user, responsive, history, pending, defaultKey }) {
+function EventForm({ user, responsive, history, defaultKey }) {
   let validation = Yup.object().shape(validationShape);
   const [selectedKey, setSelectedKey] = useState(defaultKey);
   const [submitForm] = useMutation(SUBMIT_FORM, {
@@ -59,21 +37,23 @@ function EventForm({ user, responsive, history, pending, defaultKey }) {
       });
     },
   });
-  let date = moment(new Date()).add("10", "seconds").toISOString();
-
+  let dateObj = new Date(Date.now()).toISOString();
+  let date = moment(dateObj).add(2, "minutes").toISOString();
   if (user.apikeys && user.apikeys.length > 0) {
     return (
-      <MainBox pad="medium">
+      <Box pad="medium">
         <Formik
           initialValues={defaultFormState}
           validateOnChange={false}
           validationSchema={validation}
           onSubmit={(values, { setSubmitting }) => {
+            console.log(selectedKey);
             submitForm({
               variables: {
                 id: user.id,
-                date,
+                date: date,
                 data: JSON.stringify(values),
+                key: selectedKey,
               },
             });
             setSubmitting();
@@ -127,7 +107,7 @@ function EventForm({ user, responsive, history, pending, defaultKey }) {
             </Form>
           )}
         </Formik>
-      </MainBox>
+      </Box>
     );
   }
   return (

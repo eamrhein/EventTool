@@ -55,8 +55,8 @@ export default {
     }
   `,
   SUBMIT_FORM: gql`
-    mutation submitForm($id: ID!, $date: String!, $data: String!) {
-      scheduleEvent(id: $id, date: $date, data: $data) {
+    mutation submitForm($id: ID!, $date: String!, $data: String!, $key: String!) {
+      scheduleEvent(id: $id, date: $date, data: $data, key: $key ) {
         id
         email
         apikeys

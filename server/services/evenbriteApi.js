@@ -12,9 +12,10 @@ const getOrg = async (orgId, apikey) => {
 };
 // resolve a resonse array into JSON
 
-async function createEvent(data, apikey) {
+async function createEvent(data, apikey, id) {
+  console.log(data);
   const res = await fetch(
-    `https://www.eventbriteapi.com/v3/organizations/64592771355/events/?token=${apikey}`,
+    `https://www.eventbriteapi.com/v3/organizations/${id}/events/?token=${apikey}`,
     {
       method: "post",
       body: JSON.stringify(data),
@@ -24,76 +25,79 @@ async function createEvent(data, apikey) {
     }
   );
   if (!res.ok) {
-    throw new Error("Event Data is Incomplete");
+    let error = await res.json();
+    throw new Error(error.error_description);
   }
   const resData = await res.json();
   return resData;
 }
 
-async function createSeries(id, occurrence_duration, recurrence_rule, apikey) {
+async function createSeries(id, data, apikey) {
   const res = await fetch(
     `https://www.eventbriteapi.com/v3/events/${id}/schedules/?token=${apikey}`,
     {
       method: "post",
-      body: JSON.stringify({
-        schedule: {
-          occurrence_duration,
-          recurrence_rule,
-        },
-      }),
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
     }
   );
-  const data = await res.json();
-  console.log(data);
-  return data;
+  if (!res.ok) {
+    let error = await res.json();
+    throw new Error(error.error_description);
+  }
+  const push = await res.json();
+  return push;
 }
 
-async function createTicket(id, cost, count, name, apikey) {
-  let res;
-  cost = parsePrice(cost);
-  if (cost === "000") {
-    res = await fetch(
-      ` https://www.eventbriteapi.com/v3/events/${id}/ticket_classes/?token=${apikey}`,
-      {
-        method: "post",
-        body: JSON.stringify({
-          ticket_class: {
-            name,
-            quantity_total: count,
-            free: true,
-          },
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+async function createTicket(ticketData, id, key) {
+  console.log(ticketData);
+  let stripped = ticketData.price.replace(/[^0-9.-]+/g, "");
+  var number = Number(stripped);
+  let ticketObj;
+  if (number > 0) {
+    let costStr = stripped.price.replace(/./g, "");
+    if (coststr.length < 4) {
+      costStr = "0" + costStr;
+    }
+    ticketObj = {
+      name: ticketData.name,
+      free: false,
+      cost: `USD,${costStr}`,
+      capacity: ticketData.quantity,
+    };
   } else {
-    res = await fetch(
-      ` https://www.eventbriteapi.com/v3/events/${id}/ticket_classes/?token=${apikey}`,
+    ticketObj = {
+      name: ticketData.name,
+      free: true,
+      capacity: ticketData.quantity,
+    };
+  }
+
+  try {
+    let res = await fetch(
+      `https://www.eventbriteapi.com/v3/events/${id}/ticket_classes/?token=${key}`,
       {
-        method: "post",
+        method: "POST",
         body: JSON.stringify({
-          ticket_class: {
-            name,
-            quantity_total: count,
-            cost: `USD, ${cost}`,
-          },
+          ticket_class: ticketObj,
         }),
         headers: {
           "Content-Type": "application/json",
         },
       }
     );
+    if (!res.ok) {
+      let error = await res.json();
+      throw Error(error.error_description);
+    }
+    let slug = await res.json();
+    console.log(slug);
+    return slug;
+  } catch (error) {
+    console.log(error);
   }
-  if (!res.ok) {
-    throw new Error("Ticket Info is Incorrect");
-  }
-  const data = await res.json();
-  return data;
 }
 async function publishEvent(id, apikey) {
   const res = await fetch(
@@ -120,8 +124,6 @@ async function getUploadSignature(apikey) {
 
 async function uploadImage(img, url, args) {
   const formData = new FormData();
-  // eslint-disable-next-line no-restricted-syntax
-  // eslint-disable-next-line guard-for-in
   for (const name in args) {
     formData.append(name, args[name]);
   }

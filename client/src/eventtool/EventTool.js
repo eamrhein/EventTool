@@ -23,14 +23,17 @@ function EventTool({ responsive, pending }) {
     }
   );
   if (idError || userError)
-    return <h3>Error: {idError.message || userError.message}</h3>;
+    return idError ? (
+      <h3>Error: {idError.message}</h3>
+    ) : (
+      <h3>{userError.message}</h3>
+    );
   if (idLoading || userLoading)
     return (
       <Box height="100vh" justify="center" align="center">
         <Spinner />
       </Box>
     );
-  console.log(pending);
   let { user } = userData;
   let defaultKey = user.apikeys[0];
   return (

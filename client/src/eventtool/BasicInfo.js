@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Search from "../components/SearchDropdown";
 import { useQuery } from "@apollo/react-hooks";
 import Queries from "../graphql/queries";
@@ -24,6 +24,12 @@ export default function BasicInfo({
   setFieldValue,
   errors,
 }) {
+  let orgs;
+  useEffect(() => {
+    if (orgs[0]) {
+      setFieldValue("organization", orgs[0]);
+    }
+  }, [orgs, setFieldValue, apikey]);
   const [open, setOpen] = useState(true);
   const { loading, data, error } = useQuery(
     FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES,
@@ -53,7 +59,7 @@ export default function BasicInfo({
   let types = data.types.map(({ name, id }) => {
     return { name, id };
   });
-  let orgs = data.account.organizations.map(({ name, id }) => {
+  orgs = data.account.organizations.map(({ name, id }) => {
     return { name, id };
   });
   return (
@@ -144,7 +150,7 @@ export default function BasicInfo({
             <Select
               labelKey="name"
               valueKey={{ key: "id" }}
-              value={values.organization || orgs[0].name}
+              value={values.organization}
               options={orgs}
               onChange={({ option }) => setFieldValue("organization", option)}
             />
@@ -165,6 +171,8 @@ export default function BasicInfo({
           </FormFieldLabel>
           {values.locationType === "Venue" ? (
             <Search
+              apikey={apikey}
+              orgId={values.organization.id || orgs[0].id}
               label="Location"
               margin="small"
               error={errors.locations}

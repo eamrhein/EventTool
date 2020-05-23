@@ -38,11 +38,10 @@ const scheduleEvent = async ({ id, date, data, key }) => {
     });
     job.urls.push(event.url);
     user.jobs.push(job);
-    console.log(user.jobs);
     let u = await user.save();
     return u;
   } catch (error) {
-    console.log(error.message);
+    throw Error(error.message);
   }
   // schedule.scheduleJob(date, function () {
   //   try {

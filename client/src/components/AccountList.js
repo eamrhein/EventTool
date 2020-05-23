@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import Queries from "../graphql/queries";
 import Mutations from "../graphql/mutations";
-import { Box, Text, Grid } from "grommet";
+import { Box, Text, Grid, Heading } from "grommet";
 import { FormTrash } from "grommet-icons";
 const { DELETE_API_KEY } = Mutations;
 const { FETCH_ACCOUNT, FETCH_USER } = Queries;
@@ -47,9 +47,10 @@ function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
   return (
     <Box
       focusIndicator={false}
-      width="100vw"
       key={id}
       direction="row"
+      justify="center"
+      align="center"
       border={
         apikey === selectedKey
           ? {
@@ -64,49 +65,35 @@ function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
       as="button"
       type="button"
       style={{ cursor: "pointer" }}
-      onClick={() => setSelectedKey(apikey)}
+      onClick={() => {
+        setSelectedKey(apikey);
+        // resetForm();
+      }}
     >
-      <Box pad="xsmall" direction="column">
-        <Text size="xsmall" truncate>
-          <Text size="xsmall" weight="bold">
-            Account Name:
-          </Text>{" "}
-          {account.name}
-        </Text>
-        <Text size="xsmall" truncate>
-          <Text size="xsmall" weight="bold">
-            Email:
-          </Text>{" "}
+      <Box pad="xsmall">
+        <Heading level="5" truncate>
           {account.email}
-        </Text>
-        <Text size="xsmall" truncate>
-          <Text size="xsmall" weight="bold">
-            API_KEY:
-          </Text>{" "}
-          {account.apikey}
-        </Text>
+        </Heading>
       </Box>
-      <div style={{ width: "25px", padding: "3px" }}>
-        <FormTrash
-          onMouseEnter={() => sethover(true)}
-          onMouseLeave={() => sethover(false)}
-          onClick={(e) => {
-            e.preventDefault();
-            deleteAPI({
-              variables: {
-                id: userId,
-                apikey,
-              },
-            });
-          }}
-          color={hover ? "status-error" : "status-disabled"}
-        />
-      </div>
+      <FormTrash
+        onMouseEnter={() => sethover(true)}
+        onMouseLeave={() => sethover(false)}
+        onClick={(e) => {
+          e.preventDefault();
+          deleteAPI({
+            variables: {
+              id: userId,
+              apikey,
+            },
+          });
+        }}
+        color={hover ? "status-error" : "status-disabled"}
+      />
     </Box>
   );
 }
 
-function AccountList({ user, selectedKey, setSelectedKey }) {
+function AccountList({ user, selectedKey, setSelectedKey, resetForm }) {
   if (user.apikeys.length > 0) {
     return (
       <Grid
@@ -119,6 +106,7 @@ function AccountList({ user, selectedKey, setSelectedKey }) {
       >
         {user.apikeys.map((apikey, id) => (
           <AccountCard
+            resetForm={resetForm}
             key={id}
             apikey={apikey}
             userId={user.id}

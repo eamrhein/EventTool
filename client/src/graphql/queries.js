@@ -62,6 +62,14 @@ export default {
       }
     }
   `,
+  FETCH_VENUES: gql`
+    query fetchVenues($apikey: String!, $orgId: String) {
+      venues(apikey: $apikey, orgId: $orgId) {
+        name
+        id
+      }
+    }
+  `,
   FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES: gql`
     query fetchCategories($apikey: String!) {
       categories(apikey: $apikey) {

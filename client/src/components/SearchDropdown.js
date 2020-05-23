@@ -2,62 +2,23 @@ import React, { useRef, useState, useEffect, createContext } from "react";
 import { FormClose } from "grommet-icons";
 import { Box, Button, CheckBox, Select, Text } from "grommet";
 import { FormFieldLabel } from "./FormFieldLabel";
+import { useQuery } from "@apollo/react-hooks";
+import Queries from "../graphql/queries";
 const SearchInputContext = createContext({});
-//#TODO
-// CREATE GRAPHQL QUERY to GRAB ALL account venus.
+const { FETCH_VENUES } = Queries;
 
-const allContentPartners = [
-  {
-    name: "San Francisco",
-    id: "32131232",
-  },
-  {
-    name: "New York",
-    id: "32131232",
-  },
-  {
-    name: "Denver",
-    id: "32131242",
-  },
-  {
-    name: "Austin",
-    id: "32131252",
-  },
-  {
-    name: "Seattle",
-    id: "32131262",
-  },
-  {
-    name: "San Antonio",
-    id: "32131272",
-  },
-  {
-    name: "Boston",
-    id: "32131272",
-  },
-  {
-    name: "Washington D.C.",
-    id: "32131272",
-  },
-  {
-    name: "Miami",
-    id: "32131272",
-  },
-  {
-    name: "Atlanta",
-    id: "32131272",
-  },
-  {
-    name: "Cleveland",
-    id: "32131272",
-  },
-];
-
-const SearchDropdown = ({ setFieldValue, values, ...props }) => {
-  const [contentPartners, setContentPartners] = useState(allContentPartners);
+const SearchDropdown = ({ apikey, orgId, setFieldValue, values, ...props }) => {
+  const { load, data, error } = useQuery(FETCH_VENUES, {
+    variables: {
+      apikey,
+      orgId,
+    },
+  });
+  let { venues } = data || [];
+  let safeVenus = venues.filter((obj) => obj["name"] && obj["id"]);
+  const [contentPartners, setContentPartners] = useState(safeVenus);
   const [searching, setSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
   const selectRef = useRef();
 
   const clearContentPartners = () => {
@@ -65,15 +26,18 @@ const SearchDropdown = ({ setFieldValue, values, ...props }) => {
   };
 
   useEffect(() => {
-    const filterContentPartners = allContentPartners.filter(
-      (s) => s.name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0
-    );
-
+    const filterContentPartners = safeVenus.filter((s) => {
+      let { name } = s;
+      if (name) {
+        return name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0;
+      }
+      return null;
+    });
     setTimeout(() => {
       setSearching(false);
       setContentPartners(filterContentPartners);
     }, 500);
-  }, [searching, searchQuery]);
+  }, [searching, searchQuery, safeVenus]);
 
   const renderOption = ({ name }) => (
     <Box direction="row" align="center" pad="small" flex={false}>
@@ -145,23 +109,29 @@ const SearchDropdown = ({ setFieldValue, values, ...props }) => {
   };
 
   const handleChange = (option) => {
+    console.log(option);
     const newSelectedPartners = [...values.locations];
     const seasonIndex = newSelectedPartners
-      .map(({ name }) => name)
-      .indexOf(option.name);
+      .map(({ id }) => id)
+      .indexOf(option.id);
     if (seasonIndex >= 0) {
       newSelectedPartners.splice(seasonIndex, 1);
     } else {
       newSelectedPartners.push(option);
     }
-    const selectedPartnerNames = newSelectedPartners.map(({ name }) => name);
-    const sortedContentPartners = [...allContentPartners].sort(
+    const selectedPartnerNames = newSelectedPartners.map(({ id }) => id);
+    const sortedContentPartners = [...safeVenus].sort(
       sortContentPartners(selectedPartnerNames)
     );
     setFieldValue("locations", newSelectedPartners);
     setContentPartners(sortedContentPartners);
   };
-
+  if (load) {
+    return <h1>Loading</h1>;
+  }
+  if (error) {
+    return <h1>error</h1>;
+  }
   return (
     <SearchInputContext.Provider>
       <FormFieldLabel {...props}>
@@ -170,7 +140,7 @@ const SearchDropdown = ({ setFieldValue, values, ...props }) => {
           closeOnChange={false}
           placeholder="Select a location"
           searchPlaceholder="Search for Location"
-          emptySearchMessage="No partners found"
+          emptySearchMessage="No locations found, please add some locations"
           multiple
           value={values.locations.length ? renderContentPartners() : undefined}
           selected={values.locations.map((option) =>

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
 import moment from "moment";
-import styled from "styled-components";
 import { Box, Heading, Paragraph } from "grommet";
 import { Formik, Form } from "formik";
 import AccountManager from "./AccountManager";
@@ -36,6 +35,7 @@ function EventForm({ user, responsive, history, defaultKey }) {
         fetchPolicy: "no-cache",
       });
     },
+    onCompleted: () => console.log("test"),
   });
   let dateObj = new Date(Date.now()).toISOString();
   let date = moment(dateObj).add(2, "minutes").toISOString();
@@ -46,8 +46,9 @@ function EventForm({ user, responsive, history, defaultKey }) {
           initialValues={defaultFormState}
           validateOnChange={false}
           validationSchema={validation}
-          onSubmit={(values, { setSubmitting }) => {
-            console.log(selectedKey);
+          onSubmit={(values, { setSubmitting, setStatus }) => {
+            console.log(values);
+            setStatus({ success: "testing" });
             submitForm({
               variables: {
                 id: user.id,
@@ -66,9 +67,11 @@ function EventForm({ user, responsive, history, defaultKey }) {
             handleSubmit,
             isSubmitting,
             setFieldValue,
+            success,
           }) => (
             <Form onSubmit={handleSubmit}>
               <AccountManager
+                success={success}
                 user={user}
                 errors={errors}
                 selectedKey={selectedKey}

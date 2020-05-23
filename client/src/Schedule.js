@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useQuery } from "react-apollo";
 import Queries from "./graphql/queries";
 import styled from "styled-components";

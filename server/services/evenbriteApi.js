@@ -1,5 +1,4 @@
 const fetch = require("node-fetch");
-
 const baseurl = "https://www.eventbriteapi.com/v3";
 
 // get a single account
@@ -10,6 +9,7 @@ const getAccount = async (apikey) => {
 const getOrg = async (orgId, apikey) => {
   return fetch(`${baseurl}/users/${orgId}/organizations/?token=${apikey}`);
 };
+
 // resolve a resonse array into JSON
 
 async function createEvent(data, apikey, id) {
@@ -251,7 +251,35 @@ const fetchFormats = async (apikey, continuationToken) => {
   }
   return types;
 };
+
+const fetchVenues = async (orgId, apikey, continuationToken) => {
+  console.log(orgId);
+  let url = `${baseurl}/organizations/${orgId}/venues/?token=${apikey}`;
+  if (continuationToken) {
+    url += `&continuation=${continuationToken}`;
+  }
+  const pag = await fetch(url);
+  const res = await pag.json();
+  console.log(res);
+  const venues = res.venues.map(({ name, id }) => {
+    return {
+      name,
+      id,
+    };
+  });
+  if (res.pagination && res.pagination.continuation) {
+    const rest = await fetchVenues(
+      orgId,
+      apikey,
+      res.pagination.continuationToken
+    );
+    return venues.concat(rest);
+  }
+  return venues;
+};
+
 module.exports = {
+  fetchVenues,
   fetchAccount,
   createEvent,
   createSeries,

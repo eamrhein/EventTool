@@ -83,6 +83,8 @@ function AccountManager({
   setSelectedKey,
   isSubmitting,
   errors,
+  resetForm,
+  success,
 }) {
   let { apikeys } = user;
   const [open, setOpen] = useState(true);
@@ -127,12 +129,14 @@ function AccountManager({
       </Box>
       <Collapsible open={open}>
         <Accounts
+          resetForm={resetForm}
           user={user}
           selectedKey={selectedKey}
           setSelectedKey={setSelectedKey}
         />
         <AddKeyForm id={user.id} open={addApi} />
         <FormErrors errors={errors} />
+        {success ? <Text>{success}</Text> : null}
         <Box align="end">
           <Box direction="row" gap="small">
             <Button

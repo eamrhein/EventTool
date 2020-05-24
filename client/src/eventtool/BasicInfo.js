@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Search from "../components/SearchDropdown";
 import { useQuery } from "@apollo/react-hooks";
 import Queries from "../graphql/queries";
@@ -24,12 +24,6 @@ export default function BasicInfo({
   setFieldValue,
   errors,
 }) {
-  let orgs;
-  useEffect(() => {
-    if (orgs[0]) {
-      setFieldValue("organization", orgs[0]);
-    }
-  }, [orgs, setFieldValue, apikey]);
   const [open, setOpen] = useState(true);
   const { loading, data, error } = useQuery(
     FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES,
@@ -39,15 +33,6 @@ export default function BasicInfo({
       },
     }
   );
-  if (loading)
-    return (
-      <Box height="100vh" justify="center" align="center">
-        <Spinner />
-      </Box>
-    );
-  if (error) {
-    return <Box>{error.message}</Box>;
-  }
   let categories = data.categories.map(({ name, id }) => {
     return { name, id };
   });
@@ -59,9 +44,25 @@ export default function BasicInfo({
   let types = data.types.map(({ name, id }) => {
     return { name, id };
   });
-  orgs = data.account.organizations.map(({ name, id }) => {
-    return { name, id };
-  });
+  let orgData = data.account.organizations;
+  let orgs = useMemo(() => {
+    return orgData.map(({ name, id }) => {
+      return { name, id };
+    });
+  }, [orgData]);
+  useEffect(() => {
+    setFieldValue("organization", orgs[0]);
+  }, [orgs, setFieldValue]);
+
+  if (loading)
+    return (
+      <Box height="100vh" justify="center" align="center">
+        <Spinner />
+      </Box>
+    );
+  if (error) {
+    return <Box>{error.message}</Box>;
+  }
   return (
     <Box pad="medium" width="100vw" justify="between" flex>
       <Button plain onClick={() => setOpen(!open)}>
@@ -172,7 +173,7 @@ export default function BasicInfo({
           {values.locationType === "Venue" ? (
             <Search
               apikey={apikey}
-              orgId={values.organization.id || orgs[0].id}
+              orgId={values.organization.id}
               label="Location"
               margin="small"
               error={errors.locations}

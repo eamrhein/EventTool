@@ -260,13 +260,15 @@ const fetchVenues = async (orgId, apikey, continuationToken) => {
   }
   const pag = await fetch(url);
   const res = await pag.json();
-  console.log(res);
-  const venues = res.venues.map(({ name, id }) => {
-    return {
-      name,
-      id,
-    };
-  });
+  let venues = [];
+  if (typeof res.venues === "array") {
+    venues = res.venues.map(({ name, id }) => {
+      return {
+        name,
+        id,
+      };
+    });
+  }
   if (res.pagination && res.pagination.continuation) {
     const rest = await fetchVenues(
       orgId,

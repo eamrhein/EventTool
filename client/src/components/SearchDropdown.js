@@ -6,7 +6,7 @@ import { useQuery } from "@apollo/react-hooks";
 import Queries from "../graphql/queries";
 const SearchInputContext = createContext({});
 const { FETCH_VENUES } = Queries;
-
+const arr = [];
 const SearchDropdown = ({ apikey, orgId, setFieldValue, values, ...props }) => {
   const { load, data, error } = useQuery(FETCH_VENUES, {
     variables: {
@@ -14,9 +14,8 @@ const SearchDropdown = ({ apikey, orgId, setFieldValue, values, ...props }) => {
       orgId,
     },
   });
-  let { venues } = data || [];
-  let safeVenus = venues.filter((obj) => obj["name"] && obj["id"]);
-  const [contentPartners, setContentPartners] = useState(safeVenus);
+  let venueData = data.venues.filter((obj) => obj["name"] && obj["id"]);
+  const [contentPartners, setContentPartners] = useState(venueData);
   const [searching, setSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const selectRef = useRef();
@@ -24,9 +23,8 @@ const SearchDropdown = ({ apikey, orgId, setFieldValue, values, ...props }) => {
   const clearContentPartners = () => {
     setFieldValue("locations", []);
   };
-
   useEffect(() => {
-    const filterContentPartners = safeVenus.filter((s) => {
+    let filterContentPartners = arr.filter((s) => {
       let { name } = s;
       if (name) {
         return name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0;
@@ -37,7 +35,7 @@ const SearchDropdown = ({ apikey, orgId, setFieldValue, values, ...props }) => {
       setSearching(false);
       setContentPartners(filterContentPartners);
     }, 500);
-  }, [searching, searchQuery, safeVenus]);
+  }, [searching, searchQuery]);
 
   const renderOption = ({ name }) => (
     <Box direction="row" align="center" pad="small" flex={false}>
@@ -120,7 +118,7 @@ const SearchDropdown = ({ apikey, orgId, setFieldValue, values, ...props }) => {
       newSelectedPartners.push(option);
     }
     const selectedPartnerNames = newSelectedPartners.map(({ id }) => id);
-    const sortedContentPartners = [...safeVenus].sort(
+    const sortedContentPartners = [...venueData].sort(
       sortContentPartners(selectedPartnerNames)
     );
     setFieldValue("locations", newSelectedPartners);

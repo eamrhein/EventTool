@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import AuthRoute from "./util/route_util";
-import { Switch, Redirect } from "react-router-dom";
 import Login from "./Login";
 import HeaderPanel from "./header/Header";
 import EventTool from "./eventtool/EventTool";
 import { grommet, Grommet, Box, ResponsiveContext } from "grommet";
 import { deepMerge } from "grommet/utils";
+import { useQuery } from "react-apollo";
+import Queries from "./graphql/queries";
+const { IS_LOGGED_IN } = Queries;
 
 const theme = deepMerge(grommet, {
   defaultMode: "dark",
@@ -30,7 +31,19 @@ const theme = deepMerge(grommet, {
 function App(props) {
   const [pending, setPending] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  window.setDarkMode = setDarkMode;
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", (e) => {
+      setDarkMode(true);
+    });
+  let { data, error, loading } = useQuery(IS_LOGGED_IN);
+  if (error) {
+    return <p>{error.message}</p>;
+  }
+  if (loading) {
+    return <p>Loading</p>;
+  }
+  let { isLoggedIn } = data;
   return (
     <Grommet theme={theme} themeMode={darkMode ? "dark" : "light"}>
       <ResponsiveContext.Consumer>
@@ -46,6 +59,7 @@ function App(props) {
                 responsive={responsive}
                 pending={pending}
                 setPending={setPending}
+                isLoggedIn={isLoggedIn}
               />
               <Box
                 tag="main"
@@ -54,23 +68,11 @@ function App(props) {
                 justify="start"
                 {...props}
               >
-                <Switch>
-                  <AuthRoute
-                    responsive={responsive}
-                    path="/login"
-                    component={Login}
-                    routeType="auth"
-                  />
-                  <AuthRoute
-                    exact
-                    path="/"
-                    responsive={responsive}
-                    component={EventTool}
-                    pending={pending}
-                    routeType="protected"
-                  />
-                  <Redirect to="/" />
-                </Switch>
+                {!isLoggedIn ? (
+                  <Login responsive={responsive} />
+                ) : (
+                  <EventTool pending={pending} responsive={responsive} />
+                )}
               </Box>
             </Box>
           );

@@ -35,7 +35,13 @@ const Pending = ({ user, pending }) => {
     },
     pollInterval: 500,
   });
-
+  let jobs = data.user.jobs.map((job) => {
+    return {
+      created: new Date(job.schedule),
+      data: JSON.parse(job.data),
+      urls: job.urls,
+    };
+  });
   if (error) {
     return (
       <Box>
@@ -63,38 +69,41 @@ const Pending = ({ user, pending }) => {
       align="center"
     >
       <Heading level="4" textAlign="center">
-        Status of Recently Submitted Events
+        Created Events
       </Heading>
       <Box width="100%">
         <Table>
           <TableHeader>
             <TableRow>
               <TableCell scope="col" border="bottom">
-                Date
+                Created
               </TableCell>
               <TableCell scope="col" border="bottom">
-                Status
+                Eventbrite URLs
               </TableCell>
               <TableCell scope="col" border="bottom">
-                urls
+                Publish
+              </TableCell>
+              <TableCell scope="col" border="bottom">
+                Delete
               </TableCell>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.user.jobs.map((job, index) => {
-              let date = new Date(job.schedule);
+            {jobs.map((job, index) => {
               return (
                 <TableRow key={index}>
                   <TableCell>
-                    {moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a")}
+                    {moment(job.date).format("MM/DD/YYYY h:mm A")}
                   </TableCell>
-                  <TableCell>{job.status}</TableCell>
                   <TableCell>
-                    {job.urls.map((url, id) => (
-                      <Box key={id}>
-                        <Anchor href={url}>Event</Anchor>
-                      </Box>
-                    ))}
+                    <Box>
+                      {job.data.locations.map((location, id) => (
+                        <Anchor target="_blank" href={job.urls[id]} key={id}>
+                          {location.name}
+                        </Anchor>
+                      ))}
+                    </Box>
                   </TableCell>
                 </TableRow>
               );

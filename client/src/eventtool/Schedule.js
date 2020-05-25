@@ -16,7 +16,7 @@ import { Calendar as CalendarIcon } from "grommet-icons";
 
 export default function Schedule({
   values,
-  onChange,
+  handleChange,
   setFieldValue,
   apikey,
   screenSize,
@@ -29,7 +29,7 @@ export default function Schedule({
   let day = today.getDate();
   let month = today.getMonth();
   let bounds = [
-    today.toISOString(),
+    new Date(year, month, day + 2).toISOString(),
     new Date(year + 5, month, day).toISOString(),
   ];
 
@@ -170,7 +170,12 @@ export default function Schedule({
                 label="Select an event date"
                 error={errors.start_date}
               >
-                <Calendar bounds={bounds} size="medium" range />
+                <Calendar
+                  onSelect={handleDate}
+                  bounds={bounds}
+                  size="medium"
+                  range
+                />
               </FormFieldLabel>
 
               <Box pad="small" justify="center">
@@ -203,10 +208,9 @@ export default function Schedule({
                   }
                 >
                   <TextInput
+                    id="times"
                     value={values.times}
-                    onChange={(e) =>
-                      setFieldValue("recurrence", e.target.value)
-                    }
+                    onChange={handleChange}
                   />
                 </FormFieldLabel>
               </Box>

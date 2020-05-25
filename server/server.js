@@ -16,7 +16,7 @@ const app = express();
 if (!db) {
   throw new Error("You must provide a string to connect to MongoDB Atlas");
 }
-scheduler.eventCleaner();
+// scheduler.eventCleaner();
 // Connect MongoDB:
 mongoose
   .connect(db, {

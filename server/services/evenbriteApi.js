@@ -171,7 +171,7 @@ const fetchAccount = async (apikey) => {
   const orgResponse = await getOrg(account.id, apikey);
   const orgsJson = await orgResponse.json();
 
-  const orgs = orgsJson.organizations.map((obj) => {
+  const organizations = orgsJson.organizations.map((obj) => {
     return {
       name: obj.name,
       id: obj.id,
@@ -185,7 +185,7 @@ const fetchAccount = async (apikey) => {
     last_name: account.last_name,
     name: account.name,
     image_id: account.image_id,
-    organizations: orgs,
+    organizations,
   };
 };
 const fetchCategories = async (apikey, continuationToken) => {
@@ -253,7 +253,6 @@ const fetchFormats = async (apikey, continuationToken) => {
 };
 
 const fetchVenues = async (orgId, apikey, continuationToken) => {
-  console.log(orgId);
   let url = `${baseurl}/organizations/${orgId}/venues/?token=${apikey}`;
   if (continuationToken) {
     url += `&continuation=${continuationToken}`;

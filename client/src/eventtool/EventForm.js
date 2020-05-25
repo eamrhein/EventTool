@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import * as Yup from "yup";
 import moment from "moment";
-import { Box, Heading, Paragraph } from "grommet";
+import { Box, Heading, Paragraph, Text } from "grommet";
 import { Formik, Form } from "formik";
 import AccountManager from "./AccountManager";
 import BasicInfo from "./BasicInfo";
@@ -17,6 +17,7 @@ const { SUBMIT_FORM } = Mutations;
 const { FETCH_USER } = Queries;
 
 function EventForm({ user, responsive, history, defaultKey }) {
+  const [success, setSuccess] = useState(false);
   let validation = Yup.object().shape(validationShape);
   const [selectedKey, setSelectedKey] = useState(defaultKey);
   const [submitForm] = useMutation(SUBMIT_FORM, {
@@ -35,7 +36,12 @@ function EventForm({ user, responsive, history, defaultKey }) {
         fetchPolicy: "no-cache",
       });
     },
-    onCompleted: () => console.log("test"),
+    onCompleted: () => {
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 3000);
+    },
   });
   let dateObj = new Date(Date.now()).toISOString();
   let date = moment(dateObj).add(2, "minutes").toISOString();
@@ -46,9 +52,8 @@ function EventForm({ user, responsive, history, defaultKey }) {
           initialValues={defaultFormState}
           validateOnChange={false}
           validationSchema={validation}
-          onSubmit={(values, { setSubmitting, setStatus }) => {
+          onSubmit={(values, { setSubmitting }) => {
             console.log(values);
-            setStatus({ success: "testing" });
             submitForm({
               variables: {
                 id: user.id,
@@ -67,11 +72,16 @@ function EventForm({ user, responsive, history, defaultKey }) {
             handleSubmit,
             isSubmitting,
             setFieldValue,
-            success,
           }) => (
             <Form onSubmit={handleSubmit}>
+              {success ? (
+                <Box pad="small" border={{ size: "small", color: "status-ok" }}>
+                  <Text size="small" color="status-ok">
+                    Event Submitted Successfully
+                  </Text>
+                </Box>
+              ) : null}
               <AccountManager
-                success={success}
                 user={user}
                 errors={errors}
                 selectedKey={selectedKey}

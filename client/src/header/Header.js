@@ -1,15 +1,10 @@
 import React from "react";
 import { useApolloClient } from "@apollo/react-hooks";
-import { useQuery } from "@apollo/react-hooks";
-import Queries from "../graphql/queries";
 import { Box, Heading, Header, CheckBox, Button, Menu } from "grommet";
 import { Menu as MenuIcon } from "grommet-icons";
-const { IS_LOGGED_IN } = Queries;
 
-const HeaderPanel = ({ responsive, pending, setPending, mode, setMode }) => {
-  const { data, error } = useQuery(IS_LOGGED_IN);
+const HeaderPanel = ({ isLoggedIn, responsive, pending, setPending }) => {
   const eventClient = useApolloClient();
-  if (error) return <h3>Error: {error.message}</h3>;
   const logout = (e) => {
     e.preventDefault();
     localStorage.removeItem("auth-token");
@@ -30,7 +25,7 @@ const HeaderPanel = ({ responsive, pending, setPending, mode, setMode }) => {
         icon={<MenuIcon />}
         pad="small"
         items={
-          data.isLoggedIn
+          isLoggedIn
             ? [
                 {
                   label: (
@@ -56,7 +51,7 @@ const HeaderPanel = ({ responsive, pending, setPending, mode, setMode }) => {
     </Header>
   ) : (
     <Header>
-      {data.isLoggedIn ? (
+      {isLoggedIn ? (
         <>
           <Box pad="medium" direction="row" align="center">
             <Heading
@@ -78,7 +73,7 @@ const HeaderPanel = ({ responsive, pending, setPending, mode, setMode }) => {
                   textDecoration: pending ? "underline" : "none",
                 }}
               >
-                Scheduled Events
+                Created Events
               </Button>
             </Box>
             <Box gap="small" margin="medium" direction="row">

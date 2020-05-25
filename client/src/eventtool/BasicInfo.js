@@ -15,7 +15,7 @@ import { Spinner } from "../components";
 import { FormFieldLabel } from "../components/FormFieldLabel";
 import { Document, MapLocation } from "grommet-icons";
 
-const { FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES } = Queries;
+const { FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES, FETCH_VENUES } = Queries;
 
 export default function BasicInfo({
   apikey,
@@ -33,9 +33,10 @@ export default function BasicInfo({
       },
     }
   );
-  let categories = data.categories.map(({ name, id }) => {
-    return { name, id };
-  });
+  let categories =
+    data.categories.map(({ name, id }) => {
+      return { name, id };
+    }) || [];
   let subcategories = data.subcategories
     .filter((obj) => obj.parent === values.category.name)
     .map(({ name, id }) => {
@@ -44,7 +45,7 @@ export default function BasicInfo({
   let types = data.types.map(({ name, id }) => {
     return { name, id };
   });
-  let orgData = data.account.organizations;
+  let orgData = data.account.organizations || [];
   let orgs = useMemo(() => {
     return orgData.map(({ name, id }) => {
       return { name, id };
@@ -54,14 +55,25 @@ export default function BasicInfo({
     setFieldValue("organization", orgs[0]);
   }, [orgs, setFieldValue]);
 
-  if (loading)
+  const { load: venueLoad, data: venueData, error: venueError } = useQuery(
+    FETCH_VENUES,
+    {
+      variables: {
+        apikey,
+        orgId: values.organization.id,
+      },
+    }
+  );
+  let venues = venueData.venues.filter((obj) => obj["name"] && obj["id"]);
+
+  if (loading || venueLoad)
     return (
       <Box height="100vh" justify="center" align="center">
         <Spinner />
       </Box>
     );
-  if (error) {
-    return <Box>{error.message}</Box>;
+  if (error || venueError) {
+    return <Box>{error.message || venueError.message}</Box>;
   }
   return (
     <Box pad="medium" width="100vw" justify="between" flex>
@@ -173,7 +185,7 @@ export default function BasicInfo({
           {values.locationType === "Venue" ? (
             <Search
               apikey={apikey}
-              orgId={values.organization.id}
+              venues={venues}
               label="Location"
               margin="small"
               error={errors.locations}

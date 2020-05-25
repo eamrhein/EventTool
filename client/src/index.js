@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import App from "./App";
-import { BrowserRouter } from "react-router-dom";
 import WebFont from "webfontloader";
 import ApolloClient from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
@@ -74,9 +73,7 @@ const init = async () => {
   }
   const Root = () => (
     <ApolloProvider client={client}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <App />
     </ApolloProvider>
   );
   WebFont.load({

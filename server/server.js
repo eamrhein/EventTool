@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const mongoose = require("mongoose");
 const expressGraphQl = require("express-graphql");
 const bodyParser = require("body-parser");
+const compression = require("compression");
 const cors = require("cors");
 const models = require("./models");
 const scheduler = require("./services/scheduler");
@@ -30,6 +31,7 @@ app.use(helmet());
 let redirector = require("redirect-https")({
   body: "<!-- Hello Developer! Please use HTTPS instead: {{ URL }} -->",
 });
+app.use(compression());
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
@@ -37,6 +39,7 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
+
 app.use(
   "/graphql",
   expressGraphQl((req) => {

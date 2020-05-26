@@ -33,6 +33,21 @@ export default function BasicInfo({
       },
     }
   );
+  const { load: venueLoad, data: venueData, error: venueError } = useQuery(
+    FETCH_VENUES,
+    {
+      variables: {
+        apikey,
+        orgId: values.organization.id,
+      },
+    }
+  );
+  let orgData = data.account.organizations;
+  let orgs = useMemo(() => {
+    return orgData.map(({ name, id }) => {
+      return { name, id };
+    });
+  }, [orgData]);
   let categories =
     data.categories.map(({ name, id }) => {
       return { name, id };
@@ -45,25 +60,15 @@ export default function BasicInfo({
   let types = data.types.map(({ name, id }) => {
     return { name, id };
   });
-  let orgData = data.account.organizations || [];
-  let orgs = useMemo(() => {
-    return orgData.map(({ name, id }) => {
-      return { name, id };
-    });
-  }, [orgData]);
   useEffect(() => {
-    setFieldValue("organization", orgs[0]);
-  }, [orgs, setFieldValue]);
-
-  const { load: venueLoad, data: venueData, error: venueError } = useQuery(
-    FETCH_VENUES,
-    {
-      variables: {
-        apikey,
-        orgId: values.organization.id,
-      },
+    let mounted = true;
+    if (mounted && orgs) {
+      setFieldValue("organization", orgs[0]);
     }
-  );
+    return () => {
+      mounted = false;
+    };
+  }, [orgs, setFieldValue]);
   let venues = venueData.venues.filter((obj) => obj["name"] && obj["id"]);
 
   if (loading || venueLoad)

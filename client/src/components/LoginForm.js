@@ -12,26 +12,29 @@ export const LoginForm = ({
   demo,
 }) => {
   const inputRef = useRef(null);
+  const timerId = useRef();
   useEffect(() => {
-    if (demo) {
+    let mounted = true;
+    if (demo && mounted) {
       let i = 0;
       let string = "demo@demo.com123456";
-      const int = setInterval(() => {
+      timerId.current = setInterval(() => {
         if (i <= 13) {
           setEmail(string.slice(0, i));
         } else if (i < string.length && i > 13) {
           setPassword(string.slice(13, i + 1));
         } else {
           inputRef.current.click();
-          clearInterval(int);
         }
         i++;
-        return () => {
-          clearInterval(int);
-        };
       }, 100);
     }
-  }, [setEmail, setPassword, demo]);
+    return () => {
+      mounted = false;
+      clearInterval(timerId.current);
+    };
+  }, [demo, setEmail, setPassword]);
+
   return (
     <Form
       align="start"

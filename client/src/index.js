@@ -40,6 +40,7 @@ const init = async () => {
   await persistCache({
     cache,
     storage: window.localStorage,
+    maxSize: "4mb",
   });
   const client = new ApolloClient({
     link: ApolloLink.from([errorLink, httpLink]),

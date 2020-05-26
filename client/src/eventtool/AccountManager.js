@@ -90,7 +90,13 @@ function AccountManager({
   const [open, setOpen] = useState(true);
   const [addApi, setAddApi] = useState(false);
   useEffect(() => {
-    setSelectedKey(apikeys[0]);
+    let mounted = true;
+    if (mounted) {
+      setSelectedKey(apikeys[0]);
+    }
+    return () => {
+      mounted = false;
+    };
   }, [apikeys, setSelectedKey]);
   return (
     <Box pad="medium" width="100vw" justify="between" flex>

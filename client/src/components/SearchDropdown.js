@@ -15,18 +15,33 @@ const SearchDropdown = ({ venues, setFieldValue, values, ...props }) => {
   };
 
   useEffect(() => {
-    setLocations(venues);
+    let mounted = true;
+    if (mounted) {
+      setLocations(venues);
+    }
+    return () => {
+      mounted = false;
+    };
   }, [venues]);
 
-  useEffect(() => {
-    const filterLocations = venues.filter(
-      (s) => s.name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0
-    );
+  let timerId = useRef();
 
-    setTimeout(() => {
-      setSearching(false);
-      setLocations(filterLocations);
-    }, 500);
+  useEffect(() => {
+    let mounted = true;
+    if (mounted) {
+      const filterLocations = venues.filter(
+        (s) => s.name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0
+      );
+
+      timerId.current = setTimeout(() => {
+        setSearching(false);
+        setLocations(filterLocations);
+      }, 500);
+    }
+    return () => {
+      clearTimeout(timerId.current);
+      mounted = false;
+    };
   }, [searching, searchQuery, venues]);
 
   const renderOption = ({ id, name }) => (

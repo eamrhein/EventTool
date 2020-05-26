@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import Login from "./Login";
+import React, { useState, Suspense } from "react";
 import HeaderPanel from "./header/Header";
-import EventTool from "./eventtool/EventTool";
 import { grommet, Grommet, Box, ResponsiveContext } from "grommet";
 import { deepMerge } from "grommet/utils";
 import { useQuery } from "react-apollo";
 import Queries from "./graphql/queries";
+const Login = React.lazy(() => import("./Login"));
+const EventTool = React.lazy(() => import("./eventtool/EventTool"));
 const { IS_LOGGED_IN } = Queries;
 
 const theme = deepMerge(grommet, {
@@ -44,6 +44,7 @@ function App(props) {
     return <p>Loading</p>;
   }
   let { isLoggedIn } = data;
+
   return (
     <Grommet theme={theme} themeMode={darkMode ? "dark" : "light"}>
       <ResponsiveContext.Consumer>
@@ -69,9 +70,31 @@ function App(props) {
                 {...props}
               >
                 {!isLoggedIn ? (
-                  <Login responsive={responsive} />
+                  <Suspense
+                    fallback={
+                      <Box
+                        height="100vh"
+                        background={{ light: "light-3", dark: "dark-1" }}
+                      >
+                        Loading...
+                      </Box>
+                    }
+                  >
+                    <Login responsive={responsive} />
+                  </Suspense>
                 ) : (
-                  <EventTool pending={pending} responsive={responsive} />
+                  <Suspense
+                    fallback={
+                      <Box
+                        height="100vh"
+                        background={{ light: "light-3", dark: "dark-1" }}
+                      >
+                        Loading...
+                      </Box>
+                    }
+                  >
+                    <EventTool pending={pending} responsive={responsive} />
+                  </Suspense>
                 )}
               </Box>
             </Box>

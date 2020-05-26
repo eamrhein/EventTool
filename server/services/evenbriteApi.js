@@ -6,8 +6,8 @@ const getAccount = async (apikey) => {
   return fetch(`${baseurl}/users/me?token=${apikey}`);
 };
 // fetch organization data
-const getOrg = async (orgId, apikey) => {
-  return fetch(`${baseurl}/users/${orgId}/organizations/?token=${apikey}`);
+const getOrg = async (userId, apikey) => {
+  return fetch(`${baseurl}/users/${userId}/organizations/?token=${apikey}`);
 };
 
 // resolve a resonse array into JSON
@@ -257,26 +257,33 @@ const fetchVenues = async (orgId, apikey, continuationToken) => {
   if (continuationToken) {
     url += `&continuation=${continuationToken}`;
   }
-  const pag = await fetch(url);
-  const res = await pag.json();
-  let venues = [];
-  if (typeof res.venues === "array") {
-    venues = res.venues.map(({ name, id }) => {
-      return {
-        name,
-        id,
-      };
-    });
+  try {
+    const pag = await fetch(url);
+    const res = await pag.json();
+    let venues = [];
+    console.log(res, orgId, apikey);
+    if (res.venues) {
+      console.log("this");
+      venues = res.venues.map(({ name, id }) => {
+        return {
+          name,
+          id,
+        };
+      });
+    }
+    if (res.pagination && res.pagination.continuation) {
+      const rest = await fetchVenues(
+        orgId,
+        apikey,
+        res.pagination.continuationToken
+      );
+      return venues.concat(rest);
+    }
+    console.log(venues);
+    return venues;
+  } catch (error) {
+    console.log(error);
   }
-  if (res.pagination && res.pagination.continuation) {
-    const rest = await fetchVenues(
-      orgId,
-      apikey,
-      res.pagination.continuationToken
-    );
-    return venues.concat(rest);
-  }
-  return venues;
 };
 
 module.exports = {

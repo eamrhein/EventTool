@@ -3,9 +3,9 @@ import * as Yup from "yup";
 const defaultFormState = {
   title: "",
   type: "",
-  category: "",
-  subcategory: "",
-  organization: "",
+  category: { id: "", name: "" },
+  subcategory: { id: "", name: "" },
+  organization: { id: "", name: "" },
   locationType: "Venue",
   locations: [],
   series: false,

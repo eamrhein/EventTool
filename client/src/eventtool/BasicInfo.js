@@ -25,51 +25,77 @@ export default function BasicInfo({
   errors,
 }) {
   const [open, setOpen] = useState(true);
-  const { loading, data, error } = useQuery(
-    FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES,
-    {
-      variables: {
-        apikey,
-      },
-    }
-  );
-  const { load: venueLoad, data: venueData, error: venueError } = useQuery(
-    FETCH_VENUES,
-    {
-      variables: {
-        apikey,
-        orgId: values.organization.id,
-      },
-    }
-  );
-  let orgData = data.account.organizations;
-  let orgs = useMemo(() => {
-    return orgData.map(({ name, id }) => {
-      return { name, id };
-    });
-  }, [orgData]);
-  let categories =
-    data.categories.map(({ name, id }) => {
-      return { name, id };
-    }) || [];
-  let subcategories = data.subcategories
-    .filter((obj) => obj.parent === values.category.name)
-    .map(({ name, id }) => {
-      return { name, id };
-    });
-  let types = data.types.map(({ name, id }) => {
-    return { name, id };
+  const [subcategoriesList, setSubcategoriesList] = useState([]);
+  const [venueList, setVenueList] = useState([]);
+  const {
+    loading,
+    data: {
+      account: { organizations } = {},
+      categories,
+      subcategories,
+      types,
+    } = {},
+    error,
+  } = useQuery(FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES, {
+    variables: {
+      apikey,
+    },
   });
+
   useEffect(() => {
     let mounted = true;
-    if (mounted && orgs) {
-      setFieldValue("organization", orgs[0]);
+    if (mounted && subcategories) {
+      setSubcategoriesList(
+        subcategories
+          .filter((obj) => obj.parent === values.category.name)
+          .map(({ name, id }) => {
+            return {
+              name,
+              id,
+            };
+          })
+      );
     }
     return () => {
       mounted = false;
     };
-  }, [orgs, setFieldValue]);
-  let venues = venueData.venues.filter((obj) => obj["name"] && obj["id"]);
+  }, [subcategories, values.category.name]);
+  useEffect(() => {
+    let mounted = true;
+    if (mounted && organizations) {
+      setFieldValue("organization", organizations[0]);
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [organizations, setFieldValue]);
+
+  const {
+    load: venueLoad,
+    data: { venues } = {},
+    error: venueError,
+  } = useQuery(FETCH_VENUES, {
+    variables: { apikey, orgId: values.organization.id },
+  });
+  useEffect(() => {
+    let mounted = true;
+    if (mounted) {
+      setVenueList(venues.filter((obj) => obj["name"] && obj["id"]));
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, [venues]);
+  if (loading)
+    return (
+      <Box height="100vh" justify="center" align="center">
+        <Spinner />
+      </Box>
+    );
+  if (error || venueError) {
+    return <Box>{error.message}</Box>;
+  }
 
   if (loading || venueLoad)
     return (
@@ -77,8 +103,8 @@ export default function BasicInfo({
         <Spinner />
       </Box>
     );
-  if (error || venueError) {
-    return <Box>{error.message || venueError.message}</Box>;
+  if (error) {
+    return <Box>{error.message}</Box>;
   }
   return (
     <Box pad="medium" width="100vw" justify="between" flex>
@@ -159,7 +185,7 @@ export default function BasicInfo({
                   onChange={({ option }) =>
                     setFieldValue("subcategory", option)
                   }
-                  options={subcategories}
+                  options={subcategoriesList}
                 />
               </FormFieldLabel>
             ) : null}
@@ -169,7 +195,7 @@ export default function BasicInfo({
               labelKey="name"
               valueKey={{ key: "id" }}
               value={values.organization}
-              options={orgs}
+              options={organizations}
               onChange={({ option }) => setFieldValue("organization", option)}
             />
           </FormFieldLabel>
@@ -187,10 +213,10 @@ export default function BasicInfo({
               onChange={({ option }) => setFieldValue("locationType", option)}
             />
           </FormFieldLabel>
-          {values.locationType === "Venue" ? (
+          {values.locationType === "Venue" && venues ? (
             <Search
               apikey={apikey}
-              venues={venues}
+              venues={venueList}
               label="Location"
               margin="small"
               error={errors.locations}

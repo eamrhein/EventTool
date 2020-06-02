@@ -1,6 +1,6 @@
 {
   "name": "EventTool",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A Tool to schedule eventbrite events with multiple accounts.",
   "main": "app.js",
   "repository": "https://github.com/eamrhein/EventTool",

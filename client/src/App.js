@@ -31,11 +31,11 @@ const theme = deepMerge(grommet, {
 function App(props) {
   const [pending, setPending] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  window
-    .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", (e) => {
-      setDarkMode(true);
-    });
+  // window
+  //   .matchMedia("(prefers-color-scheme: dark)")
+  //   .addEventListener("change", (e) => {
+  //     setDarkMode(true);
+  //   });
   let { data, error, loading } = useQuery(IS_LOGGED_IN);
   if (error) {
     return <p>{error.message}</p>;

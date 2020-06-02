@@ -79,7 +79,7 @@ export default function BasicInfo({
   });
   useEffect(() => {
     let mounted = true;
-    if (mounted) {
+    if (mounted && venues) {
       setVenueList(venues.filter((obj) => obj["name"] && obj["id"]));
     }
 

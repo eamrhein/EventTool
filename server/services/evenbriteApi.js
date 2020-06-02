@@ -261,7 +261,6 @@ const fetchVenues = async (orgId, apikey, continuationToken) => {
     const pag = await fetch(url);
     const res = await pag.json();
     let venues = [];
-    console.log(res, orgId, apikey);
     if (res.venues) {
       console.log("this");
       venues = res.venues.map(({ name, id }) => {
@@ -279,7 +278,6 @@ const fetchVenues = async (orgId, apikey, continuationToken) => {
       );
       return venues.concat(rest);
     }
-    console.log(venues);
     return venues;
   } catch (error) {
     console.log(error);

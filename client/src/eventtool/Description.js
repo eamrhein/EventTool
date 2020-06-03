@@ -38,25 +38,6 @@ const Description = ({ values, setFieldValue, handleChange, errors }) => {
       </Button>
       <Collapsible open={open}>
         <Box margin="small">
-          <FormFieldLabel
-            errors={errors.summary}
-            info={
-              <Box align="end">
-                <Text size="small">{values.summary.length} / 140</Text>
-              </Box>
-            }
-            label="Summary"
-          >
-            <TextArea
-              name="summary"
-              value={values.summary}
-              onChange={handleChange}
-              placeholder="Write a short event summary to get attendees excited"
-              resize={false}
-            />
-          </FormFieldLabel>
-        </Box>
-        <Box margin="small">
           <FormFieldLabel label="Description" errors={errors.description}>
             <ReactQuill
               valid={!errors.description}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import Search from "../components/SearchDropdown";
 import { useQuery } from "@apollo/react-hooks";
 import Queries from "../graphql/queries";

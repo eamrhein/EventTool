@@ -37,7 +37,7 @@ function EventTool({ responsive, pending }) {
   let { user } = userData;
   let defaultKey = user.apikeys[0];
   return (
-    <Box direction="row" justify="start" align="start" height="100vh">
+    <Box direction="row" justify="start" align="start">
       <Box>
         <Schedule user={user} pending={pending} />
         <EventForm

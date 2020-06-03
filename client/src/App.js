@@ -30,15 +30,9 @@ const theme = deepMerge(grommet, {
 
 function App(props) {
   const [pending, setPending] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  // window
-  //   .matchMedia("(prefers-color-scheme: dark)")
-  //   .addEventListener("change", (e) => {
-  //     setDarkMode(true);
-  //   });
   let { data, error, loading } = useQuery(IS_LOGGED_IN);
   if (error) {
-    return <p>{error.message}</p>;
+    return <p>{error.message} Error in App component</p>;
   }
   if (loading) {
     return <p>Loading</p>;
@@ -46,15 +40,14 @@ function App(props) {
   let { isLoggedIn } = data;
 
   return (
-    <Grommet theme={theme} themeMode={darkMode ? "dark" : "light"}>
+    <Grommet theme={theme} themeMode="light">
       <ResponsiveContext.Consumer>
         {(responsive) => {
           return (
             <Box
-              height={{ max: "100vh" }}
+              height="100%"
               style={{ transition: "0.25s ease-out" }}
               background={{ light: "light-3", dark: "dark-1" }}
-              overflow="auto"
             >
               <HeaderPanel
                 responsive={responsive}

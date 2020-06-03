@@ -85,10 +85,11 @@ function AccountManager({
   errors,
   resetForm,
   success,
+  emptyAccount,
 }) {
   let { apikeys } = user;
   const [open, setOpen] = useState(true);
-  const [addApi, setAddApi] = useState(false);
+  const [addApi, setAddApi] = useState(emptyAccount || false);
   useEffect(() => {
     let mounted = true;
     if (mounted) {
@@ -133,7 +134,8 @@ function AccountManager({
           </Box>
         </Box>
       </Box>
-      <Collapsible open={open}>
+
+      <Collapsible background="purple" open={open}>
         <Accounts
           resetForm={resetForm}
           user={user}
@@ -143,18 +145,20 @@ function AccountManager({
         <AddKeyForm id={user.id} open={addApi} />
         <FormErrors errors={errors} />
         {success ? <Text>{success}</Text> : null}
-        <Box align="end">
-          <Box direction="row" gap="small">
-            <Button
-              label="Submit"
-              type="submit"
-              primary
-              size="large"
-              color="brand"
-              disabled={isSubmitting}
-            />
+        {emptyAccount ? null : (
+          <Box align="end">
+            <Box direction="row" gap="small">
+              <Button
+                label="Submit"
+                type="submit"
+                primary
+                size="large"
+                color="brand"
+                disabled={isSubmitting}
+              />
+            </Box>
           </Box>
-        </Box>
+        )}
       </Collapsible>
     </Box>
   );

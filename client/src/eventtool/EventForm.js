@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Yup from "yup";
 import moment from "moment";
-import { Box, Heading, Paragraph, Text } from "grommet";
+import { Box, Heading, Paragraph, Text, Button } from "grommet";
+import { Ascend } from "grommet-icons";
 import { Formik, Form } from "formik";
 import AccountManager from "./AccountManager";
 import BasicInfo from "./BasicInfo";
@@ -16,8 +17,23 @@ import Queries from "../graphql/queries";
 const { SUBMIT_FORM } = Mutations;
 const { FETCH_USER } = Queries;
 
-function EventForm({ user, responsive, history, defaultKey }) {
+const top = () => {
+  setTimeout(function () {
+    console.log("test");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, 200);
+};
+
+function EventForm({ user, responsive, defaultKey }) {
   const [success, setSuccess] = useState(false);
+  const [yPos, setYpos] = useState(0);
+  useEffect(() => {
+    const listener = (e) => setYpos(window.scrollY);
+    window.addEventListener("scroll", listener);
+    return () => {
+      window.removeEventListener("scroll", listener);
+    };
+  }, []);
   let validation = Yup.object().shape(validationShape);
   const [selectedKey, setSelectedKey] = useState(defaultKey);
   const [submitForm] = useMutation(SUBMIT_FORM, {
@@ -47,7 +63,7 @@ function EventForm({ user, responsive, history, defaultKey }) {
   let date = moment(dateObj).add(2, "minutes").toISOString();
   if (user.apikeys && user.apikeys.length > 0) {
     return (
-      <Box pad="medium">
+      <Box pad="medium" overflow="auto">
         <Formik
           initialValues={defaultFormState}
           validateOnChange={false}
@@ -86,7 +102,6 @@ function EventForm({ user, responsive, history, defaultKey }) {
                 errors={errors}
                 selectedKey={selectedKey}
                 setSelectedKey={setSelectedKey}
-                history={history}
                 isSubmitting={isSubmitting}
               />
               <BasicInfo
@@ -120,19 +135,42 @@ function EventForm({ user, responsive, history, defaultKey }) {
             </Form>
           )}
         </Formik>
+        {yPos > 100 ? (
+          <Box
+            style={{ position: "fixed", top: "95%", left: "95%" }}
+            direction="row"
+            justify="end"
+          >
+            <Button
+              color="accent-3"
+              plain
+              icon={<Ascend />}
+              onClick={() => top()}
+            />
+          </Box>
+        ) : null}
       </Box>
     );
   }
   return (
     <Box
+      height="100vh"
       border={{
         color: "brand",
         size: "medium",
       }}
+      overflow="auto"
       pad="medium"
       align="center"
       justify="center"
     >
+      <AccountManager
+        user={user}
+        errors={[]}
+        selectedKey={selectedKey}
+        setSelectedKey={setSelectedKey}
+        emptyAccount
+      />
       <Heading
         style={{ fontFamily: "Fira Sans", fontWeight: "900" }}
         margin="small"

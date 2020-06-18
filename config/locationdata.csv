@@ -1,0 +1,320 @@
+City,State,Postal
+New York City,NY,10012
+Brooklyn,NY,11211
+Manhattan,NY,10036
+Queens,NY,11102
+Philadelphia,PA,19103
+Jacksonville,FL,32202
+Columbus ,OH,43215
+Charlotte,NC,28202
+Indianapolis,IN,46204
+Washington DC,,20002
+Boston,MA,O2108
+Detroit,MI,48226
+Louisville,KY,40202
+Baltimore,MD,21202
+Atlanta,GA,30303
+Miami ,FL,33132
+Raleigh ,NC,27601
+Virginia Beach,VA,23462
+Tampa,FL,33602
+Lexington,KY,40507
+Cincinnati,OH,45202
+Pittsburgh,PA,15222
+Greensboro,NC,27401
+Orlando,FL,32801
+Newark,NJ,O7102
+Toledo,OH,43604
+Durham,NC,27701
+Fort Wayne,IN,46802
+Jersey City,NJ,O7302
+St. Petersburg,FL,33701
+Buffalo,NY,14202
+Winston-Salem,NC,27101
+Norfolk,VA,23510
+Chesapeake,VA,23510
+Hialeah,FL,33012
+Richmond,VA,23220
+Fayetteville,NC,28301
+Rochester,NY,14604
+Grand Rapids,MI,49503
+Yonkers,NY,10701
+Akron,OH,44308
+Augusta,GA,30901
+Port St. Lucie,FL,34984
+Columbus,GA,31901
+ Tallahassee,FL,32301
+Cape Coral,FL,33990
+Knoxville,TN,37902
+Worcester,MA,O1608
+Fort Lauderdale,FL,33301
+Chattanooga,TN,37402
+Providence,RI,O2903
+Newport News,VA,23607
+Pembroke Pines,FL,
+Cary,NC,
+Alexandria,VA,22314
+Springfield ,MA,
+Hollywood,FL,
+Macon,GA,31201
+Savannah,GA,31401
+Paterson,NJ,O7505
+Bridgeport,CT,O6604
+Syracuse,NY,13202
+Miramar,FL,
+Dayton,OH,45402
+Charleston,SC,29401
+Warren,MI,
+Hampton,VA,
+Gainesville,FL,32601
+Coral Springs,FL,33065
+Columbia,SC,29201
+Sterling Heights,MI,48313
+New Haven,CT,O6511
+Stamford,CT,O6901
+Elizabeth,NJ,O7201
+Athens,GA,30601
+Wilmington,NC,28401
+Hartford,CT,O6103
+Ann Arbor,MI,48104
+Allentown,PA,18101
+Cambridge,MA,O2138
+Lansing,MI,48933
+Clearwater,FL,
+Palm Bay,FL,32905
+North Charleston,SC,
+Miami Gardens,FL,
+Manchester,NH,O3101
+High Point,NC,
+Pompano Beach,FL,
+Lowell,MA,O1852
+West Palm Beach,FL,33401
+Lakeland,FL,33801
+Sandy Springs,GA,30328
+Waterbury,CT,
+Davie,FL,
+Lakewood,NJ,
+Clinton,MI,
+Edison,NJ,O8817
+Woodbridge,NJ,O7095
+,,
+,,
+Wilmington,DE,19801
+Portland,ME,O4101
+Burlington,VT,O5401
+Charleston,WV,25301
+,,
+East Hampton,NY,11937
+Cape Cod,MA,O2601
+Naples,,
+Boca Raton,,
+Princeton,,
+Chicago,IL,60601
+Houston,TX,77002
+San Antonio,TX,78205
+Dallas,TX,75202
+Austin,TX,78701
+Fort Worth,TX,76102
+El Paso,TX,79901
+Nashville,TN,37219
+Memphis,TN,38103
+Oklahoma City,OK,73104
+Milwaukee,WI,53203
+Kansas City,MO,68108
+Minneapolis,MN,55402
+Tulsa,OK,74103
+Arlington,TX,76011
+New Orleans,LA,70130
+Wichita,KS,67202
+Corpus Christi,TX,78401
+Saint Paul,MN,55101
+St. Louis,MO,63102
+Plano,TX,75074
+Lincoln,NE,68508
+Laredo,TX,78040
+Madison,WI,53703
+Lubbock ,TX,79401
+Baton Rouge,LA,70801
+Des Moines,IA,50309
+Birmingham,AL,35203
+Amarillo ,TX,79101
+Aurora,IL,60506
+Montgomery,AL,36104
+Little Rock,AR,72201
+Huntsville,AL,35801
+Grand Prairie,TX,75050
+Overland Park,KS,66204
+McKinney,TX,75069
+Mobile ,AL,36602
+Shreveport,LA,71101
+Frisco,TX,75034
+Brownsville,TX,78520
+Sioux Falls,SD,57104
+Springfield,MO,65802
+Jackson,MS,39201
+Clarksville,TN,37040
+Pasadena,TX,77506
+Kansas City,KS,
+Kileen,TX,76541
+Naperville,IL,60540
+Joliet,IL,
+Rockford,IL,61104
+McAllen,TX,78501
+Mesquite,TX,
+Midland,TX,
+Murfreesboro,TN,37130
+Olathe,KS,66061
+Denton,TX,76201
+Waco,TX,76702
+Carrollton,TX,
+Cedar Rapids,IA,52401
+Topeka,KS,66603
+Fargo,ND,58102
+Norman,OK,
+Columbia,MO,65201
+Abilene,TX,79601
+Pearland,TX,
+Richardson,TX,
+Odessa,TX,79761
+Sugar Land,TX,
+Beaumont,TX,77701
+Evansville,IN,47708
+Rochester,MN,55904
+Independence,MO,64050
+College Station,TX,77840
+Springfield,IL,62701
+Elgin,IL,
+Peoria,IL,61602
+Broken Arrow,OK,
+Lewisville,TX,
+League City,TX,
+Tyler,TX,75702
+Green Bay,WI,54301
+Wichita Falls,TX,76301
+Allen,TX,
+Davenport,IA,52801
+Tuscaloosa,AL,35401
+San Angelo,TX,76903
+Phoenix,AZ,85004
+Denver,CO',80202
+Albuquerque,NM,87102
+Tucson,AZ,85701
+Mesa,AZ,85210
+Colorado Springs,CO,80903
+Aurora,CO,60506
+Chandler,AZ,85225
+Scottsdale,AZ,85251
+Glendale,AZ,85301
+Gilbert,AZ,85296
+Boise,ID,83702
+Salt Lake City,UT,84101
+Tempe,AZ,85281
+Salem,OR,97301
+Peoria,AZ,61602
+Fort Collins,CO,80524
+Lakewood,CO,80226
+Thornton,CO,80229
+Surprise,AZ,85374
+West Valley City,UT,84120
+Arvada,CO,80002
+Provo,UT,84601
+West Jordan,UT,84088
+Westminster,CO,80031
+Pueblo,CO,81003
+Centennial,CO,80112
+Billings,MT,59101
+Boulder,CO,80302
+Greenley,CO,80631
+Meridian,ID,83642
+Las Cruces,NM,88001
+Los Angeles,CA,90028
+San Diego,CA,92101
+San Jose,CA,95113
+San Francisco,CA,94111
+Seattle,WA,98101
+Portland,OR,97204
+Las Vegas,NV,89109
+Fresno,CA,93721
+Sacramento,CA,95814
+Long Beach,CA,90802
+Oakland,CA,94612
+Bakersfield,CA,93301
+Anaheim,CA,92805
+Santa Ana,CA,92701
+Riverside,CA,92501
+Stockton,CA,95202
+Henderson,NV,89015
+Irvine,CA,92618
+Reno,NV,89501
+North Las Vegas,NV,89030
+Fremont,CA,94538
+Spokane,WA,99201
+Tacoma,WA,98402
+San Bernadino,CA,92405
+Modesto,CA,95354
+Fontana,CA,92335
+Santa Clarita,CA,95050
+Oxnard,CA,93035
+Moreno Valley,CA,92553
+Glendale,CA,91203
+Huntington Beach,CA,92648
+Vancouver,WA,98660
+Ontario,CA,91762
+Rancho Cucamonga,CA,91739
+Santa Rosa,CA,95404
+Oceanside,CA,92054
+Salem,OR,97301
+Elk Grove,CA,95624
+Garden Grove,CA,92840
+Eugene,OR,97401
+Corona,CA,92882
+Hayward,CA,94541
+Lancaster,CA,93534
+Palmdale,CA,93550
+Salinas,CA,93901
+Sunnyvale,CA,94086
+Pomona,CA,91766
+Escondido,CA,92025
+Bellevue,WA,98004
+Torrance,CA,90503
+Pasadena,CA,91101
+Fullerton,CA,92832
+Orange,CA,92866
+Roseville,CA,95678
+Visalia,CA,
+Concord,CA,
+Kent,WA,
+Santa Clara,CA,
+Thousand Oaks,CA,
+Simi Valley,CA,93065
+Victorville,CA,
+Vallejo,CA,
+Berkeley,CA,94720
+Fairfield,CA,94533
+Carlsbad,CA,
+El Monte,CA,
+Murrieta,CA,
+Temecula,CA,
+Costa Mesa,CA,
+Downey,CA,
+Clovis,CA,
+Antioch,CA,94509
+Everett,WA,98201
+Ventura,CA,
+Gresham,OR,
+Richmond,CA,
+Inglewood,CA,90301
+Jurupa Valley,CA,
+Hillsboro,OR,
+Santa Maria,CA,93454
+Daly City,CA,
+West Covina,CA,
+Norwalk,CA,
+San Mateo,CA,94403
+Sparks,NV,
+Burbank,CA,
+Rialto,CA,
+El Cajon,CA,
+Renton,WA,
+Vista,CA,
+Vacaville,CA,

@@ -15,7 +15,7 @@ const convertTime12to24 = (time12h) => {
   return `${hours}:${minutes}:00Z`;
 };
 
-function parseForm(form) {
+function parseForm(form, id) {
   let start_date = form.start_date.split("T")[0];
   let end_date = form.end_date.split("T")[0];
   let start_time = convertTime12to24(form.start_time);
@@ -28,6 +28,7 @@ function parseForm(form) {
       name: {
         html: form.title,
       },
+      venue_id: id,
       online_event: form.venue === "Online Event",
       description: {
         html: form.description,

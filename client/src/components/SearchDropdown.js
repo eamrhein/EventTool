@@ -2,35 +2,43 @@ import React, { useRef, useState, useEffect, createContext } from "react";
 import { FormClose } from "grommet-icons";
 import { Box, Button, CheckBox, Select, Text } from "grommet";
 import { FormFieldLabel } from "./FormFieldLabel";
+import test from "./locations.json";
 const SearchInputContext = createContext({});
 
+const sortLocations = (selectedLocationName) => {
+  return (p1, p2) => {
+    const p1Exists = selectedLocationName.includes(p1.id);
+    const p2Exists = selectedLocationName.includes(p2.id);
+
+    if (!p1Exists && p2Exists) {
+      return 1;
+    }
+    if (p1Exists && !p2Exists) {
+      return -1;
+    }
+    if (p1.City.toLowerCase() < p2.City.toLowerCase()) {
+      return -1;
+    }
+    return 1;
+  };
+};
+
 const SearchDropdown = ({ venues, setFieldValue, values, ...props }) => {
-  const [locations, setLocations] = useState(venues);
+  const [locations, setLocations] = useState(test.sort(sortLocations("")));
   const [searching, setSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const selectRef = useRef();
-
   const clearLocations = () => {
     setFieldValue("locations", []);
   };
-
-  useEffect(() => {
-    let mounted = true;
-    if (mounted) {
-      setLocations(venues);
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [venues]);
 
   let timerId = useRef();
 
   useEffect(() => {
     let mounted = true;
     if (mounted) {
-      const filterLocations = venues.filter(
-        (s) => s.name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0
+      const filterLocations = test.filter(
+        (s) => s.City.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0
       );
 
       timerId.current = setTimeout(() => {
@@ -42,14 +50,14 @@ const SearchDropdown = ({ venues, setFieldValue, values, ...props }) => {
       clearTimeout(timerId.current);
       mounted = false;
     };
-  }, [searching, searchQuery, venues]);
+  }, [searching, searchQuery, test]);
 
-  const renderOption = ({ id, name }) => (
+  const renderOption = ({ City }) => (
     <Box direction="row" align="center" pad="small" flex={false}>
       <CheckBox
         tabIndex="-1"
-        checked={values.locations.some((partner) => partner.id === id)}
-        label={<Text size="small">{name}</Text>}
+        checked={values.locations.some((partner) => partner.City === City)}
+        label={<Text size="small">{City}</Text>}
         onChange={() => {}}
       />
     </Box>
@@ -75,7 +83,7 @@ const SearchDropdown = ({ venues, setFieldValue, values, ...props }) => {
       </Box>
       <Box flex>
         <Text size="small" truncate>
-          {values.locations.map(({ name }) => name).join(", ")}
+          {values.locations.map(({ City }) => City).join(", ")}
         </Text>
       </Box>
       <Button
@@ -94,37 +102,18 @@ const SearchDropdown = ({ venues, setFieldValue, values, ...props }) => {
       </Button>
     </Box>
   );
-
-  const sortLocations = (selectedLocationName) => {
-    return (p1, p2) => {
-      const p1Exists = selectedLocationName.includes(p1.id);
-      const p2Exists = selectedLocationName.includes(p2.id);
-
-      if (!p1Exists && p2Exists) {
-        return 1;
-      }
-      if (p1Exists && !p2Exists) {
-        return -1;
-      }
-      if (p1.name.toLowerCase() < p2.name.toLowerCase()) {
-        return -1;
-      }
-      return 1;
-    };
-  };
-
   const handleChange = (option) => {
     const newSelectedLocation = [...values.locations];
     const seasonIndex = newSelectedLocation
-      .map(({ id }) => id)
-      .indexOf(option.id);
+      .map(({ City }) => City)
+      .indexOf(option.City);
     if (seasonIndex >= 0) {
       newSelectedLocation.splice(seasonIndex, 1);
     } else {
       newSelectedLocation.push(option);
     }
-    const selectedLocation = newSelectedLocation.map(({ name }) => name);
-    const sortedLocation = [...venues].sort(sortLocations(selectedLocation));
+    const selectedLocation = newSelectedLocation.map(({ City }) => City);
+    const sortedLocation = [...test].sort(sortLocations(selectedLocation));
     setFieldValue("locations", newSelectedLocation);
     setLocations(sortedLocation);
   };
@@ -139,8 +128,8 @@ const SearchDropdown = ({ venues, setFieldValue, values, ...props }) => {
           emptySearchMessage="No locations found, please add some locations"
           multiple
           replace={false}
-          valueKey="id"
-          labelKey="name"
+          valueKey="City"
+          labelKey="City"
           value={values.locations.length ? renderLocations() : []}
           options={locations}
           onChange={({ option }) => handleChange(option)}

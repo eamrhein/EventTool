@@ -2,60 +2,37 @@ const schedule = require("node-schedule");
 const mongoose = require("mongoose");
 const moment = require("moment");
 const eventbrite = require("./evenbriteApi");
-const { parseForm } = require("./parseForm");
 let Job = mongoose.model("jobs");
 let User = mongoose.model("users");
 
-const scheduleEvent = async ({ id, date, data, key }) => {
+const scheduleEvent = async ({ id, data, key }) => {
   let user = await User.findById(id);
   if (!user) {
     throw Error("User not in database");
   }
   let form = JSON.parse(data);
-  let { eventData, scheduleData } = parseForm(form);
   try {
-    let event = await eventbrite.createEvent(
-      eventData,
-      key,
-      form.organization.id
-    );
-    if (event.is_series) {
-      let seriesRes = await eventbrite.createSeries(
-        event.id,
-        scheduleData,
-        key
-      );
-    }
-    let ticketPromises = form.tickets.map(async (ticketData) => {
-      return await eventbrite.createTicket(ticketData, event.id, key);
-    });
-    let ticketRes = await Promise.all(ticketPromises);
-    let job = new Job({
-      data,
-      schedule: date,
-      status: "Pending",
-      urls: [],
-    });
-    job.urls.push(event.url);
-    user.jobs.push(job);
-    let u = await user.save();
-    return u;
+    let venues = await eventbrite.updateVenues(form.organization.id, key, form);
+    console.log(venues);
+    let events = await eventbrite.createEvent(form, key, venues);
+    // if (events[0].isSeries) {
+    //   await eventbrite.createSeries();
+    // }
+    // let tickets = await eventbrite.createTicket();
+    // let job = new Job({
+    //   data,
+    //   schedule: date,
+    //   status: "Pending",
+    //   urls: [],
+    // });
+    // job.urls = events.map((event) => event.url);
+    // user.jobs.push(job);
+    // let u = await user.save();
+    // return u;
   } catch (error) {
+    console.error(error.message);
     throw Error(error.message);
   }
-  // schedule.scheduleJob(date, function () {
-  //   try {
-  //     console.log("hello");
-  //     let index = user.jobs.findIndex((obj) => obj._id === job._id);
-  //     let jobEvent = user.jobs[index];
-  //     console.log(jobEvent, "test1");
-  //     job.status = "Resolved";
-  //     user.save();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // });
-  // // console.log(user);
 };
 
 function eventCleaner() {
@@ -78,7 +55,7 @@ const cleanupEvents = async () => {
       }
     }
   }
-  console.log("cleanup succesfull");
+  console.log("cleanup sucessfull");
 };
 
 module.exports = { scheduleEvent, eventCleaner };

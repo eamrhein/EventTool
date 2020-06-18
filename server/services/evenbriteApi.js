@@ -1,4 +1,5 @@
 const fetch = require("node-fetch");
+const { parseForm } = require("./parseForm");
 const baseurl = "https://www.eventbriteapi.com/v3";
 
 // get a single account
@@ -10,26 +11,34 @@ const getOrg = async (userId, apikey) => {
   return fetch(`${baseurl}/users/${userId}/organizations/?token=${apikey}`);
 };
 
-// resolve a resonse array into JSON
+// resolve a response array into JSON
 
-async function createEvent(data, apikey, id) {
-  console.log(data);
-  const res = await fetch(
-    `https://www.eventbriteapi.com/v3/organizations/${id}/events/?token=${apikey}`,
-    {
-      method: "post",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
+async function createEvent(data, apikey, id, locs) {
+  try {
+    let reqs = locs.map((loc) => {
+      let form = parseForm(data, loc);
+      return fetch(
+        `https://www.eventbriteapi.com/v3/organizations/${id}/events/?token=${apikey}`,
+        {
+          method: "post",
+          body: JSON.stringify(form),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    });
+    let res = await Promise.all(reqs);
+    console.log(res);
+    if (!res.ok) {
+      let error = await res.json();
+      throw new Error(error.error_description);
     }
-  );
-  if (!res.ok) {
-    let error = await res.json();
-    throw new Error(error.error_description);
+    console.log(res);
+    return res;
+  } catch (error) {
+    console.error(error.message);
   }
-  const resData = await res.json();
-  return resData;
 }
 
 async function createSeries(id, data, apikey) {
@@ -52,7 +61,6 @@ async function createSeries(id, data, apikey) {
 }
 
 async function createTicket(ticketData, id, key) {
-  console.log(ticketData);
   let stripped = ticketData.price.replace(/[^0-9.-]+/g, "");
   var number = Number(stripped);
   let ticketObj;
@@ -93,7 +101,6 @@ async function createTicket(ticketData, id, key) {
       throw Error(error.error_description);
     }
     let slug = await res.json();
-    console.log(slug);
     return slug;
   } catch (error) {
     console.log(error);
@@ -164,7 +171,6 @@ async function getUploadedUrl(token) {
 const fetchAccount = async (apikey) => {
   const accountRes = await getAccount(apikey);
   if (!accountRes.ok) {
-    console.log(accountRes);
     throw new Error("Eventbrite API is not responding");
   }
   const account = await accountRes.json();
@@ -251,7 +257,62 @@ const fetchFormats = async (apikey, continuationToken) => {
   }
   return types;
 };
+const updateVenues = async (orgId, apikey, data) => {
+  //url
+  let url = `${baseurl}/organizations/${orgId}/venues/?token=${apikey}`;
+  try {
+    // find out which venues have already been created
+    let existingVenuesReq = await fetch(url);
+    let existingVenues = await existingVenuesReq.json();
+    existingVenues = existingVenues.venues.map((obj) => obj.name);
 
+    //find which submitted venues have not been created yet
+    let newLocations = data.locations.filter(
+      (obj) =>
+        existingVenues.findIndex((venueName) => venueName === obj.City) === -1
+    );
+
+    //create new venues
+    newLocations = newLocations.map((loc) => {
+      return fetch(url, {
+        method: "post",
+        body: JSON.stringify({
+          venue: {
+            name: loc.City,
+            address: {
+              city: loc.City,
+              region: loc.State,
+              postal_code: loc.Postal,
+            },
+          },
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    });
+
+    let createdVenueReqs = await Promise.all(newLocations);
+    if (!createdVenueReqs.every((res) => res.ok)) {
+      throw new Error("Error updating venue information");
+    }
+    // return venue ids for both newly created venues and already existing ones
+    let updatedVenuesReq = await fetch(url);
+    let updatedVenues = await updatedVenuesReq.json();
+    updatedVenues = updatedVenues.venues.filter(
+      (ven) => data.locations.findIndex((loc) => loc.City === ven.name) !== -1
+    );
+    updatedVenues = updatedVenues.map((ven) => {
+      return {
+        name: ven.name,
+        id: ven.id,
+      };
+    });
+    return updatedVenues;
+  } catch (error) {
+    console.error(error.message);
+  }
+};
 const fetchVenues = async (orgId, apikey, continuationToken) => {
   let url = `${baseurl}/organizations/${orgId}/venues/?token=${apikey}`;
   if (continuationToken) {
@@ -262,7 +323,6 @@ const fetchVenues = async (orgId, apikey, continuationToken) => {
     const res = await pag.json();
     let venues = [];
     if (res.venues) {
-      console.log("this");
       venues = res.venues.map(({ name, id }) => {
         return {
           name,
@@ -289,6 +349,7 @@ module.exports = {
   fetchAccount,
   createEvent,
   createSeries,
+  updateVenues,
   createTicket,
   publishEvent,
   getUploadedUrl,

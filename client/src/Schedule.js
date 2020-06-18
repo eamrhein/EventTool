@@ -58,6 +58,7 @@ const Pending = ({ user, pending }) => {
       </Box>
     );
   }
+  console.log(jobs);
   return (
     <MainBox
       overflow="scroll"
@@ -76,13 +77,16 @@ const Pending = ({ user, pending }) => {
           <TableHeader>
             <TableRow>
               <TableCell scope="col" border="bottom">
-                Created
+                Title
               </TableCell>
               <TableCell scope="col" border="bottom">
-                Eventbrite URLs
+                Location
               </TableCell>
               <TableCell scope="col" border="bottom">
-                Publish
+                Publish Date
+              </TableCell>
+              <TableCell scope="col" border="bottom">
+                Interval
               </TableCell>
               <TableCell scope="col" border="bottom">
                 Delete
@@ -93,14 +97,12 @@ const Pending = ({ user, pending }) => {
             {jobs.map((job, index) => {
               return (
                 <TableRow key={index}>
-                  <TableCell>
-                    {moment(job.date).format("MM/DD/YYYY h:mm A")}
-                  </TableCell>
+                  <TableCell>{job.data.title}</TableCell>
                   <TableCell>
                     <Box>
                       {job.data.locations.map((location, id) => (
                         <Anchor target="_blank" href={job.urls[id]} key={id}>
-                          {location.name}
+                          {location.City}
                         </Anchor>
                       ))}
                     </Box>

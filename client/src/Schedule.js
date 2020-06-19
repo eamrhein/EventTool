@@ -55,7 +55,7 @@ const CalenderButton = () => {
         <Button
           primary
           disabled={confirmed}
-          color={confirmed ? "accent-1" : "accent-2"}
+          color={confirmed ? "accent-1 " : "accent-2"}
           label="confirm"
           onClick={onButtonPress}
         />

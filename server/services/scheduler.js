@@ -13,22 +13,26 @@ const scheduleEvent = async ({ id, data, key }) => {
   let form = JSON.parse(data);
   try {
     let venues = await eventbrite.updateVenues(form.organization.id, key, form);
-    console.log(venues);
-    let events = await eventbrite.createEvent(form, key, venues);
-    // if (events[0].isSeries) {
-    //   await eventbrite.createSeries();
-    // }
-    // let tickets = await eventbrite.createTicket();
-    // let job = new Job({
-    //   data,
-    //   schedule: date,
-    //   status: "Pending",
-    //   urls: [],
-    // });
-    // job.urls = events.map((event) => event.url);
-    // user.jobs.push(job);
-    // let u = await user.save();
-    // return u;
+    let events = await eventbrite.createEvent(
+      form,
+      key,
+      form.organization.id,
+      venues
+    );
+    if (events[0].isSeries) {
+      await eventbrite.createSeries(form, key);
+    }
+    // let tickets = await eventbrite.createTicket(form, key);
+    let job = new Job({
+      data,
+      schedule: new Date(),
+      status: "Pending",
+      urls: [],
+    });
+    job.urls = events.map((event) => event.url);
+    user.jobs.push(job);
+    let u = await user.save();
+    return u;
   } catch (error) {
     console.error(error.message);
     throw Error(error.message);

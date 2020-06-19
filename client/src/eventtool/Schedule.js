@@ -9,10 +9,14 @@ import {
   TextInput,
   Collapsible,
   Button,
+  DropButton,
 } from "grommet";
+import moment from "moment";
 import { FormFieldLabel } from "../components/";
 import { TimeInput } from "../components/";
 import { Calendar as CalendarIcon } from "grommet-icons";
+
+
 
 export default function Schedule({
   values,
@@ -35,12 +39,18 @@ export default function Schedule({
 
   const handleDate = (dates) => {
     if (typeof dates === "string") {
-      setFieldValue("start_date", dates[0][0]);
+      let date = new Date(dates);
+      let dateStr = moment(date).format("YYYY-MM-DD");
+      console.log(dateStr);
+      setFieldValue("start_date", dates);
       setFieldValue("end_date", "");
     }
     if (typeof dates === "object") {
-      setFieldValue("start_date", dates[0][0]);
-      setFieldValue("end_date", dates[0][1]);
+      let start = moment(dates[0][0]).format("YYYY-MM-DD");
+      let end = moment(dates[0][1]).format("YYYY-MM-DD");
+      console.log(start, end);
+      setFieldValue("start_date", start);
+      setFieldValue("end_date", end);
     }
   };
   const handleTime = (e, time) => {

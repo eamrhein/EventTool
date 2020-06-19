@@ -1,55 +1,58 @@
 const moment = require("moment");
-const convertTime12to24 = (time12h) => {
-  const [time, modifier] = time12h.split(" ");
+const e = require("express");
+const geoTz = require("geo-tz");
 
-  let [hours, minutes] = time.split(":");
+let map = new Map();
+geoTz.setCache({ store: map });
 
-  if (hours === "12") {
-    hours = "00";
+function parseForm(form, loc) {
+  let start = moment(
+    form.start_date + " " + form.start_time,
+    "YYYY-MM-DD hh:mm A"
+  )
+    .utc()
+    .format();
+  let end = "";
+  if (form.end_date) {
+    end = moment(form.end_date + " " + form.end_time, "YYYY-MM-DD hh:mm A")
+      .tz("america/los_angeles")
+      .utc()
+      .format();
+  } else {
+    end = moment(form.start_date + " " + form.end_time, "YYYY-MM-DD hh:mm A")
+      .tz("america/los_angeles")
+      .utc()
+      .format();
   }
-
-  if (modifier === "PM") {
-    hours = parseInt(hours, 10) + 12;
-  }
-
-  return `${hours}:${minutes}:00Z`;
-};
-
-function parseForm(form, id) {
-  let start_date = form.start_date.split("T")[0];
-  let end_date = form.end_date.split("T")[0];
-  let start_time = convertTime12to24(form.start_time);
-  let end_time = convertTime12to24(form.end_time);
-  let start_utc = start_date + "T" + start_time;
-  let end_duration = start_date + "T" + end_time;
-  let end_utc = end_date + "T" + end_time;
+  
+  let tz = geoTz(loc.latitude, loc.longitude)[0];
   let eventData = {
     event: {
       name: {
-        html: form.title,
+        html: form.title + "-" + loc.name,
       },
-      venue_id: id,
+      venue_id: loc.id,
       online_event: form.venue === "Online Event",
       description: {
         html: form.description,
       },
       start: {
-        timezone: "America/Los_Angeles",
-        utc: start_utc,
+        timezone: tz,
+        utc: start,
       },
       end: {
-        timezone: "America/Los_Angeles",
-        utc: end_utc,
+        timezone: tz,
+        utc: end,
       },
       is_series: form.series,
       currency: "USD",
     },
   };
-  let duration = moment(end_duration).diff(moment(start_utc), "seconds");
+  let duration = moment(end).diff(moment(start), "seconds");
   let scheduleData = {
     schedule: {
       occurrence_duration: duration,
-      recurrence_rule: `DTSTART:${start_utc.replace(
+      recurrence_rule: `DTSTART:${start.replace(
         /:|-/g,
         ""
       )}\nRRULE:FREQ=${form.occurs.toUpperCase()};COUNT=${form.times}`,

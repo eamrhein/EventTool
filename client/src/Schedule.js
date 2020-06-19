@@ -1,20 +1,68 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-apollo";
 import Queries from "./graphql/queries";
 import styled from "styled-components";
-import moment from "moment";
+
 import {
   Anchor,
   Heading,
   Box,
+  Button,
   Table,
   TableRow,
   TableBody,
   TableCell,
   TableHeader,
+  Select,
+  DropButton,
+  Text,
+  Calendar,
 } from "grommet";
-
+import { FormDown } from "grommet-icons";
 let { FETCH_USER } = Queries;
+const CalenderButton = () => {
+  const [date, setDate] = useState();
+  const [open, setOpen] = useState();
+  const [confirmed, setConfirmed] = useState(false);
+  const onSelect = (selectedDate) => {
+    setDate(selectedDate);
+    setOpen(false);
+  };
+  const onButtonPress = () => {
+    setConfirmed(true);
+  };
+  return (
+    <Box direction="row">
+      <DropButton
+        open={!confirmed && open}
+        onClose={() => setOpen(false)}
+        onOpen={() => setOpen(true)}
+        dropContent={
+          <Calendar disabled={confirmed} date={date} onSelect={onSelect} />
+        }
+        disabled={confirmed}
+      >
+        <Box direction="row" gap="medium" align="center" pad="small">
+          <Text>
+            {date
+              ? new Date(date).toLocaleDateString()
+              : "Select date to publish event"}
+          </Text>
+          <FormDown color="brand" />
+        </Box>
+      </DropButton>
+      {date ? (
+        <Button
+          primary
+          disabled={confirmed}
+          color={confirmed ? "accent-1" : "accent-2"}
+          label="confirm"
+          onClick={onButtonPress}
+        />
+      ) : null}
+    </Box>
+  );
+};
 let MainBox = styled(Box)`
   position: fixed;
   overflow-y: scroll;
@@ -33,7 +81,6 @@ const Pending = ({ user, pending }) => {
     variables: {
       userId: user.id,
     },
-    pollInterval: 500,
   });
   let jobs = data.user.jobs.map((job) => {
     return {
@@ -82,9 +129,7 @@ const Pending = ({ user, pending }) => {
               <TableCell scope="col" border="bottom">
                 Location
               </TableCell>
-              <TableCell scope="col" border="bottom">
-                Publish Date
-              </TableCell>
+              <TableCell scope="col" border="bottom"></TableCell>
               <TableCell scope="col" border="bottom">
                 Interval
               </TableCell>
@@ -105,6 +150,25 @@ const Pending = ({ user, pending }) => {
                           {location.City}
                         </Anchor>
                       ))}
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <CalenderButton />
+                  </TableCell>
+                  <TableCell>
+                    <Select
+                      placeholder="how often to publish events"
+                      options={[
+                        "Every 1 Minute",
+                        "Every 5 minutes",
+                        "Every 30 minute",
+                      ]}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Box direction="row">
+                      <Button size="small" label="Schedule" />
+                      <Button size="small" label="Delete" />
                     </Box>
                   </TableCell>
                 </TableRow>

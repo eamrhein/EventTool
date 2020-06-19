@@ -16,25 +16,26 @@ const getOrg = async (userId, apikey) => {
 async function createEvent(data, apikey, id, locs) {
   try {
     let reqs = locs.map((loc) => {
-      let form = parseForm(data, loc);
+      let { eventData } = parseForm(data, loc);
       return fetch(
         `https://www.eventbriteapi.com/v3/organizations/${id}/events/?token=${apikey}`,
         {
           method: "post",
-          body: JSON.stringify(form),
+          body: JSON.stringify(eventData),
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
     });
-    let res = await Promise.all(reqs);
-    console.log(res);
-    if (!res.ok) {
-      let error = await res.json();
-      throw new Error(error.error_description);
+    let resPromise = await Promise.all(reqs);
+    let res = await Promise.all(
+      resPromise.map(async (data) => await data.json())
+    );
+    if (!resPromise.every((promise) => promise.ok)) {
+      res.forEach((error) => console.error(error.error_description));
+      throw new Error("error creating events");
     }
-    console.log(res);
     return res;
   } catch (error) {
     console.error(error.message);
@@ -306,6 +307,8 @@ const updateVenues = async (orgId, apikey, data) => {
       return {
         name: ven.name,
         id: ven.id,
+        latitude: ven.latitude,
+        longitude: ven.longitude,
       };
     });
     return updatedVenues;

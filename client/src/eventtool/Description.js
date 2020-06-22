@@ -37,7 +37,7 @@ const Description = ({ values, setFieldValue, handleChange, errors }) => {
         </Heading>
       </Button>
       <Collapsible open={open}>
-        <Box margin="small">
+        <Box margin="small" height="40em">
           <FormFieldLabel label="Description" errors={errors.description}>
             <ReactQuill
               valid={!errors.description}

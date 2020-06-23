@@ -60,6 +60,7 @@ export default function BasicInfo({
       mounted = false;
     };
   }, [subcategories, values.category.name]);
+  
   useEffect(() => {
     let mounted = true;
     if (mounted && organizations) {

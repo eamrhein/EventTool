@@ -4,7 +4,7 @@ import { Box, Button, CheckBox, Select, Text } from "grommet";
 import { FormFieldLabel } from "./FormFieldLabel";
 import test from "./locations.json";
 const SearchInputContext = createContext({});
-
+//test
 const sortLocations = (selectedLocationName) => {
   return (p1, p2) => {
     const p1Exists = selectedLocationName.includes(p1.id);

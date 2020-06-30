@@ -1,10 +1,10 @@
 import React from "react";
-import Schedule from "../Schedule";
+import Schedule from "../EventStatus/EventStatus";
 import { useQuery } from "@apollo/react-hooks";
 import EventForm from "./EventForm";
-import Queries from "../graphql/queries";
+import Queries from "../../graphql/queries";
 import { Box } from "grommet";
-import { Spinner } from "../components";
+import { Spinner } from "../../components/Spinner";
 
 const { FETCH_USER_ID, FETCH_USER } = Queries;
 function EventTool({ responsive, pending }) {

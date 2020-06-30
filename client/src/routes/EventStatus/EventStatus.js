@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "react-apollo";
-import Queries from "./graphql/queries";
+import Queries from "../../graphql/queries";
 import styled from "styled-components";
 
 import {
@@ -13,7 +13,6 @@ import {
   TableBody,
   TableCell,
   TableHeader,
-  Select,
   DropButton,
   Text,
   Calendar,
@@ -87,6 +86,7 @@ const Pending = ({ user, pending }) => {
       created: new Date(job.schedule),
       data: JSON.parse(job.data),
       urls: job.urls,
+      status: job.status
     };
   });
   if (error) {
@@ -124,18 +124,18 @@ const Pending = ({ user, pending }) => {
           <TableHeader>
             <TableRow>
               <TableCell scope="col" border="bottom">
-                Title
+                <Text>Title</Text>
               </TableCell>
               <TableCell scope="col" border="bottom">
-                Location
-              </TableCell>
-              <TableCell scope="col" border="bottom"></TableCell>
-              <TableCell scope="col" border="bottom">
-                Interval
+                <Text>Location</Text>
               </TableCell>
               <TableCell scope="col" border="bottom">
-                Delete
+                <Text>Date</Text>
               </TableCell>
+              <TableCell scope="col" border="bottom">
+                <Text>Status</Text>
+              </TableCell>
+              <TableCell scope="col" border="bottom" />
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -156,14 +156,7 @@ const Pending = ({ user, pending }) => {
                     <CalenderButton />
                   </TableCell>
                   <TableCell>
-                    <Select
-                      placeholder="how often to publish events"
-                      options={[
-                        "Every 1 Minute",
-                        "Every 5 minutes",
-                        "Every 30 minute",
-                      ]}
-                    />
+                    <Text>{job.status}</Text>
                   </TableCell>
                   <TableCell>
                     <Box direction="row">

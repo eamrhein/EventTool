@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
-import Mutations from "../graphql/mutations";
-import Accounts from "../components/AccountList";
+import Mutations from "../../graphql/mutations";
+import Accounts from "../../components/AccountList";
 import {
   Box,
   Button,

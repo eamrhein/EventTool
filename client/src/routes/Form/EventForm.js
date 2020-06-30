@@ -10,9 +10,9 @@ import Schedule from "./Schedule";
 import Description from "./Description";
 import Tickets from "./Tickets";
 import { useMutation } from "@apollo/react-hooks";
-import { defaultFormState, validationShape } from "../util/form_defaults";
-import Mutations from "../graphql/mutations";
-import Queries from "../graphql/queries";
+import { defaultFormState, validationShape } from "../../util/form_defaults";
+import Mutations from "../../graphql/mutations";
+import Queries from "../../graphql/queries";
 
 const { SUBMIT_FORM } = Mutations;
 const { FETCH_USER } = Queries;

@@ -50,7 +50,7 @@ const SearchDropdown = ({ venues, setFieldValue, values, ...props }) => {
       clearTimeout(timerId.current);
       mounted = false;
     };
-  }, [searching, searchQuery, test]);
+  }, [searching, searchQuery]);
 
   const renderOption = ({ City }) => (
     <Box direction="row" align="center" pad="small" flex={false}>

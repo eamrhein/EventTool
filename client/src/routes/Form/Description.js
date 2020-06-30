@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
-import { Box, TextArea, Heading, Text, Button, Collapsible } from "grommet";
+import { Box, Heading, Button, Collapsible } from "grommet";
 import { Book } from "grommet-icons";
-import { FormFieldLabel } from "../components/FormFieldLabel";
+import { FormFieldLabel } from "../../components/FormFieldLabel";
 import "react-quill/dist/quill.snow.css";
 
 const Description = ({ values, setFieldValue, handleChange, errors }) => {
@@ -37,9 +37,10 @@ const Description = ({ values, setFieldValue, handleChange, errors }) => {
         </Heading>
       </Button>
       <Collapsible open={open}>
-        <Box margin="small" height="40em">
-          <FormFieldLabel label="Description" errors={errors.description}>
+        <Box margin="small">
+          <FormFieldLabel  label="Description" errors={errors.description}>
             <ReactQuill
+              style={{height: "40em"}}
               valid={!errors.description}
               theme="snow"
               placeholder="format your description however you like"

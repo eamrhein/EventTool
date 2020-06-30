@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Search from "../components/SearchDropdown";
+import Search from "../../components/SearchDropdown";
 import { useQuery } from "@apollo/react-hooks";
-import Queries from "../graphql/queries";
+import Queries from "../../graphql/queries";
 import {
   Box,
   Heading,
@@ -11,8 +11,8 @@ import {
   Collapsible,
   Button,
 } from "grommet";
-import { Spinner } from "../components";
-import { FormFieldLabel } from "../components/FormFieldLabel";
+import { Spinner } from "../../components";
+import { FormFieldLabel } from "../../components/FormFieldLabel";
 import { Document, MapLocation } from "grommet-icons";
 
 const { FETCH_CATEGORIES_AND_SUBCATEGORIES_AND_TYPES, FETCH_VENUES } = Queries;

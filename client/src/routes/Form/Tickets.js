@@ -10,7 +10,7 @@ import {
   Collapsible,
 } from "grommet";
 import { Ticket, FormTrash, Currency } from "grommet-icons";
-import { FormFieldLabel } from "../components/FormFieldLabel";
+import { FormFieldLabel } from "../../components/FormFieldLabel";
 
 const Tickets = ({ screenSize, values, setFieldValue }) => {
   const [selected, setSelected] = useState("paid");

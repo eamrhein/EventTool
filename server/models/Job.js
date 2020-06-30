@@ -20,6 +20,7 @@ const JobSchema = new Schema({
     default: Date.now,
   },
   urls: [{ type: String }],
+  eventbriteIds: [{type: String}]
 });
 const Jobs = mongoose.model("jobs", JobSchema);
 

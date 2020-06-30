@@ -43,7 +43,7 @@ const Description = ({ values, setFieldValue, handleChange, errors }) => {
               style={{height: "40em"}}
               valid={!errors.description}
               theme="snow"
-              placeholder="format your description however you like"
+              placeholder="format your description however you like, including large text etc"
               value={values.description}
               onChange={(value) => setFieldValue("description", value)}
             />

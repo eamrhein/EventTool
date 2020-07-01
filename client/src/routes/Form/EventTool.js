@@ -6,6 +6,7 @@ import Queries from "../../graphql/queries";
 import { Box } from "grommet";
 import { Spinner } from "../../components/Spinner";
 
+// Upper level component to hold both Event Status and Event Form Components
 const { FETCH_USER_ID, FETCH_USER } = Queries;
 function EventTool({ responsive, pending }) {
   const {

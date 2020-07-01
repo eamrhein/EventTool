@@ -2,6 +2,8 @@ import React, { useRef, useEffect } from "react";
 import { Box, Form, FormField, TextInput, Button, Text } from "grommet";
 import { Mail } from "grommet-icons";
 
+
+// Multi purpose form component for login regiser and demo login
 export const LoginForm = ({
   email,
   setEmail,

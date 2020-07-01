@@ -2,6 +2,7 @@ import React from "react";
 import { MaskedInput } from "grommet";
 import { FormFieldLabel } from "./FormFieldLabel";
 
+// Input component for Time
 export const TimeInput = (props) => {
   let { label, required, error, ...rest } = props;
   return (

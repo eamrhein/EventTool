@@ -1,6 +1,6 @@
 import React from "react";
 import { Box } from "grommet";
-
+// Spinner component to show when items are loading
 const spinning = (
   <svg
     version="1.1"

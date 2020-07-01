@@ -7,8 +7,15 @@ import { FormTrash } from "grommet-icons";
 const { DELETE_API_KEY } = Mutations;
 const { FETCH_ACCOUNT, FETCH_USER } = Queries;
 
+
+// React Component built to show Eventbrite Account Information
+// Includes Acccount Card and an Account List
+
+// Card of Each Account Includes Account Email
 function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
   const [hover, sethover] = useState(false);
+
+  // Mutation To delete eventbrite account from database from api key
   const [deleteAPI] = useMutation(DELETE_API_KEY, {
     onError: (err) => {
       const message = err.message.split(":")[1];
@@ -92,7 +99,7 @@ function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
     </Box>
   );
 }
-
+// Grid that has list of accounts
 function AccountList({ user, selectedKey, setSelectedKey, resetForm }) {
   if (user.apikeys.length > 0) {
     return (

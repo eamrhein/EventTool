@@ -39,7 +39,7 @@ const CalenderButton = () => {
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
         dropContent={
-          <Calendar disabled={confirmed} date={date} onSelect={onSelect} />
+          <Calendar  date={date} onSelect={onSelect} />
         }
         disabled={confirmed}
       >
@@ -85,6 +85,7 @@ const Pending = ({ user, pending }) => {
   });
   let jobs = data.user.jobs.map((job) => {
     return {
+      id: job.id,
       created: new Date(job.schedule),
       data: JSON.parse(job.data),
       urls: job.urls,

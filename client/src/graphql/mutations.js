@@ -18,6 +18,13 @@ export default {
       }
     }
   `,
+  PUBLISH_EVENT: gql`
+  mutation publishEvent($id: ID!, $eventids: [String], $key: String!, $dateStr: String! $interval: String!) {
+    publishEvent(id: $id, eventids: $eventids, key: $key, dateStr: $dateStr, interval: $interval) {
+      status
+    }
+  }
+`,
   VERIFY_USER: gql`
     mutation VerifyUser($token: String!) {
       verifyUser(token: $token) {

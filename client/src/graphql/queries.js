@@ -18,6 +18,7 @@ export default {
         email
         apikeys
         jobs {
+          id
           data
           status
           schedule

@@ -12,7 +12,6 @@ const getOrg = async (userId, apikey) => {
 };
 
 // resolve a response array into JSON
-
 async function createEvent(data, apikey, id, locs) {
   try {
     let reqs = locs.map((loc) => {
@@ -61,50 +60,56 @@ async function createSeries(id, data, apikey) {
   return push;
 }
 
-async function createTicket(ticketData, id, key) {
-  let stripped = ticketData.price.replace(/[^0-9.-]+/g, "");
-  var number = Number(stripped);
-  let ticketObj;
-  if (number > 0) {
-    let costStr = stripped.price.replace(/./g, "");
-    if (coststr.length < 4) {
-      costStr = "0" + costStr;
-    }
-    ticketObj = {
-      name: ticketData.name,
-      free: false,
-      cost: `USD,${costStr}`,
-      capacity: ticketData.quantity,
-    };
-  } else {
-    ticketObj = {
-      name: ticketData.name,
-      free: true,
-      capacity: ticketData.quantity,
-    };
-  }
-
-  try {
-    let res = await fetch(
-      `https://www.eventbriteapi.com/v3/events/${id}/ticket_classes/?token=${key}`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          ticket_class: ticketObj,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+async function createTicket(ticketData, ids, key) {
+  let parsedTickets = ticketData.map((ticket) => {
+    let stripped = ticket.price.replace(/[^0-9.-]+/g, "");
+    var number = Number(stripped);
+   let ticketObj;
+    if (number > 0) {
+      let costStr = stripped.price.replace(/./g, "");
+      if (coststr.length < 4) {
+        costStr = "0" + costStr;
       }
-    );
-    if (!res.ok) {
-      let error = await res.json();
-      throw Error(error.error_description);
+      ticketObj = {
+        name: ticket.name,
+        free: false,
+        cost: `USD,${costStr}`,
+        capacity: ticket.quantity,
+      };
+    } else {
+      ticketObj = {
+        name: ticket.name,
+        free: true,
+        capacity: ticket.quantity,
+      };
     }
-    let slug = await res.json();
-    return slug;
+    return ticketObj
+  })
+  try {
+    let ticketReq = ids.map((id) => {
+      return parsedTickets.map((ticketObj) => {
+        return fetch(
+          `https://www.eventbriteapi.com/v3/events/${id}/ticket_classes/?token=${key}`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              ticket_class: ticketObj,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      })
+    })
+    ticketPromiseGroups = await Promise.all(ticketReq.map(async(reqGroup) => await Promise.all(reqGroup)))
+     let data = await Promise.all(ticketPromiseGroups.map(async(p) => {
+       return await Promise.all(p.map(async(p) => await p.json()))
+     }))
+     
+     return data
   } catch (error) {
-    console.log(error);
+    console.error(error)
   }
 }
 async function publishEvent(id, apikey) {

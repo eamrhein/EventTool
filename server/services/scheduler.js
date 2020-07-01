@@ -32,11 +32,11 @@ const scheduleEvent = async ({ id, data, key }) => {
       job.status = "Creating Event Series'"
       await eventbrite.createSeries(form, key);
     }
+    job.eventbriteIds = events.map((event) => event.id)
     job.status = "Creating Tickets"
-    let tickets = await eventbrite.createTicket(form, key);
+    let tickets = await eventbrite.createTicket(form.tickets, job.eventbriteIds, key);
     job.status = "Adding Event Data"
     job.urls = events.map((event) => event.url);
-    job.eventbriteIds = events.map((event) => event.id)
     job.status = "Draft Complete"
     user.jobs.push(job);
     let u = await user.save();

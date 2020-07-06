@@ -42,6 +42,7 @@ const scheduleEvent = async ({ id, data, key }) => {
     job.status = "Adding Event Data";
     job.urls = events.map((event) => event.url);
     job.status = "Draft Complete";
+    console.log(job)
     user.jobs.push(job);
     let u = await user.save();
     return u;
@@ -57,7 +58,7 @@ const scheduleEvent = async ({ id, data, key }) => {
 function publishEvent({ id, eventids, key, dateStr, interval }) {
   let date = moment(dateStr);
   let job = Job.findById(id);
-  console.log(job);
+  console.log(eventids);
   let count = eventids.length;
   while (count > 0) {
     schedule.scheduleJob(

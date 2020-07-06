@@ -99,12 +99,13 @@ const mutation = new GraphQLObjectType({
       type: JobType,
       args: {
         id: { type: GraphQLID },
-        eventids: {type: GraphQLList(GraphQLID)},
+        eventids: {type: GraphQLList(GraphQLString)},
         key: { type: GraphQLString },
         dateStr: { type: GraphQLString },
         interval: { type: GraphQLString },
       },
       async resolve(_, { id, eventids, key, dateStr, interval }) {
+        console.log(id, eventids, key, dateStr, interval)
         return scheduler.publishEvent({
           id,
           eventids,

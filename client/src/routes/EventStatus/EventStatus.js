@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useQuery } from "react-apollo";
+import { useQuery, useMutation } from "react-apollo";
 import Queries from "../../graphql/queries";
+import Mutations from "../../graphql/mutations";
 import styled from "styled-components";
 
 import {
@@ -19,10 +20,9 @@ import {
 } from "grommet";
 import { FormDown } from "grommet-icons";
 let { FETCH_USER } = Queries;
-
+let {  PUBLISH_EVENT } = Mutations
 // Form to show status
-const CalenderButton = () => {
-  const [date, setDate] = useState();
+const CalenderButton = ( {date, setDate}) => {
   const [open, setOpen] = useState();
   const [confirmed, setConfirmed] = useState(false);
   const onSelect = (selectedDate) => {
@@ -78,6 +78,28 @@ let MainBox = styled(Box)`
   transition: opacity 0.5s ease 0.2s;
 `;
 const Pending = ({ user, pending }) => {
+  const [date, setDate] = useState();
+  const [publishEvent] = useMutation(PUBLISH_EVENT, {
+    onError: (err) => {
+      console.log(err);
+    },
+    onCompleted: (stuff) => {
+      console.log(stuff)
+    }
+  });
+  const handlePublish = (e, job) => {
+    e.preventDefault();
+    console.log(job)
+    publishEvent({
+      variables: {
+        id: job.id,
+        eventids: job.eventbriteIds,
+        key: job.key,
+        dateStr: job.date,
+        interval: 5
+      }
+    })
+  }
   const { data, error, loading } = useQuery(FETCH_USER, {
     variables: {
       userId: user.id,
@@ -88,8 +110,11 @@ const Pending = ({ user, pending }) => {
       id: job.id,
       created: new Date(job.schedule),
       data: JSON.parse(job.data),
+      eventbriteIds: job.eventbriteIds,
       urls: job.urls,
-      status: job.status
+      status: job.status,
+      key: user.apikeys[0],
+      date
     };
   });
   if (error) {
@@ -108,7 +133,6 @@ const Pending = ({ user, pending }) => {
       </Box>
     );
   }
-  console.log(jobs);
   return (
     <MainBox
       overflow="scroll"
@@ -156,15 +180,17 @@ const Pending = ({ user, pending }) => {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <CalenderButton />
+                    <CalenderButton date={date} setDate={setDate} />
                   </TableCell>
                   <TableCell>
                     <Text>{job.status}</Text>
                   </TableCell>
                   <TableCell>
                     <Box direction="row">
-                      <Button size="small" label="Schedule" />
-                      <Button size="small" label="Delete" />
+                      <Button type="button" size="small" label="Schedule" onClick={(e) => {
+                        handlePublish(e, job)
+                      }} />
+                      <Button size="small" label="Delete"  />
                     </Box>
                   </TableCell>
                 </TableRow>

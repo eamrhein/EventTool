@@ -10,6 +10,7 @@ const JobType = new GraphQLObjectType({
     status: { type: GraphQLString },
     schedule: { type: GraphQLString },
     urls: { type: GraphQLList(GraphQLString) },
+    eventbriteIds: { type: GraphQLList(GraphQLString) },
   },
 });
 

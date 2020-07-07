@@ -55,34 +55,38 @@ const scheduleEvent = async ({ id, data, key }) => {
 };
 
 async function publishEvent({ id, eventids, key, dateStr, interval }) {
+  console.log("test")
   let date = moment(dateStr);
-  let user = await User.findOne({'jobs._id': id})
+  if (date.isBefore(new Date())) {
+    date = moment(new Date());
+  }
+  let user = await User.findOne({ 'jobs._id': id })
   let job = user.jobs.find(job => job.id === id)
-  if(!job){
+  if (!job) {
     throw new Error("Job is not in database")
   }
   job.status = "Event awaiting to be published";
-  eventids.forEach((currentId) => {
-    schedule.scheduleJob(
-      date.add(interval, "minutes").format(),
-      async function () {
-        try {
-          console.log(currentId)
-          eventbrite.publishEvent(currentId, key);
-          job.status = "Publishing Events";
+  eventids.forEach(async (currentId) => {
+      schedule.scheduleJob(
+        date.add(interval, "seconds").format(),
+        async function () {
+          try {
+            let promise = await eventbrite.publishEvent(currentId, key);
+            if(!promise.ok) {
+              throw new Error(promise.error_description)
+            }
+            job.status = "Publishing Finished"
+          } catch (error) {
+            console.error(error.message)
+            job.status = "Publishing Failed" + error.message;
+          }
+          console.log("Event Published Successfully") 
           await user.save()
-
-        } catch (error) {
-          job.status = "Publishing Failed" + error.message;
-          console.log(error.message)
-          await user.save()
-          throw new Error(error.message);
         }
-      }
-    );
-  })  
+      );
+      return job
+  })
   let b = await user.save()
-  return job;
 }
 
 async function eventCleaner() {

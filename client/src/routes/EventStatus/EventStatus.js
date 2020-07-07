@@ -61,7 +61,7 @@ const CalenderButton = ({ date, setDate, confirmed, setConfirmed }) => {
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
         dropContent={
-          <Calendar bound={bounds} date={date} onSelect={onSelect} />
+          <Calendar bounds={bounds} date={date} onSelect={onSelect} />
         }
         disabled={confirmed}
       >
@@ -90,23 +90,26 @@ const EventTableRow = ({user, job, index, setErr}) => {
   const [confirmed, setConfirmed] = useState(false);
   const [publishEvent] = useMutation(PUBLISH_EVENT, {
     errorPolicy: 'all',
+    refetchQueries: [{
+      query: FETCH_USER,
+      variables: {
+        userId: user.id
+      }
+    }],
     onError: ({ graphQLErrors, networkError }) => {
       let errArr = [];
       if(graphQLErrors){
       errArr = errArr.concat(graphQLErrors.map((err, i) => <Text key={i}>{err.message}</Text>))
       }
       if(networkError){
-        errArr = errArr.concat([<Text key={99}>{networkError.message}</Text>])
+        errArr = errArr.concat([<Text color="Red" key={99}>{networkError.message}</Text>])
       }
       console.log(errArr)
       setErr(errArr)
     },
-    update(cache) {
-      let data = cache.readQuery({
-        query: FETCH_USER,
-        variables: { userId: user.id },
-      });
-    }
+    onCompleted: () => {
+      setErr([<Text color="green">Success</Text>])
+    },
   });
   const handlePublish = (e, job) => {
     e.preventDefault();
@@ -152,9 +155,11 @@ const EventTableRow = ({user, job, index, setErr}) => {
 const EventStatus = ({ user, pending }) => {
   const [err, setErr] = useState([])
   const { data, error, loading } = useQuery(FETCH_USER, {
+    fetchPolicy: 'cache-and-network',
     variables: {
       userId: user.id,
     },
+    pollInterval: 60000
   });
   let jobs = data.user.jobs.map((job) => {
     return {

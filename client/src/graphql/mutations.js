@@ -19,7 +19,7 @@ export default {
     }
   `,
   PUBLISH_EVENT: gql`
-  mutation publishEvent($id: ID!, $eventids: [String!], $key: String!, $dateStr: String! $interval: Int!) {
+  mutation publishEvent($id: ID!, $eventids: [ID!], $key: ID!, $dateStr: String!, $interval: Int) {
     publishEvent(id: $id, eventids: $eventids, key: $key, dateStr: $dateStr, interval: $interval) {
       status
     }

@@ -113,6 +113,7 @@ async function createTicket(ticketData, ids, key) {
   }
 }
 async function publishEvent(id, apikey) {
+  console.log(id)
   const res = await fetch(
     `https://www.eventbriteapi.com/v3/events/${id}/publish/?token=${apikey}`,
     {
@@ -123,6 +124,8 @@ async function publishEvent(id, apikey) {
     }
   );
   if (!res.ok) {
+    let e = await res.json()
+    console.log(e)
     throw new Error("Could Not Publish Event");
   }
   return res.json();

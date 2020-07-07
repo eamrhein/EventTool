@@ -42,7 +42,6 @@ const scheduleEvent = async ({ id, data, key }) => {
     job.status = "Adding Event Data";
     job.urls = events.map((event) => event.url);
     job.status = "Draft Complete";
-    console.log(job)
     user.jobs.push(job);
     let u = await user.save();
     return u;
@@ -55,30 +54,34 @@ const scheduleEvent = async ({ id, data, key }) => {
   }
 };
 
-function publishEvent({ id, eventids, key, dateStr, interval }) {
+async function publishEvent({ id, eventids, key, dateStr, interval }) {
   let date = moment(dateStr);
-  let job = Job.findById(id);
-  console.log(eventids);
-  let count = eventids.length;
-  while (count > 0) {
+  let user = await User.findOne({'jobs._id': id})
+  let job = user.jobs.find(job => job.id === id)
+  if(!job){
+    throw new Error("Job is not in database")
+  }
+  job.status = "Event awaiting to be published";
+  eventids.forEach((currentId) => {
     schedule.scheduleJob(
-      date.add(interval * count, "minutes").format(),
-      function () {
+      date.add(interval, "minutes").format(),
+      async function () {
         try {
-          eventbrite.publishEvent(eventids[count-1], key);
+          console.log(currentId)
+          eventbrite.publishEvent(currentId, key);
           job.status = "Publishing Events";
-          job.save();
+          await user.save()
+
         } catch (error) {
           job.status = "Publishing Failed" + error.message;
-          job.save();
+          console.log(error.message)
+          await user.save()
           throw new Error(error.message);
         }
       }
     );
-    count = count - 1;
-  }
-  job.status = "All Events Published";
-  job.save();
+  })  
+  let b = await user.save()
   return job;
 }
 

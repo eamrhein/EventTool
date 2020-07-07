@@ -20,18 +20,40 @@ import {
 } from "grommet";
 import { FormDown } from "grommet-icons";
 let { FETCH_USER } = Queries;
-let {  PUBLISH_EVENT } = Mutations
+let { PUBLISH_EVENT } = Mutations
+
+let MainBox = styled(Box)`
+  position: fixed;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  min-width: 100;
+  max-height: 70%;
+  left: 2.5%;
+  right: 2.5%;
+  z-index: 1;
+  opacity: ${(props) => (props.shown ? 1 : 0)};
+  pointer-events: ${(props) => (props.shown ? "all" : "none")};
+  transition: opacity 0.5s ease 0.2s;
+`;
+
 // Form to show status
-const CalenderButton = ( {date, setDate}) => {
+const CalenderButton = ({ date, setDate, confirmed, setConfirmed }) => {
   const [open, setOpen] = useState();
-  const [confirmed, setConfirmed] = useState(false);
   const onSelect = (selectedDate) => {
     setDate(selectedDate);
     setOpen(false);
   };
   const onButtonPress = () => {
-    setConfirmed(true);
+    setConfirmed(!confirmed);
   };
+  let today = new Date();
+  let year = today.getFullYear();
+  let day = today.getDate();
+  let month = today.getMonth();
+  let bounds = [
+    today.toISOString(),
+    new Date(year + 5, month, day).toISOString(),
+  ];
   return (
     <Box direction="row">
       <DropButton
@@ -39,7 +61,7 @@ const CalenderButton = ( {date, setDate}) => {
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
         dropContent={
-          <Calendar  date={date} onSelect={onSelect} />
+          <Calendar bound={bounds} date={date} onSelect={onSelect} />
         }
         disabled={confirmed}
       >
@@ -55,51 +77,80 @@ const CalenderButton = ( {date, setDate}) => {
       {date ? (
         <Button
           primary
-          disabled={confirmed}
           color={confirmed ? "accent-1 " : "accent-2"}
-          label="confirm"
+          label={confirmed ? "change" : "confirm"}
           onClick={onButtonPress}
         />
       ) : null}
     </Box>
   );
 };
-let MainBox = styled(Box)`
-  position: fixed;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  min-width: 100;
-  max-height: 70%;
-  left: 2.5%;
-  right: 2.5%;
-  z-index: 1;
-  opacity: ${(props) => (props.shown ? 1 : 0)};
-  pointer-events: ${(props) => (props.shown ? "all" : "none")};
-  transition: opacity 0.5s ease 0.2s;
-`;
-const Pending = ({ user, pending }) => {
+const EventTableRow = ({user, job, index, setErr}) => {
   const [date, setDate] = useState();
+  const [confirmed, setConfirmed] = useState(false);
   const [publishEvent] = useMutation(PUBLISH_EVENT, {
-    onError: (err) => {
-      console.log(err);
+    errorPolicy: 'all',
+    onError: ({ graphQLErrors, networkError }) => {
+      let errArr = [];
+      if(graphQLErrors){
+      errArr = errArr.concat(graphQLErrors.map((err, i) => <Text key={i}>{err.message}</Text>))
+      }
+      if(networkError){
+        errArr = errArr.concat([<Text key={99}>{networkError.message}</Text>])
+      }
+      console.log(errArr)
+      setErr(errArr)
     },
-    onCompleted: (stuff) => {
-      console.log(stuff)
+    update(cache) {
+      let data = cache.readQuery({
+        query: FETCH_USER,
+        variables: { userId: user.id },
+      });
     }
   });
   const handlePublish = (e, job) => {
     e.preventDefault();
-    console.log(job)
     publishEvent({
       variables: {
         id: job.id,
         eventids: job.eventbriteIds,
         key: job.key,
-        dateStr: job.date,
+        dateStr: date,
         interval: 5
       }
     })
   }
+  return (
+    <TableRow key={index}>
+    <TableCell>{job.data.title}</TableCell>
+    <TableCell>
+      <Box>
+        {job.data.locations.map((location, id) => (
+          <Anchor target="_blank" href={job.urls[id]} key={id}>
+            {location.City}
+          </Anchor>
+        ))}
+      </Box>
+    </TableCell>
+    <TableCell>
+      <CalenderButton date={date} setDate={setDate} confirmed={confirmed} setConfirmed={setConfirmed} />
+    </TableCell>
+    <TableCell>
+      <Text>{job.status}</Text>
+    </TableCell>
+    <TableCell>
+      <Box direction="row">
+        <Button disabled={!date || !confirmed} type="button" size="small" label="Schedule" onClick={(e) => {
+          handlePublish(e, job)
+        }} />
+        <Button size="small" label="Delete" />
+      </Box>
+    </TableCell>
+  </TableRow>
+  )
+}
+const EventStatus = ({ user, pending }) => {
+  const [err, setErr] = useState([])
   const { data, error, loading } = useQuery(FETCH_USER, {
     variables: {
       userId: user.id,
@@ -114,7 +165,6 @@ const Pending = ({ user, pending }) => {
       urls: job.urls,
       status: job.status,
       key: user.apikeys[0],
-      date
     };
   });
   if (error) {
@@ -146,6 +196,7 @@ const Pending = ({ user, pending }) => {
       <Heading level="4" textAlign="center">
         Created Events
       </Heading>
+      {err}
       <Box width="100%">
         <Table>
           <TableHeader>
@@ -168,32 +219,7 @@ const Pending = ({ user, pending }) => {
           <TableBody>
             {jobs.map((job, index) => {
               return (
-                <TableRow key={index}>
-                  <TableCell>{job.data.title}</TableCell>
-                  <TableCell>
-                    <Box>
-                      {job.data.locations.map((location, id) => (
-                        <Anchor target="_blank" href={job.urls[id]} key={id}>
-                          {location.City}
-                        </Anchor>
-                      ))}
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    <CalenderButton date={date} setDate={setDate} />
-                  </TableCell>
-                  <TableCell>
-                    <Text>{job.status}</Text>
-                  </TableCell>
-                  <TableCell>
-                    <Box direction="row">
-                      <Button type="button" size="small" label="Schedule" onClick={(e) => {
-                        handlePublish(e, job)
-                      }} />
-                      <Button size="small" label="Delete"  />
-                    </Box>
-                  </TableCell>
-                </TableRow>
+                <EventTableRow job={job} user={user} index={index} setErr={setErr} />
               );
             })}
           </TableBody>
@@ -203,4 +229,4 @@ const Pending = ({ user, pending }) => {
   );
 };
 
-export default Pending;
+export default EventStatus;

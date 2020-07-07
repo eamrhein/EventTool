@@ -7,7 +7,7 @@ const AuthService = require("../services/auth");
 const scheduler = require("../services/scheduler");
 
 const User = mongoose.model("users");
-const { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID, GraphQLList } = graphql;
+const { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID, GraphQLList, GraphQLInt } = graphql;
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -100,9 +100,9 @@ const mutation = new GraphQLObjectType({
       args: {
         id: { type: GraphQLID },
         eventids: {type: GraphQLList(GraphQLID)},
-        key: { type: GraphQLString },
+        key: { type: GraphQLID },
         dateStr: { type: GraphQLString },
-        interval: { type: GraphQLString },
+        interval: { type: GraphQLInt },
       },
       async resolve(_, { id, eventids, key, dateStr, interval }) {
         return scheduler.publishEvent({

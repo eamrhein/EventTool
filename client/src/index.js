@@ -21,10 +21,14 @@ const cache = new InMemoryCache({
   dataIdFromObject: (object) => object._id || null,
 });
 
-const errorLink = onError(({ graphQLErrors }) => {
-  if (graphQLErrors) {
-    graphQLErrors.map(({ message }) => console.log(message));
-  }
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.forEach(({ message, locations, path }) =>
+      console.log(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+      )
+    );
+  if (networkError) console.log(`[Network error]: ${networkError}`);
 });
 let devhost = window.location.hostname;
 const gqlUri =

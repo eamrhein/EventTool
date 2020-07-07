@@ -18,6 +18,7 @@ function EventTool({ responsive, pending }) {
   const { data: userData, error: userError, loading: userLoading } = useQuery(
     FETCH_USER,
     {
+      fetchPolicy: 'cache-and-network',
       variables: {
         userId: userId,
       },

@@ -66,10 +66,11 @@ async function createTicket(ticketData, ids, key) {
     var number = Number(stripped);
    let ticketObj;
     if (number > 0) {
-      let costStr = stripped.price.replace(/./g, "");
-      if (coststr.length < 4) {
+      let costStr = stripped.replace(/./g, "");
+      if (costStr.length < 4) {
         costStr = "0" + costStr;
       }
+      console.log(costStr)
       ticketObj = {
         name: ticket.name,
         free: false,
@@ -113,19 +114,17 @@ async function createTicket(ticketData, ids, key) {
   }
 }
 async function publishEvent(id, apikey) {
-  const res = await fetch(
-    `https://www.eventbriteapi.com/v3/events/${id}/publish/?token=${apikey}`,
-    {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  if (!res.ok) {
-    throw new Error("Could Not Publish Event");
-  }
-  return res.json();
+    const req = await fetch(
+      `https://www.eventbriteapi.com/v3/events/${id}/publish/?token=${apikey}`,
+      {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  const res = await req.json()
+  return res;
 }
 async function getUploadSignature(apikey) {
   const fetchToken = await fetch(

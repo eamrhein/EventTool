@@ -37,7 +37,7 @@ let MainBox = styled(Box)`
 `;
 
 // Form to show status
-const CalenderButton = ({ date, setDate, confirmed, setConfirmed }) => {
+const CalenderButton = ({ date, setDate, confirmed, setConfirmed, locked }) => {
   const [open, setOpen] = useState();
   const onSelect = (selectedDate) => {
     setDate(selectedDate);
@@ -63,7 +63,7 @@ const CalenderButton = ({ date, setDate, confirmed, setConfirmed }) => {
         dropContent={
           <Calendar bounds={bounds} date={date} onSelect={onSelect} />
         }
-        disabled={confirmed}
+        disabled={confirmed || locked}
       >
         <Box direction="row" gap="medium" align="center" pad="small">
           <Text>
@@ -108,7 +108,7 @@ const EventTableRow = ({user, job, index, setErr}) => {
       setErr(errArr)
     },
     onCompleted: () => {
-      setErr([<Text color="green">Success</Text>])
+      setErr([<Text key={98} color="green">Success</Text>])
     },
   });
   const handlePublish = (e, job) => {
@@ -124,7 +124,7 @@ const EventTableRow = ({user, job, index, setErr}) => {
     })
   }
   return (
-    <TableRow key={index}>
+    <TableRow >
     <TableCell>{job.data.title}</TableCell>
     <TableCell>
       <Box>
@@ -136,14 +136,14 @@ const EventTableRow = ({user, job, index, setErr}) => {
       </Box>
     </TableCell>
     <TableCell>
-      <CalenderButton date={date} setDate={setDate} confirmed={confirmed} setConfirmed={setConfirmed} />
+      <CalenderButton locked={job.locked} date={date} setDate={setDate} confirmed={confirmed} setConfirmed={setConfirmed} />
     </TableCell>
     <TableCell>
       <Text>{job.status}</Text>
     </TableCell>
     <TableCell>
       <Box direction="row">
-        <Button disabled={!date || !confirmed} type="button" size="small" label="Schedule" onClick={(e) => {
+        <Button disabled={!date || !confirmed || job.locked } type="button" size="small" label="Schedule" onClick={(e) => {
           handlePublish(e, job)
         }} />
         <Button size="small" label="Delete" />
@@ -170,6 +170,7 @@ const EventStatus = ({ user, pending }) => {
       urls: job.urls,
       status: job.status,
       key: user.apikeys[0],
+      locked: job.locked
     };
   });
   if (error) {
@@ -224,7 +225,7 @@ const EventStatus = ({ user, pending }) => {
           <TableBody>
             {jobs.map((job, index) => {
               return (
-                <EventTableRow job={job} user={user} index={index} setErr={setErr} />
+                <EventTableRow job={job} user={user} key={index} setErr={setErr} />
               );
             })}
           </TableBody>

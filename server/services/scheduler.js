@@ -12,6 +12,7 @@ const scheduleEvent = async ({ id, data, key }) => {
     status: "Pending",
     urls: [],
     eventbriteIds: [],
+    locked: false,
   });
   let user = await User.findById(id);
   if (!user) {
@@ -55,7 +56,6 @@ const scheduleEvent = async ({ id, data, key }) => {
 };
 
 async function publishEvent({ id, eventids, key, dateStr, interval }) {
-  console.log("test")
   let date = moment(dateStr);
   if (date.isBefore(new Date())) {
     date = moment(new Date());
@@ -67,24 +67,26 @@ async function publishEvent({ id, eventids, key, dateStr, interval }) {
   }
   job.status = "Event awaiting to be published";
   eventids.forEach(async (currentId) => {
-      schedule.scheduleJob(
-        date.add(interval, "seconds").format(),
-        async function () {
-          try {
-            let promise = await eventbrite.publishEvent(currentId, key);
-            if(!promise.ok) {
-              throw new Error(promise.error_description)
-            }
-            job.status = "Publishing Finished"
-          } catch (error) {
-            console.error(error.message)
-            job.status = "Publishing Failed" + error.message;
+    schedule.scheduleJob(
+      date.add(interval, "seconds").format(),
+      async function () {
+        try {
+          let promise = await eventbrite.publishEvent(currentId, key);
+          if (promise.error_description) {
+            throw new Error(promise.error_description)
           }
-          console.log("Event Published Successfully") 
-          await user.save()
+          job.status = "Publishing Finished";
+          job.locked = true;
+        } catch (error) {
+          console.error(error.message)
+          job.locked = true;
+          job.status = "Publishing Failed" + error.message;
         }
-      );
-      return job
+        console.log("Event Published Successfully")
+        await user.save()
+      }
+    );
+    return job
   })
   let b = await user.save()
 }

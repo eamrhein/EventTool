@@ -22,6 +22,7 @@ export default {
   mutation publishEvent($id: ID!, $eventids: [ID!], $key: ID!, $dateStr: String!, $interval: Int) {
     publishEvent(id: $id, eventids: $eventids, key: $key, dateStr: $dateStr, interval: $interval) {
       status
+      locked
     }
   }
 `,
@@ -77,6 +78,7 @@ export default {
           status
           schedule
           urls
+          locked
         }
       }
     }

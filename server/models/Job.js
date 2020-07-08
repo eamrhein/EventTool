@@ -19,6 +19,10 @@ const JobSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  locked: {
+    type: Boolean,
+    default: false,
+  },
   urls: [{ type: String }],
   eventbriteIds: [{type: String}]
 });

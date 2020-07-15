@@ -17,6 +17,7 @@ export default {
         id
         email
         apikeys
+        selectedKey
         jobs {
           id
           data

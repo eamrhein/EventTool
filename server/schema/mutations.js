@@ -5,6 +5,7 @@ const JobType = require("./job_type");
 const validateAPIkey = require("../validation/apikey");
 const AuthService = require("../services/auth");
 const scheduler = require("../services/scheduler");
+const { resolve } = require("path");
 
 const User = mongoose.model("users");
 const { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID, GraphQLList, GraphQLInt } = graphql;
@@ -40,6 +41,24 @@ const mutation = new GraphQLObjectType({
       async resolve(_, args) {
         return AuthService.verifyUser(args);
       },
+    },
+    selectKey: {
+      type: UserType,
+      args: {
+        key: {type: GraphQLString},
+        userId: {type: GraphQLID}
+      },
+      async resolve(_, {key, userId}) {
+        console.log(userId)
+        let user = await User.findById(userId)
+        if(!user){
+          throw new Error("user not found");
+        }
+        console.log(user)
+        user.selectedKey = key;
+        user.save()
+        return user;
+      }
     },
     pushAPIkey: {
       type: UserType,

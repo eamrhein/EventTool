@@ -8,7 +8,9 @@ const AuthRoute = ({
   component: Component,
   path,
   exact,
+  userId,
   routeType,
+  responsive,
   ...rest
 }) => {
   let { data, error } = useQuery(IS_LOGGED_IN);
@@ -21,9 +23,10 @@ const AuthRoute = ({
       <Route
         path={path}
         exact={exact}
+        {...rest}
         render={(props) =>
           isLoggedIn ? (
-            <Component {...props} {...rest} />
+            <Component {...props} responsive={responsive} userId={userId} />
           ) : (
             <Redirect to="/login" />
           )
@@ -35,8 +38,9 @@ const AuthRoute = ({
       <Route
         path={path}
         exact={exact}
+        {...rest}
         render={(props) =>
-          !isLoggedIn ? <Component {...props} {...rest} /> : <Redirect to="/" />
+          !isLoggedIn ? <Component {...props} responsive={responsive} userId={userId} /> : <Redirect to="/" />
         }
       />
     );

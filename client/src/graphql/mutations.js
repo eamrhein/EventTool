@@ -40,6 +40,7 @@ export default {
         id
         email
         apikeys
+        selectedKey
         jobs {
           data
           status
@@ -54,11 +55,21 @@ export default {
         id
         email
         apikeys
+        selectedKey
         jobs {
           data
           status
           schedule
         }
+      }
+    }
+  `,
+  SELECT_KEY: gql`
+    mutation selectkey($key: String!, $userId: ID!) {
+      selectKey(key: $key, userId: $userId){
+        id,
+        selectedKey
+        apikeys
       }
     }
   `,

@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from "react";
+import React, { Suspense } from "react";
 import HeaderPanel from "./header/Header";
 import { grommet, Grommet, Box, ResponsiveContext } from "grommet";
 import { deepMerge } from "grommet/utils";
@@ -29,7 +29,6 @@ const theme = deepMerge(grommet, {
 });
 
 function App(props) {
-  const [pending, setPending] = useState(false);
   let { data, error, loading } = useQuery(IS_LOGGED_IN);
   if (error) {
     return <p>{error.message} Error in App component</p>;
@@ -45,14 +44,12 @@ function App(props) {
         {(responsive) => {
           return (
             <Box
-              height="100%"
+              height="100vh"
               style={{ transition: "0.25s ease-out" }}
               background={{ light: "light-3", dark: "dark-1" }}
             >
               <HeaderPanel
                 responsive={responsive}
-                pending={pending}
-                setPending={setPending}
                 isLoggedIn={isLoggedIn}
               />
               <Box
@@ -86,7 +83,7 @@ function App(props) {
                       </Box>
                     }
                   >
-                    <EventTool pending={pending} responsive={responsive} />
+                    <EventTool responsive={responsive} />
                   </Suspense>
                 )}
               </Box>

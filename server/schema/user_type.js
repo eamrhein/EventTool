@@ -17,6 +17,7 @@ const UserType = new GraphQLObjectType({
     token: { type: GraphQLString },
     loggedIn: { type: GraphQLBoolean },
     jobs: { type: GraphQLList(JobType) },
+    selectedKey: { type: GraphQLString},
   },
 });
 

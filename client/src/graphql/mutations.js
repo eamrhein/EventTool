@@ -40,11 +40,19 @@ export default {
         id
         email
         apikeys
+        selectedKey
         jobs {
           data
           status
           schedule
         }
+      }
+    }
+  `,
+  DELETE_EVENT: gql`
+    mutation deleteEvent($id: ID!){
+      deleteEvent(id: $id){
+        id
       }
     }
   `,
@@ -54,11 +62,21 @@ export default {
         id
         email
         apikeys
+        selectedKey
         jobs {
           data
           status
           schedule
         }
+      }
+    }
+  `,
+  SELECT_KEY: gql`
+    mutation selectkey($key: String!, $userId: ID!) {
+      selectKey(key: $key, userId: $userId){
+        id,
+        selectedKey
+        apikeys
       }
     }
   `,

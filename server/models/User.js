@@ -22,6 +22,10 @@ const UserSchema = new Schema({
       type: String,
     },
   ],
+  selectedKey: {
+    type: String,
+    default: "",
+  },
   jobs: [JobSchema],
 });
 const User = mongoose.model("users", UserSchema);

@@ -26,6 +26,7 @@ const validationShape = {
     .max(70, "Too Long")
     .required("event title is required"),
   category: Yup.string().required("category selection is required"),
+  organization: Yup.string().required("An organization selection is required"),
   subcategory: Yup.string().required("subcategory selection is required"),
   type: Yup.string().required("event type is required"),
   times: Yup.number().min(1, "Event must occur at least once"),

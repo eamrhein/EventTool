@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { useQuery, useMutation } from "react-apollo";
+import { useMutation } from "react-apollo";
 import Queries from "../../graphql/queries";
 import Mutations from "../../graphql/mutations";
-import styled from "styled-components";
-
 import {
   Anchor,
   Heading,
@@ -20,23 +18,7 @@ import {
 } from "grommet";
 import { FormDown } from "grommet-icons";
 let { FETCH_USER } = Queries;
-let { PUBLISH_EVENT } = Mutations
-
-let MainBox = styled(Box)`
-  position: fixed;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  min-width: 100;
-  max-height: 70%;
-  left: 2.5%;
-  right: 2.5%;
-  z-index: 1;
-  opacity: ${(props) => (props.shown ? 1 : 0)};
-  pointer-events: ${(props) => (props.shown ? "all" : "none")};
-  transition: opacity 0.5s ease 0.2s;
-`;
-
-// Form to show status
+let { PUBLISH_EVENT, DELETE_EVENT } = Mutations;
 const CalenderButton = ({ date, setDate, confirmed, setConfirmed, locked }) => {
   const [open, setOpen] = useState();
   const onSelect = (selectedDate) => {
@@ -85,30 +67,77 @@ const CalenderButton = ({ date, setDate, confirmed, setConfirmed, locked }) => {
     </Box>
   );
 };
-const EventTableRow = ({user, job, index, setErr}) => {
+const EventTableRow = ({ user, job, index, setErr }) => {
   const [date, setDate] = useState();
   const [confirmed, setConfirmed] = useState(false);
   const [publishEvent] = useMutation(PUBLISH_EVENT, {
-    errorPolicy: 'all',
-    refetchQueries: [{
-      query: FETCH_USER,
-      variables: {
-        userId: user.id
-      }
-    }],
+    errorPolicy: "all",
+    refetchQueries: [
+      {
+        query: FETCH_USER,
+        variables: {
+          userId: user.id,
+        },
+      },
+    ],
     onError: ({ graphQLErrors, networkError }) => {
       let errArr = [];
-      if(graphQLErrors){
-      errArr = errArr.concat(graphQLErrors.map((err, i) => <Text key={i}>{err.message}</Text>))
+      if (graphQLErrors) {
+        errArr = errArr.concat(
+          graphQLErrors.map((err, i) => <Text key={i}>{err.message}</Text>)
+        );
       }
-      if(networkError){
-        errArr = errArr.concat([<Text color="Red" key={99}>{networkError.message}</Text>])
+      if (networkError) {
+        errArr = errArr.concat([
+          <Text color="Red" key={99}>
+            {networkError.message}
+          </Text>,
+        ]);
       }
-      console.log(errArr)
-      setErr(errArr)
+      console.log(errArr);
+      setErr(errArr);
     },
     onCompleted: () => {
-      setErr([<Text key={98} color="green">Success</Text>])
+      setErr([
+        <Text key={98} color="green">
+          Success
+        </Text>,
+      ]);
+    },
+  });
+  const [deleteEvent] = useMutation(DELETE_EVENT, {
+    errorPolicy: "all",
+    refetchQueries: [
+      {
+        query: FETCH_USER,
+        variables: {
+          userId: user.id,
+        },
+      },
+    ],
+    onError: ({ graphQLErrors, networkError }) => {
+      let errArr = [];
+      if (graphQLErrors) {
+        errArr = errArr.concat(
+          graphQLErrors.map((err, i) => <Text key={i}>{err.message}</Text>)
+        );
+      }
+      if (networkError) {
+        errArr = errArr.concat([
+          <Text color="Red" key={99}>
+            {networkError.message}
+          </Text>,
+        ]);
+      }
+      console.log(errArr);
+      setErr(errArr);
+    },
+    onCompleted: () => {
+      setErr([
+        <Text key={98} color="green">
+          Success
+        </Text>,
+      ]);
     },
   });
   const handlePublish = (e, job) => {
@@ -119,49 +148,68 @@ const EventTableRow = ({user, job, index, setErr}) => {
         eventids: job.eventbriteIds,
         key: job.key,
         dateStr: date,
-        interval: 5
-      }
-    })
-  }
+        interval: 5,
+      },
+    });
+  };
+  let handleDelete = (e, eJob) => {
+    e.preventDefault(console.log(eJob));
+    deleteEvent({
+      variables: {
+        id: eJob.id,
+        apikey: eJob.key,
+      },
+    });
+  };
   return (
-    <TableRow >
-    <TableCell>{job.data.title}</TableCell>
-    <TableCell>
-      <Box>
-        {job.data.locations.map((location, id) => (
-          <Anchor target="_blank" href={job.urls[id]} key={id}>
-            {location.City}
-          </Anchor>
-        ))}
-      </Box>
-    </TableCell>
-    <TableCell>
-      <CalenderButton locked={job.locked} date={date} setDate={setDate} confirmed={confirmed} setConfirmed={setConfirmed} />
-    </TableCell>
-    <TableCell>
-      <Text>{job.status}</Text>
-    </TableCell>
-    <TableCell>
-      <Box direction="row">
-        <Button disabled={!date || !confirmed || job.locked } type="button" size="small" label="Schedule" onClick={(e) => {
-          handlePublish(e, job)
-        }} />
-        <Button size="small" label="Delete" />
-      </Box>
-    </TableCell>
-  </TableRow>
-  )
-}
-const EventStatus = ({ user, pending }) => {
-  const [err, setErr] = useState([])
-  const { data, error, loading } = useQuery(FETCH_USER, {
-    fetchPolicy: 'cache-and-network',
-    variables: {
-      userId: user.id,
-    },
-    pollInterval: 60000
-  });
-  let jobs = data.user.jobs.map((job) => {
+    <TableRow key={index}>
+      <TableCell>{job.data.title}</TableCell>
+      <TableCell>
+        <Box>
+          {job.data.locations.map((location, id) => (
+            <Anchor target="_blank" href={job.urls[id]} key={id}>
+              {location.City}
+            </Anchor>
+          ))}
+        </Box>
+      </TableCell>
+      <TableCell>
+        <CalenderButton
+          locked={job.locked}
+          date={date}
+          setDate={setDate}
+          confirmed={confirmed}
+          setConfirmed={setConfirmed}
+        />
+      </TableCell>
+      <TableCell>
+        <Text>{job.status}</Text>
+      </TableCell>
+      <TableCell>
+        <Box direction="row">
+          <Button
+            disabled={!date || !confirmed || job.locked}
+            type="button"
+            size="small"
+            label="Schedule"
+            onClick={(e) => {
+              handlePublish(e, job);
+            }}
+          />
+          <Button
+            onClick={(e) => handleDelete(e, job)}
+            size="small"
+            label="Delete"
+          />
+        </Box>
+      </TableCell>
+    </TableRow>
+  );
+};
+const EventStatus = ({ user }) => {
+  const [err, setErr] = useState([]);
+  let { jobs } = user;
+  jobs = jobs.map((job) => {
     return {
       id: job.id,
       created: new Date(job.schedule),
@@ -170,68 +218,47 @@ const EventStatus = ({ user, pending }) => {
       urls: job.urls,
       status: job.status,
       key: user.apikeys[0],
-      locked: job.locked
+      locked: job.locked,
     };
   });
-  if (error) {
-    return (
-      <Box>
-        <Heading margin="small" color="red">
-          {error.message}
-        </Heading>
-      </Box>
-    );
-  }
-  if (loading) {
-    return (
-      <Box>
-        <Heading color="green">Loading</Heading>
-      </Box>
-    );
-  }
   return (
-    <MainBox
-      overflow="scroll"
-      pad="medium"
-      background={{ light: "light-2", dark: "dark-1" }}
-      border={{ size: "small" }}
-      elevation="medium"
-      shown={pending}
-      align="center"
-    >
-      <Heading level="4" textAlign="center">
-        Created Events
-      </Heading>
-      {err}
-      <Box width="100%">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableCell scope="col" border="bottom">
-                <Text>Title</Text>
-              </TableCell>
-              <TableCell scope="col" border="bottom">
-                <Text>Location</Text>
-              </TableCell>
-              <TableCell scope="col" border="bottom">
-                <Text>Date</Text>
-              </TableCell>
-              <TableCell scope="col" border="bottom">
-                <Text>Status</Text>
-              </TableCell>
-              <TableCell scope="col" border="bottom" />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {jobs.map((job, index) => {
-              return (
-                <EventTableRow job={job} user={user} key={index} setErr={setErr} />
-              );
-            })}
-          </TableBody>
-        </Table>
-      </Box>
-    </MainBox>
+    <Box pad="medium" align="center" width="100vw">
+        <Heading level="3">Created Events</Heading>
+        {err}
+        <Box pad="large" width="100%">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableCell scope="col" border="bottom">
+                  <Text>Title</Text>
+                </TableCell>
+                <TableCell scope="col" border="bottom">
+                  <Text>Location</Text>
+                </TableCell>
+                <TableCell scope="col" border="bottom">
+                  <Text>Date</Text>
+                </TableCell>
+                <TableCell scope="col" border="bottom">
+                  <Text>Status</Text>
+                </TableCell>
+                <TableCell scope="col" border="bottom" />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {jobs.map((job, index) => {
+                return (
+                  <EventTableRow
+                    job={job}
+                    user={user}
+                    key={index}
+                    setErr={setErr}
+                  />
+                );
+              })}
+            </TableBody>
+          </Table>
+        </Box>
+    </Box>
   );
 };
 

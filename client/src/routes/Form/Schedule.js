@@ -38,14 +38,12 @@ export default function Schedule({
     if (typeof dates === "string") {
       let date = new Date(dates);
       let dateStr = moment(date).format("YYYY-MM-DD");
-      console.log(dateStr);
-      setFieldValue("start_date", dates);
+      setFieldValue("start_date", dateStr);
       setFieldValue("end_date", "");
     }
     if (typeof dates === "object") {
       let start = moment(dates[0][0]).format("YYYY-MM-DD");
       let end = moment(dates[0][1]).format("YYYY-MM-DD");
-      console.log(start, end);
       setFieldValue("start_date", start);
       setFieldValue("end_date", end);
     }

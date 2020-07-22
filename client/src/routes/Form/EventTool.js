@@ -1,4 +1,5 @@
 import React from "react";
+import { Route, Switch } from "react-router-dom";
 import Schedule from "../EventStatus/EventStatus";
 import { useQuery } from "@apollo/react-hooks";
 import EventForm from "./EventForm";
@@ -8,7 +9,7 @@ import { Spinner } from "../../components/Spinner";
 
 // Upper level component to hold both Event Status and Event Form Components
 const { FETCH_USER_ID, FETCH_USER } = Queries;
-function EventTool({ responsive, pending }) {
+function EventTool({ responsive }) {
   const {
     data: { userId },
     error: idError,
@@ -18,7 +19,7 @@ function EventTool({ responsive, pending }) {
   const { data: userData, error: userError, loading: userLoading } = useQuery(
     FETCH_USER,
     {
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: "cache-and-network",
       variables: {
         userId: userId,
       },
@@ -39,15 +40,19 @@ function EventTool({ responsive, pending }) {
   let { user } = userData;
   let defaultKey = user.apikeys[0];
   return (
-    <Box direction="row" justify="start" align="start">
-      <Box>
-        <Schedule user={user} pending={pending} />
-        <EventForm
-          responsive={responsive}
-          user={user}
-          defaultKey={defaultKey}
-        />
-      </Box>
+    <Box direction="row" justify="start" align="start" height="90vh">
+        <Switch>
+          <Route exact path="/status">
+            <Schedule user={user} />
+          </Route>
+          <Route path="/">
+            <EventForm
+              responsive={responsive}
+              user={user}
+              defaultKey={defaultKey}
+            />
+          </Route>
+        </Switch>
     </Box>
   );
 }

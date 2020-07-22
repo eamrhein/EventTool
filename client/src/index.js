@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
+import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import WebFont from "webfontloader";
 import ApolloClient from "apollo-client";
@@ -80,7 +81,9 @@ const init = async () => {
   }
   const Root = () => (
     <ApolloProvider client={client}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </ApolloProvider>
   );
   WebFont.load({

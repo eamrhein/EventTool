@@ -5,10 +5,18 @@ const JobType = require("./job_type");
 const validateAPIkey = require("../validation/apikey");
 const AuthService = require("../services/auth");
 const scheduler = require("../services/scheduler");
+const eventbrite = require("../services/evenbriteApi")
 const { resolve } = require("path");
 
 const User = mongoose.model("users");
-const { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID, GraphQLList, GraphQLInt } = graphql;
+const {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLNonNull,
+  GraphQLID,
+  GraphQLList,
+  GraphQLInt,
+} = graphql;
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -45,20 +53,20 @@ const mutation = new GraphQLObjectType({
     selectKey: {
       type: UserType,
       args: {
-        key: {type: GraphQLString},
-        userId: {type: GraphQLID}
+        key: { type: GraphQLString },
+        userId: { type: GraphQLID },
       },
-      async resolve(_, {key, userId}) {
-        console.log(userId)
-        let user = await User.findById(userId)
-        if(!user){
+      async resolve(_, { key, userId }) {
+        console.log(userId);
+        let user = await User.findById(userId);
+        if (!user) {
           throw new Error("user not found");
         }
-        console.log(user)
+        console.log(user);
         user.selectedKey = key;
-        user.save()
+        user.save();
         return user;
-      }
+      },
     },
     pushAPIkey: {
       type: UserType,
@@ -114,11 +122,29 @@ const mutation = new GraphQLObjectType({
         });
       },
     },
+    deleteEvent: {
+      type: UserType,
+      args: {
+        id: { type: GraphQLID },
+      },
+      async resolve(_, { id }) {
+        let user = await User.findOne({ 'jobs._id': id })
+        let event = user.jobs.find(job => 
+          {
+            return(job.id === id) 
+          })
+        let newjobs = user.jobs.filter((obj) => obj.id !== event.id)
+        user.jobs = newjobs;
+        await user.save()
+        return(user.id)
+
+      },
+    },
     publishEvent: {
       type: JobType,
       args: {
         id: { type: GraphQLID },
-        eventids: {type: GraphQLList(GraphQLID)},
+        eventids: { type: GraphQLList(GraphQLID) },
         key: { type: GraphQLID },
         dateStr: { type: GraphQLString },
         interval: { type: GraphQLInt },
@@ -129,7 +155,7 @@ const mutation = new GraphQLObjectType({
           eventids,
           key,
           dateStr,
-          interval
+          interval,
         });
       },
     },

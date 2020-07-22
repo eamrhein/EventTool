@@ -59,6 +59,32 @@ async function createSeries(id, data, apikey) {
   const push = await res.json();
   return push;
 }
+async function deleteEvent(event, key) {
+  try {
+    let locs = event.eventbriteIds.map((locid) => {
+      return fetch(
+        `${baseurl}/events/${locid}/?token=${key}`,
+        {
+          method: "delete",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+    }) 
+    let resPromise = await Promise.all(locs);
+    let res = await Promise.all(
+      resPromise.map(async (data) => await data.json())
+    );
+    if (!resPromise.every((promise) => promise.ok)) {
+      res.forEach((error) => console.error(error.error_description));
+      throw new Error("error deleting events");
+    }
+    return true;
+  } catch (error) {
+    console.error(error.message)
+  }
+}
 
 async function createTicket(ticketData, ids, key) {
   let parsedTickets = ticketData.map((ticket) => {
@@ -365,4 +391,5 @@ module.exports = {
   fetchCategories,
   fetchSubCategories,
   fetchFormats,
+  deleteEvent
 };

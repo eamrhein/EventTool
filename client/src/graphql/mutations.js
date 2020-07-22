@@ -49,6 +49,13 @@ export default {
       }
     }
   `,
+  DELETE_EVENT: gql`
+    mutation deleteEvent($id: ID!){
+      deleteEvent(id: $id){
+        id
+      }
+    }
+  `,
   DELETE_API_KEY: gql`
     mutation deleteAPIkey($id: ID!, $apikey: String!) {
       deleteAPIkey(id: $id, apikey: $apikey) {

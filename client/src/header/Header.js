@@ -1,9 +1,10 @@
 import React from "react";
 import { useApolloClient } from "@apollo/react-hooks";
-import { Box, Heading, Header, CheckBox, Button, Menu } from "grommet";
+import { Link } from "react-router-dom";
+import { Box, Heading, Header, Button, Menu, Text } from "grommet";
 import { Menu as MenuIcon } from "grommet-icons";
 
-const HeaderPanel = ({ isLoggedIn, responsive, pending, setPending }) => {
+const HeaderPanel = ({ isLoggedIn, responsive }) => {
   const eventClient = useApolloClient();
   const logout = (e) => {
     e.preventDefault();
@@ -18,7 +19,7 @@ const HeaderPanel = ({ isLoggedIn, responsive, pending, setPending }) => {
   };
 
   return responsive === "small" ? (
-    <Header>
+    <Header height="5vh">
       <Menu
         alignSelf="center"
         dropProps={{ align: { top: "bottom", left: "left" } }}
@@ -28,17 +29,7 @@ const HeaderPanel = ({ isLoggedIn, responsive, pending, setPending }) => {
           isLoggedIn
             ? [
                 {
-                  label: (
-                    <CheckBox
-                      background={{
-                        light: "light-2",
-                        dark: "dark-2",
-                      }}
-                      checked={pending}
-                      label="Scheduled Events"
-                    />
-                  ),
-                  onClick: () => setPending(!pending),
+                  label: <Link to="/status">Status</Link>,
                 },
                 {
                   label: "Logout",
@@ -50,31 +41,28 @@ const HeaderPanel = ({ isLoggedIn, responsive, pending, setPending }) => {
       />
     </Header>
   ) : (
-    <Header>
+    <Header height="10vh">
       {isLoggedIn ? (
         <>
           <Box pad="medium" direction="row" align="center">
-            <Heading
-              level="1"
-              color="brand"
-              style={{ userSelect: "none", fontFamily: "Playball" }}
-            >
-              Event Tool
-            </Heading>
+            <Link style={{ textDecoration: "none" }} to="/">
+              <Heading
+                level="1"
+                color="brand"
+                style={{
+                  userSelect: "none",
+                  fontFamily: "Playball",
+                }}
+              >
+                Event Tool
+              </Heading>
+            </Link>
           </Box>
           <Box direction="row" gap="small">
             <Box gap="small" margin="medium" direction="row">
-              <Button
-                onClick={() => {
-                  setPending(!pending);
-                }}
-                style={{
-                  fontFamily: "Fira Sans",
-                  textDecoration: pending ? "underline" : "none",
-                }}
-              >
-                Created Events
-              </Button>
+              <Link style={{ textDecoration: "none" }} to="/status">
+                <Text color="dark-1">Status</Text>
+              </Link>
             </Box>
             <Box gap="small" margin="medium" direction="row">
               <Button

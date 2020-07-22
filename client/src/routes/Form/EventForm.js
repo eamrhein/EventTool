@@ -63,7 +63,7 @@ function EventForm({ user, responsive, defaultKey }) {
   let date = moment(dateObj).add(2, "minutes").toISOString();
   if (user.apikeys && user.apikeys.length > 0) {
     return (
-      <Box pad="medium" overflow="auto">
+      <Box background="light-3">
         <Formik
           initialValues={defaultFormState}
           validateOnChange={false}
@@ -154,30 +154,22 @@ function EventForm({ user, responsive, defaultKey }) {
   }
   return (
     <Box
-      height="100vh"
       border={{
         color: "brand",
         size: "medium",
       }}
-      overflow="auto"
       pad="medium"
       align="center"
+      margin="large"
       justify="center"
     >
-      <AccountManager
-        user={user}
-        errors={[]}
-        selectedKey={selectedKey}
-        setSelectedKey={setSelectedKey}
-        emptyAccount
-      />
       <Heading
         style={{ fontFamily: "Fira Sans", fontWeight: "900" }}
         margin="small"
       >
         Welcome to Event Tool
       </Heading>
-      <Box width="70%" margin="medium" align="start">
+      <Box  margin="medium" align="start">
         <Heading margin="small" level="3">
           How to use this application:
         </Heading>
@@ -197,6 +189,13 @@ function EventForm({ user, responsive, defaultKey }) {
           </Paragraph>
         </Box>
       </Box>
+      <AccountManager
+        user={user}
+        errors={[]}
+        selectedKey={selectedKey}
+        setSelectedKey={setSelectedKey}
+        emptyAccount
+      />
     </Box>
   );
 }

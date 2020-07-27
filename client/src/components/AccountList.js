@@ -4,15 +4,14 @@ import Queries from "../graphql/queries";
 import Mutations from "../graphql/mutations";
 import { Box, Text, Grid, Heading } from "grommet";
 import { FormTrash } from "grommet-icons";
-const { DELETE_API_KEY } = Mutations;
+const { DELETE_API_KEY, SELECT_KEY } = Mutations;
 const { FETCH_ACCOUNT, FETCH_USER } = Queries;
-
 
 // React Component built to show Eventbrite Account Information
 // Includes Acccount Card and an Account List
 
 // Card of Each Account Includes Account Email
-function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
+function AccountCard({ apikey, id, userId, selectedKey }) {
   const [hover, sethover] = useState(false);
 
   // Mutation To delete eventbrite account from database from api key
@@ -38,6 +37,27 @@ function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
       });
     },
   });
+  const [selectKey] = useMutation(SELECT_KEY, {
+    onError: (err) => {
+      console.log(err.message);
+    },
+    update(cache, { data: { selectKey } }) {
+      let data = cache.readQuery({
+        query: FETCH_USER,
+        variables: { userId },
+      });
+      cache.writeQuery({
+        query: FETCH_USER,
+        variables: { userId },
+        data: {
+          user: {
+            ...data.user,
+            selectedKey: selectKey.selectedKey,
+          },
+        },
+      });
+    },
+  });
   const { loading, data, error } = useQuery(FETCH_ACCOUNT, {
     variables: {
       apikey,
@@ -51,6 +71,7 @@ function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
     );
   if (loading) return null;
   let { account } = data;
+
   return (
     <Box
       focusIndicator={false}
@@ -73,8 +94,12 @@ function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
       type="button"
       style={{ cursor: "pointer" }}
       onClick={() => {
-        setSelectedKey(apikey);
-        // resetForm();
+        selectKey({
+          variables: {
+            userId: userId,
+            key: apikey,
+          },
+        });
       }}
     >
       <Box pad="xsmall">
@@ -100,7 +125,7 @@ function AccountCard({ apikey, id, userId, selectedKey, setSelectedKey }) {
   );
 }
 // Grid that has list of accounts
-function AccountList({ user, selectedKey, setSelectedKey, resetForm }) {
+function AccountList({ user, selectedKey }) {
   if (user.apikeys.length > 0) {
     return (
       <Grid
@@ -113,13 +138,11 @@ function AccountList({ user, selectedKey, setSelectedKey, resetForm }) {
       >
         {user.apikeys.map((apikey, id) => (
           <AccountCard
-            resetForm={resetForm}
             key={id}
             apikey={apikey}
             userId={user.id}
             id={id}
             selectedKey={selectedKey}
-            setSelectedKey={setSelectedKey}
           />
         ))}
       </Grid>

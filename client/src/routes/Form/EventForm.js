@@ -24,7 +24,7 @@ const top = () => {
   }, 200);
 };
 
-function EventForm({ user, responsive, defaultKey }) {
+function EventForm({ user, responsive }) {
   const [success, setSuccess] = useState(false);
   const [yPos, setYpos] = useState(0);
   useEffect(() => {
@@ -35,7 +35,7 @@ function EventForm({ user, responsive, defaultKey }) {
     };
   }, []);
   let validation = Yup.object().shape(validationShape);
-  const [selectedKey, setSelectedKey] = useState(defaultKey);
+  let { selectedKey } = user
   const [submitForm] = useMutation(SUBMIT_FORM, {
     onError: (err) => {
       console.log(err);
@@ -49,7 +49,6 @@ function EventForm({ user, responsive, defaultKey }) {
             ...scheduleEvent,
           },
         },
-        fetchPolicy: "no-cache",
       });
     },
     onCompleted: () => {
@@ -101,7 +100,6 @@ function EventForm({ user, responsive, defaultKey }) {
                 user={user}
                 errors={errors}
                 selectedKey={selectedKey}
-                setSelectedKey={setSelectedKey}
                 isSubmitting={isSubmitting}
               />
               <BasicInfo
@@ -193,7 +191,6 @@ function EventForm({ user, responsive, defaultKey }) {
         user={user}
         errors={[]}
         selectedKey={selectedKey}
-        setSelectedKey={setSelectedKey}
         emptyAccount
       />
     </Box>

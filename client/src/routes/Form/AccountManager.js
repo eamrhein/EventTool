@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import Mutations from "../../graphql/mutations";
+import Queries from "../../graphql/queries"
 import Accounts from "../../components/AccountList";
 import {
   Box,
@@ -12,7 +13,8 @@ import {
   Heading,
 } from "grommet";
 import { Add, Subtract } from "grommet-icons";
-const { PUSH_API_KEY } = Mutations;
+const { PUSH_API_KEY, SELECT_KEY } = Mutations;
+const { FETCH_USER } = Queries
 
 //  To Display formik Error messages
 function FormErrors({ errors }) {
@@ -47,12 +49,36 @@ const AddKeyForm = ({ id, open }) => {
       }, 10000);
     },
   });
+  const [selectKey] = useMutation(SELECT_KEY, {
+    onError: (err) => {
+      console.log(err.message);
+    },
+    update(cache, { data: { selectKey } }) {
+      let data = cache.readQuery({
+        query: FETCH_USER,
+        variables: { userId: id },
+      });
+      cache.writeQuery({
+        query: FETCH_USER,
+        variables: { userId: id },
+        data: {
+          user: {
+            ...data.user,
+            apikeys: [...data.user.apikeys, selectKey.selectedKey],
+            selectedKey: selectKey.selectedKey,
+          },
+        },
+      });
+    },
+  });
   return (
     <Collapsible open={open || false}>
       <Box margin="small">
         <FormField error={errorMessage} label="API Key">
           <TextInput
-            onChange={(e) => setApiKey(e.target.value)}
+            onChange={(e) => {
+              setApiKey(e.target.value)
+            }}
             value={apikey}
             placeholder="2HFXXX2G...."
           />
@@ -67,6 +93,13 @@ const AddKeyForm = ({ id, open }) => {
                 apikey,
               },
             });
+            selectKey({
+              variables: {
+                userId: id,
+                key: apikey 
+
+              }
+            })
             setApiKey("");
           }}
           color="neutral-2"
@@ -80,25 +113,14 @@ const AddKeyForm = ({ id, open }) => {
 function AccountManager({
   user,
   selectedKey,
-  setSelectedKey,
   isSubmitting,
   errors,
   resetForm,
   success,
   emptyAccount,
 }) {
-  let { apikeys } = user;
   const [open, setOpen] = useState(true);
   const [addApi, setAddApi] = useState(emptyAccount || false);
-  useEffect(() => {
-    let mounted = true;
-    if (mounted) {
-      setSelectedKey(apikeys[0]);
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [apikeys, setSelectedKey]);
   return (
     <Box pad="medium" width="100vw" justify="between" flex>
       <Heading
@@ -140,7 +162,6 @@ function AccountManager({
           resetForm={resetForm}
           user={user}
           selectedKey={selectedKey}
-          setSelectedKey={setSelectedKey}
         />
         <AddKeyForm id={user.id} open={addApi} />
         <FormErrors errors={errors} />

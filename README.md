@@ -6,7 +6,6 @@
 
 <br />
 <p align="center">
-  <img src="images/logo.png" alt="Logo" />
   <h1 align="center" style="color:rgb(0, 96, 168)">Event Tool</h1>
   <p align="center">
     A Web framework build to make create batch Events in EventBrite.

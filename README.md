@@ -14,7 +14,7 @@
     <a href="https://github.com/eamrhein/EventTool/wiki"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="http://eventtool.ericamrhein.com/">View Demo</a>
+    <a href="https://eventbrite-tool.herokuapp.com/">View Demo</a>
     ·
     <a href="https://github.com/eamrhein/EventTool/issues">Open Bugs and Feature Requests</a>
     ·

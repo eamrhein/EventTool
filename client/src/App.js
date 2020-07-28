@@ -4,8 +4,10 @@ import { grommet, Grommet, Box, ResponsiveContext } from "grommet";
 import { deepMerge } from "grommet/utils";
 import { useQuery } from "react-apollo";
 import Queries from "./graphql/queries";
-const Login = React.lazy(() => import("./routes/Login/Login"));
-const EventTool = React.lazy(() => import("./routes/Form/EventTool"));
+import Login from './routes/Login/Login'
+import EventTool from './routes/Form/EventTool'
+// const Login = React.lazy(() => import("./routes/Login/Login"));
+// const EventTool = React.lazy(() => import("./routes/Form/EventTool"));
 const { IS_LOGGED_IN } = Queries;
 
 const theme = deepMerge(grommet, {

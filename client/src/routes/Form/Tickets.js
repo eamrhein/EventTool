@@ -232,7 +232,7 @@ const Tickets = ({ screenSize, values, setFieldValue }) => {
                 />
               </Box>
             ) : (
-              <Box height="100%" align="center" justify="center">
+              <Box align="center" justify="center">
                 <Text>Add Ticket</Text>
               </Box>
             )}

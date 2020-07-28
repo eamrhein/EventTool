@@ -8,7 +8,7 @@
 <p align="center">
   <h1 align="center" style="color:rgb(0, 96, 168)">Event Tool</h1>
   <p align="center">
-    A Web framework build to make create batch Events in EventBrite.
+    A Web framework build to create batch Events in EventBrite.
     <br />
     <a href="https://github.com/eamrhein/EventTool/wiki"><strong>Explore the docs »</strong></a>
     <br />

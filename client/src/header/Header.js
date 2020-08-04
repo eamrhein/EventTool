@@ -54,7 +54,7 @@ const HeaderPanel = ({ isLoggedIn, responsive }) => {
                   fontFamily: "Playball",
                 }}
               >
-                Event Tool
+                Eventbrite Tool
               </Heading>
             </Link>
           </Box>

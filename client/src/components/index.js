@@ -4,3 +4,4 @@ export * from "./SearchDropdown";
 export * from "./Spinner";
 export * from "./TimeInput";
 export * from "./LoginForm";
+export * from './StyledSectionButton'

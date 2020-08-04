@@ -63,7 +63,7 @@ const Login = (props) => {
         color="brand"
         style={{ userSelect: "none", fontFamily: "Playball" }}
       >
-        Event Tool
+         Eventbrite Tool
       </Heading>
       <Tabs activeIndex={index} onActive={onActive} pad="small" width="70vw">
         <Tab

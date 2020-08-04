@@ -19,7 +19,7 @@ import { ApolloLink } from "apollo-link";
 import Mutations from "./graphql/mutations";
 const { VERIFY_USER } = Mutations;
 
-//Lam Comment
+
 
 const cache = new InMemoryCache({
   dataIdFromObject: (object) => object._id || null,

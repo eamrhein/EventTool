@@ -217,7 +217,7 @@ const EventStatus = ({ user }) => {
       eventbriteIds: job.eventbriteIds,
       urls: job.urls,
       status: job.status,
-      key: user.apikeys[0],
+      key: user.selectedKey,
       locked: job.locked,
     };
   });

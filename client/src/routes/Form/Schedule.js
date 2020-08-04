@@ -11,8 +11,7 @@ import {
   Button,
 } from "grommet";
 import moment from "moment";
-import { FormFieldLabel } from "../../components/";
-import { TimeInput } from "../../components/";
+import { FormFieldLabel, TimeInput, StyledSectionButton } from "../../components/";
 import { Calendar as CalendarIcon } from "grommet-icons";
 
 export default function Schedule({
@@ -57,34 +56,18 @@ export default function Schedule({
     }
   };
   return (
-    <Box pad="medium" width="100vw" fill>
-      <Button plain onClick={() => setOpen(!open)}>
+    <Box pad="medium" width="100vw" >
+      <StyledSectionButton open={open} plain onClick={() => setOpen(!open)}>
         <Heading
-          color={
-            open
-              ? "neutral-2"
-              : {
-                  dark: "light-1",
-                  light: "dark-1",
-                }
-          }
           level="2"
         >
           {open ? "-" : "+"}{" "}
           <CalendarIcon
             size="medium"
-            color={
-              open
-                ? "neutral-2"
-                : {
-                    dark: "light-1",
-                    light: "dark-1",
-                  }
-            }
           />{" "}
           Schedule
         </Heading>
-      </Button>
+      </StyledSectionButton>
       <Collapsible open={open}>
         <FormFieldLabel
           pad={true}

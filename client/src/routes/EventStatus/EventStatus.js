@@ -14,9 +14,10 @@ import {
   TableHeader,
   DropButton,
   Text,
+  RangeInput,
   Calendar,
 } from "grommet";
-import { FormDown } from "grommet-icons";
+import { FormDown, Add, Subtract } from "grommet-icons";
 let { FETCH_USER } = Queries;
 let { PUBLISH_EVENT, DELETE_EVENT } = Mutations;
 const CalenderButton = ({ date, setDate, confirmed, setConfirmed, locked }) => {
@@ -70,6 +71,11 @@ const CalenderButton = ({ date, setDate, confirmed, setConfirmed, locked }) => {
 const EventTableRow = ({ user, job, index, setErr }) => {
   const [date, setDate] = useState();
   const [confirmed, setConfirmed] = useState(false);
+  const [value, setValue] = React.useState(5);
+  const [isAddDisabled, setIsAddDisabled] = React.useState(false);
+  const [isSubtractDisabled, setIsSubtractDisabled] = React.useState(true);
+
+  const onChange = (event) => setValue(event.target.value);
   const [publishEvent] = useMutation(PUBLISH_EVENT, {
     errorPolicy: "all",
     refetchQueries: [
@@ -148,7 +154,7 @@ const EventTableRow = ({ user, job, index, setErr }) => {
         eventids: job.eventbriteIds,
         key: job.key,
         dateStr: date,
-        interval: 5,
+        interval: value,
       },
     });
   };
@@ -184,6 +190,48 @@ const EventTableRow = ({ user, job, index, setErr }) => {
       </TableCell>
       <TableCell>
         <Text>{job.status}</Text>
+      </TableCell>
+      <TableCell>
+        <Box direction="row" align="center" pad="small" gap="medium">
+          <Box>{value + " "} minutes</Box>
+          <Button
+            plain={false}
+            disabled={isSubtractDisabled}
+            icon={<Subtract size="small" color="neutral-2" />}
+            onChange={() => {
+              if (value > 9) {
+                setIsAddDisabled(false);
+              } else setIsSubtractDisabled(true)
+            }}
+            onClick={() => {
+              if (value > 9) {
+                setIsAddDisabled(false);
+                setValue(value - 5);
+              } else setIsSubtractDisabled(true);
+            }}
+          />
+          <Box align="center" width="medium">
+            <RangeInput
+              min={5}
+              max={60}
+              step={5}
+              value={value}
+              onChange={onChange}
+              size="small"
+            />
+          </Box>
+          <Button
+            plain={false}
+            disabled={isAddDisabled}
+            icon={<Add size="small" color="neutral-2" />}
+            onClick={() => {
+              if (value < 60) {
+                setIsSubtractDisabled(false);
+                setValue(value + 5);
+              } else setIsAddDisabled(true);
+            }}
+          />
+        </Box>
       </TableCell>
       <TableCell>
         <Box direction="row">
@@ -223,41 +271,44 @@ const EventStatus = ({ user }) => {
   });
   return (
     <Box pad="medium" align="center" width="100vw">
-        <Heading level="3">Created Events</Heading>
-        {err}
-        <Box pad="large" width="100%">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableCell scope="col" border="bottom">
-                  <Text>Title</Text>
-                </TableCell>
-                <TableCell scope="col" border="bottom">
-                  <Text>Location</Text>
-                </TableCell>
-                <TableCell scope="col" border="bottom">
-                  <Text>Date</Text>
-                </TableCell>
-                <TableCell scope="col" border="bottom">
-                  <Text>Status</Text>
-                </TableCell>
-                <TableCell scope="col" border="bottom" />
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {jobs.map((job, index) => {
-                return (
-                  <EventTableRow
-                    job={job}
-                    user={user}
-                    key={index}
-                    setErr={setErr}
-                  />
-                );
-              })}
-            </TableBody>
-          </Table>
-        </Box>
+      <Heading level="3">Created Events</Heading>
+      {err}
+      <Box pad="large" width="100%">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableCell scope="col" border="bottom" align="center">
+                <Text>Title</Text>
+              </TableCell>
+              <TableCell scope="col" border="bottom" align="center">
+                <Text>Location</Text>
+              </TableCell>
+              <TableCell scope="col" border="bottom" align="center">
+                <Text>Date</Text>
+              </TableCell>
+              <TableCell scope="col" border="bottom" align="center">
+                <Text>Status</Text>
+              </TableCell>
+              <TableCell scope="col" border="bottom" align="center">
+                <Text align="center">Batch Interval</Text>
+              </TableCell>
+              <TableCell scope="col" border="bottom" />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {jobs.map((job, index) => {
+              return (
+                <EventTableRow
+                  job={job}
+                  user={user}
+                  key={index}
+                  setErr={setErr}
+                />
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Box>
     </Box>
   );
 };

@@ -54,6 +54,12 @@ const scheduleEvent = async ({ id, data, key }) => {
     return u;
   }
 };
+function chunk(array, size) {
+  var result = []
+  for (var i=0;i<array.length;i+=size)
+    result.push( array.slice(i,i+size) )
+  return result
+  }
 
 async function publishEvent({ id, eventids, key, dateStr, interval }) {
   let date = moment(dateStr);
@@ -66,27 +72,31 @@ async function publishEvent({ id, eventids, key, dateStr, interval }) {
     throw new Error("Job is not in database")
   }
   job.status = "Event awaiting to be published";
-  eventids.forEach(async (currentId) => {
-    schedule.scheduleJob(
-      date.add(interval, "seconds").format(),
-      async function () {
-        try {
-          let promise = await eventbrite.publishEvent(currentId, key);
-          if (promise.error_description) {
-            throw new Error(promise.error_description)
+  let batches = chunk(eventids, 10)
+  console.log(batches)
+  batches.forEach((batch) => {
+    let cdate = date.add(interval, "minutes").format()
+    batch.forEach(async (currentId) => {
+      schedule.scheduleJob(
+        cdate,
+        async function () {
+          try {
+            let promise = await eventbrite.publishEvent(currentId, key);
+            if (promise.error_description) {
+              throw new Error(promise.error_description)
+            }
+            job.status = "Publishing Finished";
+            job.locked = true;
+          } catch (error) {
+            console.error(error.message)
+            job.locked = true;
+            job.status = "Publishing Failed" + error.message;
           }
-          job.status = "Publishing Finished";
-          job.locked = true;
-        } catch (error) {
-          console.error(error.message)
-          job.locked = true;
-          job.status = "Publishing Failed" + error.message;
+          console.log("Event Published Successfully")
+          await user.save()
         }
-        console.log("Event Published Successfully")
-        await user.save()
-      }
-    );
-    return job
+      );
+    })
   })
   let b = await user.save()
 }

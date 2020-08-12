@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import Schedule from "../EventStatus/EventStatus";
 import { useQuery } from "@apollo/react-hooks";
 import EventForm from "./EventForm";
@@ -52,6 +52,7 @@ function EventTool({ responsive }) {
               defaultKey={defaultKey}
             />
           </Route>
+          <Redirect from="*" to='/' />
         </Switch>
     </Box>
   );

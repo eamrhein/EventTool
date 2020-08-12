@@ -210,14 +210,14 @@ const EventTableRow = ({ user, job, index, setErr }) => {
               } else setIsSubtractDisabled(true);
             }}
           />
-          <Box align="center" width="medium">
+          <Box align="center" width="xsmall">
             <RangeInput
               min={5}
               max={60}
               step={5}
               value={value}
               onChange={onChange}
-              size="small"
+              size="xsmall"
             />
           </Box>
           <Button

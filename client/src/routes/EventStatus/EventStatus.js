@@ -193,7 +193,8 @@ const EventTableRow = ({ user, job, index, setErr }) => {
       </TableCell>
       <TableCell>
         <Box direction="row" align="center" pad="small" gap="medium">
-          <Box>{value + " "} minutes</Box>
+          <Text>{value < 10 ? "0" + value: value}</Text>
+          <Text>minutes</Text>
           <Button
             plain={false}
             disabled={isSubtractDisabled}

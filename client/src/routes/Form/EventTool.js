@@ -52,7 +52,6 @@ function EventTool({ responsive }) {
               defaultKey={defaultKey}
             />
           </Route>
-          <Redirect from="*" to='/' />
         </Switch>
     </Box>
   );

@@ -52,7 +52,7 @@ app.use(
     };
   })
 );
-app.use("/", redirector);
+// app.use("/", redirector);
 app.use(bodyParser.json());
 
 module.exports = app;

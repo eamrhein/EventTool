@@ -75,10 +75,11 @@ async function publishEvent({ id, eventids, key, dateStr, interval }) {
   let batches = chunk(eventids, 10)
   console.log(batches)
   batches.forEach((batch) => {
-    let cdate = date.add(interval, "minutes").format()
+    date.add(24, "hours").format()
     batch.forEach(async (currentId) => {
+      date.add(interval, "minutes")
       schedule.scheduleJob(
-        cdate,
+        date.format(),
         async function () {
           try {
             let promise = await eventbrite.publishEvent(currentId, key);

@@ -212,7 +212,6 @@ const Tickets = ({ screenSize, values, setFieldValue }) => {
                           <Box round="full" overflow="hidden">
                             <Button
                               size="small"
-                              hoverIndicator="accent-1"
                               onClick={() => {
                                 setFieldValue(
                                   "tickets",

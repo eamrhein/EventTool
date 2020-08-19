@@ -2,30 +2,26 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-<!-- PROJECT LOGO -->
-
-<br />
-<p align="center">
-  <h1 align="center" style="color:rgb(0, 96, 168)">Event Tool</h1>
-  <p align="center">
-    A Web framework build to create batch Events in EventBrite.
-    <br />
-    <a href="https://github.com/eamrhein/EventTool/wiki"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://eventbrite-tool.herokuapp.com/">View Demo</a>
-    ·
-    <a href="https://github.com/eamrhein/EventTool/issues">Open Bugs and Feature Requests</a>
-    ·
-  </p>
-</p>
-
+# EventTool
+#### A web to built with React/Redux and GraphQL to manage creating eventbrite Events.
+![Welcome](/images/Welcome.png)
 ## About The Project
+EventTool is a web tool to allow users to create Eventbrite events from many locations all at once. The tool is built for a user to create a single event and then post it for many locations At once.
 
-![Video from awesomescreenshot.com](https://awevideo.s3.amazonaws.com/video-506564-69527f7d39c71055daaecf24c09e2798_960x540.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJSCJQ2NM3XLFPVKA%2F20200728%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20200728T213305Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=f051064e4c52c8dc6048fbb18b3d4a92072f198e1b3f1ed9adf5f185cf3430a8) 
+## Key Features
++ Event Creation
+  + Users can create events in the same way as regular Eventbrite Website.
++ Serside Event Scheduling
+  + Users can publish events to be working at a future date.
++ Batching and throttling event publishing.
+  + Events are Published in intervals of 10 each every 5 minutes.
++ User Authentication
+  + Users can create a new account or log in with an existing one
+  + Passwords are encrypted using BCrypt and appropriate errors are rendered when a login or signup form is filled incorrectly.
++ Interacts With the eventbrite API.
 
-### Built With
-
+### Technologies
+- [Eventbrite API](https://www.eventbrite.com/platform/api)
 - [GraphQL](https://graphql.org/)
 - [bcrypt](https://github.com/kelektiv/node.bcrypt.js)
 - [Node.js](https://nodejs.org/)

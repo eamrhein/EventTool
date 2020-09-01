@@ -19,10 +19,11 @@ function EventTool({ responsive }) {
   const { data: userData, error: userError, loading: userLoading } = useQuery(
     FETCH_USER,
     {
-      fetchPolicy: "cache-and-network",
+      // fetchPolicy: "cache-and-network",
       variables: {
         userId: userId,
       },
+      pollInterval: 10000
     }
   );
   if (idError || userError)

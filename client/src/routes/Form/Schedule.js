@@ -29,10 +29,9 @@ export default function Schedule({
   let day = today.getDate();
   let month = today.getMonth();
   let bounds = [
-    new Date(year, month, day + 2).toISOString(),
+    new Date(year, month, day + 1).toISOString(),
     new Date(year + 5, month, day).toISOString(),
-  ];
-
+  ];  
   const handleDate = (dates) => {
     if (typeof dates === "string") {
       let date = new Date(dates);

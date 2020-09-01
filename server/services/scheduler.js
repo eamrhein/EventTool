@@ -9,7 +9,7 @@ const scheduleEvent = async ({ id, data, key }) => {
   let job = new Job({
     data,
     schedule: new Date(),
-    status: "Pending",
+    status: 1,
     urls: [],
     eventbriteIds: [],
     locked: false,
@@ -20,9 +20,9 @@ const scheduleEvent = async ({ id, data, key }) => {
   }
   let form = JSON.parse(data);
   try {
-    job.status = "Adding Venues";
+    job.status = 2
     let venues = await eventbrite.updateVenues(form.organization.id, key, form);
-    job.status = "Creating Events";
+    job.status = 3;
     let events = await eventbrite.createEvent(
       form,
       key,
@@ -30,24 +30,24 @@ const scheduleEvent = async ({ id, data, key }) => {
       venues
     );
     if (events[0].isSeries) {
-      job.status = "Creating Event Series'";
+      job.status = 4;
       await eventbrite.createSeries(form, key);
     }
     job.eventbriteIds = events.map((event) => event.id);
-    job.status = "Creating Tickets";
+    job.status = 5;
     let tickets = await eventbrite.createTicket(
       form.tickets,
       job.eventbriteIds,
       key
     );
-    job.status = "Adding Event Data";
+    job.status = 6;
     job.urls = events.map((event) => event.url);
-    job.status = "Draft Complete";
+    job.status = 7;
     user.jobs.push(job);
     let u = await user.save();
     return u;
   } catch (error) {
-    job.status = "failed - " + job.status;
+    job.status = 1;
     user.jobs.push(job);
     let u = await user.save();
     console.error(error.message);
@@ -71,13 +71,11 @@ async function publishEvent({ id, eventids, key, dateStr, interval }) {
   if (!job) {
     throw new Error("Job is not in database")
   }
-  job.status = "Event awaiting to be published";
+  job.status = 8;
   let batches = chunk(eventids, 10)
   console.log(batches)
   batches.forEach((batch) => {
-    date.add(24, "hours").format()
     batch.forEach(async (currentId) => {
-      date.add(interval, "minutes")
       schedule.scheduleJob(
         date.format(),
         async function () {
@@ -86,18 +84,20 @@ async function publishEvent({ id, eventids, key, dateStr, interval }) {
             if (promise.error_description) {
               throw new Error(promise.error_description)
             }
-            job.status = "Publishing Finished";
+            job.status = 10;
             job.locked = true;
           } catch (error) {
             console.error(error.message)
             job.locked = true;
-            job.status = "Publishing Failed" + error.message;
+            job.status = 1;
           }
           console.log("Event Published Successfully")
           await user.save()
         }
       );
+      date.add(interval, "minutes")
     })
+    date.add(24, "hours").format()
   })
   let b = await user.save()
 }

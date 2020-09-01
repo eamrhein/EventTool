@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useMutation } from "react-apollo";
 import Queries from "../../graphql/queries";
 import Mutations from "../../graphql/mutations";
+import ProgressBar from "../../components/ProgressBar";
 import {
   Anchor,
   Heading,
@@ -20,6 +21,7 @@ import {
 import { FormDown, Add, Subtract } from "grommet-icons";
 let { FETCH_USER } = Queries;
 let { PUBLISH_EVENT, DELETE_EVENT } = Mutations;
+
 const CalenderButton = ({ date, setDate, confirmed, setConfirmed, locked }) => {
   const [open, setOpen] = useState();
   const onSelect = (selectedDate) => {
@@ -189,11 +191,11 @@ const EventTableRow = ({ user, job, index, setErr }) => {
         />
       </TableCell>
       <TableCell>
-        <Text>{job.status}</Text>
+        <ProgressBar status={job.status} />
       </TableCell>
       <TableCell>
         <Box direction="row" align="center" pad="small" gap="medium">
-          <Text>{value < 10 ? "0" + value: value}</Text>
+          <Text>{value < 10 ? "0" + value : value}</Text>
           <Text>minutes</Text>
           <Button
             plain={false}
@@ -202,7 +204,7 @@ const EventTableRow = ({ user, job, index, setErr }) => {
             onChange={() => {
               if (value > 9) {
                 setIsAddDisabled(false);
-              } else setIsSubtractDisabled(true)
+              } else setIsSubtractDisabled(true);
             }}
             onClick={() => {
               if (value > 9) {
@@ -273,7 +275,6 @@ const EventStatus = ({ user }) => {
   return (
     <Box pad="medium" align="center" width="100vw">
       <Heading level="3">Created Events</Heading>
-      {err}
       <Box pad="large" width="100%">
         <Table>
           <TableHeader>

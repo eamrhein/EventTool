@@ -126,7 +126,7 @@ const EventTableRow = ({ user, job, index, setErr }) => {
     onError: ({ graphQLErrors, networkError }) => {
       let errArr = [];
       if (graphQLErrors) {
-        errArr = errArr.concat(
+        errArr = errArr.concat( 
           graphQLErrors.map((err, i) => <Text key={i}>{err.message}</Text>)
         );
       }
@@ -176,7 +176,7 @@ const EventTableRow = ({ user, job, index, setErr }) => {
         <Box>
           {job.data.locations.map((location, id) => (
             <Anchor target="_blank" href={job.urls[id]} key={id}>
-              {location.City}
+              {location.City} 
             </Anchor>
           ))}
         </Box>
@@ -190,15 +190,14 @@ const EventTableRow = ({ user, job, index, setErr }) => {
           setConfirmed={setConfirmed}
         />
       </TableCell>
-      <TableCell>
+      <TableCell justify="center  " align="center">
         <ProgressBar status={job.status} />
       </TableCell>
       <TableCell>
         <Box direction="row" align="center" pad="small" gap="medium">
-          <Text>{value < 10 ? "0" + value : value}</Text>
-          <Text>minutes</Text>
+          <Text>{value < 10 ? "0" + value : value} minutes</Text>
           <Button
-            plain={false}
+            plain
             disabled={isSubtractDisabled}
             icon={<Subtract size="small" color="neutral-2" />}
             onChange={() => {
@@ -224,7 +223,7 @@ const EventTableRow = ({ user, job, index, setErr }) => {
             />
           </Box>
           <Button
-            plain={false}
+            plain
             disabled={isAddDisabled}
             icon={<Add size="small" color="neutral-2" />}
             onClick={() => {
@@ -241,6 +240,7 @@ const EventTableRow = ({ user, job, index, setErr }) => {
           <Button
             disabled={!date || !confirmed || job.locked}
             type="button"
+            margin="small"
             size="small"
             label="Schedule"
             onClick={(e) => {
@@ -250,6 +250,7 @@ const EventTableRow = ({ user, job, index, setErr }) => {
           <Button
             onClick={(e) => handleDelete(e, job)}
             size="small"
+            margin="small"
             label="Delete"
           />
         </Box>

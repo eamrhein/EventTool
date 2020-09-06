@@ -1,6 +1,6 @@
 import React from "react";
-import { Text } from "grommet";
-import styled, {css, keyframes } from "styled-components";
+import { Text, Box } from "grommet";
+import styled, { css, keyframes } from "styled-components";
 
 const move = keyframes`
   0% {
@@ -85,31 +85,51 @@ const BarFrame = styled.div`
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
     overflow: hidden;
-    animation: ${(props) => (props.animate ? css`${move} 2s linear infinite`: null)}
+    animation: ${(props) =>
+      props.animate
+        ? css`
+            ${move} 2s linear infinite
+          `
+        : null}
   }
 `;
 
 let statusHash = {
-    1: "10%",
-    2: "20%",
-    3: "30%",
-    4: "40%",
-    5: "50%",
-    6: "60%",
-    7: "70%",
-    8: "80%",
-    9: "90%",
-    10: "100"
-}
-const ProgressBar = ({status}) => {
-    let progress = statusHash[status]
+  1: "10%",
+  2: "20%",
+  3: "30%",
+  4: "40%",
+  5: "50%",
+  6: "60%",
+  7: "70%",
+  8: "80%",
+  9: "90%",
+  10: "100",
+};
+const ProgressBar = ({ status }) => {
+  let progress = statusHash[status];
 
   return (
-    <BarFrame animate width="200px" red={status < 5} green={status === 10} orange={status > 4 && status < 10}>
-      <span style={{ width: `${progress}` }}>
-        <span><Text size="small">Event Status</Text></span>
-      </span>
-    </BarFrame>
+    <>
+      <BarFrame
+        animate
+        width="200px"
+        red={status < 5}
+        green={status === 10}
+        orange={status > 4 && status < 10}
+      >
+        <span style={{ width: `${progress}` }}>
+          <span></span>
+        </span>
+      </BarFrame>
+      <Box align="center">
+        {status < 10 ? (
+          <Text color="Orange">Ready to Publish</Text>
+        ) : (
+          <Text>Published</Text>
+        )}
+      </Box>
+    </>
   );
 };
 
